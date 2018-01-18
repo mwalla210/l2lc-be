@@ -1,4 +1,4 @@
-# l2lc-db
+# l2lc-api
 
 A RESTful API for line2line cloud
 
