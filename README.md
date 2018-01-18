@@ -1,3 +1,5 @@
 # l2lc-db
 
-## Back-end database for Line2Line Cloud
+A RESTful API for line2line cloud
+
+More documentation will come later

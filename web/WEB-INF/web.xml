@@ -5,7 +5,7 @@
          version="3.1">
 
     <servlet>
-        <servlet-name>Example API</servlet-name>
+        <servlet-name>L2lC API</servlet-name>
         <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
 
         <init-param>
@@ -20,7 +20,7 @@
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>Example API</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <servlet-name>L2lC API</servlet-name>
+        <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 </web-app>

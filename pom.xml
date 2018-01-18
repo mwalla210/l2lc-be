@@ -5,7 +5,7 @@
   <groupId>com.line2linecoatings.api</groupId>
   <artifactId>l2lapi</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
 
   <name>l2lapi</name>
   <url>http://maven.apache.org</url>
@@ -15,6 +15,28 @@
       <maven.compiler.target>1.8</maven.compiler.target>
       <maven.compiler.source>1.8</maven.compiler.source>
   </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <webXml>web\WEB-INF\web.xml</webXml>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <url>http://138.197.88.198:8080/manager/text</url>
+                    <server>TomcatServer</server>
+                    <path>/l2lc</path>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
   <dependencies>
     <dependency>
