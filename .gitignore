@@ -1,4 +1,4 @@
 out/
-l2lapi.iml
+*.iml
 target/
 .idea/
