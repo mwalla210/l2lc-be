@@ -17,10 +17,17 @@
             <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
             <param-value>true</param-value>
         </init-param>
+
     </servlet>
 
     <servlet-mapping>
         <servlet-name>L2lC API</servlet-name>
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
+
+    <resource-ref>
+        <res-ref-name>jdbc/sqlite</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+    </resource-ref>
+
 </web-app>
