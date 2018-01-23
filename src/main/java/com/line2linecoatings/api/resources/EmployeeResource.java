@@ -23,16 +23,17 @@ public class EmployeeResource
 
     @POST
     @Path("/create")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response createEmployee(Employee employee, @Context HttpHeaders headers) throws Exception {
+        Employee createdEmployee = null;
         try {
-            employeeService.createEmployee(employee);
+            createdEmployee = employeeService.createEmployee(employee);
         } catch (Exception ex) {
             log.error(ex.toString());
             throw ex;
         }
 
-        return Response.noContent().build();
+        return Response.ok(createdEmployee).build();
     }
 
     @GET

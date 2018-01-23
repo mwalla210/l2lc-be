@@ -12,8 +12,8 @@ public class EmployeeService {
     public EmployeeService() {
         trackingDAO = new TrackingDAOImpl();
     }
-    public void createEmployee(Employee employee) throws Exception {
-        trackingDAO.createEmployee(employee);
+    public Employee createEmployee(Employee employee) throws Exception {
+        return trackingDAO.createEmployee(employee);
     }
 
     public Employee getEmployee(int id) throws Exception{
