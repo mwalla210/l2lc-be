@@ -39,11 +39,12 @@
 							"raw": "{\n\t\"firstName\": \"Joel\",\n\t\"lastName\": \"Bornemann\"\n}"
 						},
 						"url": {
-							"raw": "{{host}}/api/employee/create",
+							"raw": "{{host}}/l2lc/api/employee/create",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
+								"l2lc",
 								"api",
 								"employee",
 								"create"
@@ -63,12 +64,12 @@
 						"header": [],
 						"body": {},
 						"url": {
-							"raw": "{{host}}/api/employee/{{empid}}",
+							"raw": "{{host}}/{{basepath}}/employee/{{empid}}",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
-								"api",
+								"{{basepath}}",
 								"employee",
 								"{{empid}}"
 							]
