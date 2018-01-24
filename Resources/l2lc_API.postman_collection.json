@@ -1,0 +1,83 @@
+{
+	"info": {
+		"name": "l2lc_API",
+		"_postman_id": "c0fa2e13-bfd5-72cb-2178-43ccfa375732",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Employees",
+			"description": "",
+			"item": [
+				{
+					"name": "Create_Employee",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9149a3e3-a2bf-4442-b6ed-a5d723d753a5",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)",
+									"pm.environment.set(\"empid\", jsonData.id);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstName\": \"Joel\",\n\t\"lastName\": \"Bornemann\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/employee/create",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"employee",
+								"create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get_EmployeeById",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{host}}/api/employee/{{empid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"employee",
+								"{{empid}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
