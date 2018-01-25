@@ -13,6 +13,7 @@ public class TrackingDAOImpl {
     public static final Log log = LogFactory.getLog(TrackingDAOImpl.class);
 
     public Employee createEmployee(Employee employee) throws Exception {
+        log.info("Start of createEmployee in DAO");
         Connection conn = createConnection();
 
         String query = "INSERT INTO employee (first_name, last_name) VALUES (?, ?)";
@@ -40,6 +41,26 @@ public class TrackingDAOImpl {
         }
         preparedStatement.close();
         conn.close();
+        log.info("End of createEmployee in DAO");
+        return employee;
+    }
+
+    public Employee updateEmployee(int id, Employee employee) throws Exception {
+        log.info("Start of createEmployee in DAO with id " + id);
+        Connection conn = createConnection();
+
+        String query = "UPDATE Employee " +
+                "SET first_name = ?, last_name = ? "+
+                "WHERE id = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setString(1, employee.getFirstName());
+        preparedStatement.setString(2, employee.getLastName());
+        preparedStatement.setInt(3, id);
+
+        preparedStatement.executeUpdate();
+
+        employee.setId(id);
+        log.info("End of createEmployee in DAO with id " + id);
         return employee;
     }
 
@@ -60,6 +81,23 @@ public class TrackingDAOImpl {
         return employee;
     }
 
+    public boolean removeEmployee(int id) throws Exception {
+        log.info("Start of removeEmployee in DAO with id " + id);
+        int count;
+        boolean removed;
+
+        Connection conn = createConnection();
+
+        String query = "DELETE FROM Employee WHERE id = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, id);
+
+        count = preparedStatement.executeUpdate();
+        removed = count==1?true:false;
+        log.info("End of removeEmployee in DAO with id " + id);
+        return removed;
+    }
+
     private Employee mapEmployeeFromResultSet(ResultSet rs) throws Exception {
         Employee employee = null;
         if (rs.next()) {
@@ -72,10 +110,12 @@ public class TrackingDAOImpl {
         return employee;
     }
     private Connection createConnection() throws Exception{
+        log.info("Start of createConnection");
         Connection conn = null;
         Context context = new InitialContext();
         DataSource ds = (DataSource) context.lookup("java:comp/env/jdbc/sqlite");
         conn = ds.getConnection();
+        log.info("End of createConnection");
         return conn;
     }
 }
