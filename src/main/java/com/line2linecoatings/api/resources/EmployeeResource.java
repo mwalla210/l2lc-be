@@ -95,7 +95,7 @@ public class EmployeeResource extends BasicResource
             log.error(headers);
             throw ex;
         }
-        
+
         if (removed) {
             return getResponse(Response.Status.OK);
         } else {
