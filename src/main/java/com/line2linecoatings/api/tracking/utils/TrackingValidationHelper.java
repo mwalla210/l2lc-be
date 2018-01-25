@@ -5,18 +5,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Variant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class TrackingValidationHelper {
     public static final Log log = LogFactory.getLog(TrackingValidationHelper.class);
 
     public TrackingError validateEmployee(Employee employee) {
 
+        log.info("Start of validateEmployee");
         TrackingError error = null;
         List<String> errorMessages = new ArrayList<>();
         if (StringUtils.isEmpty(employee.getFirstName())) {
@@ -32,6 +30,7 @@ public class TrackingValidationHelper {
             error.setErrorMessages(errorMessages);
             error.setStatus(Response.Status.NOT_ACCEPTABLE);
         }
+        log.info("End of validateEmployee");
         return error;
     }
 

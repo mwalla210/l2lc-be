@@ -13,24 +13,40 @@ public class EmployeeService {
         trackingDAO = new TrackingDAOImpl();
     }
     public Employee createEmployee(Employee employee) throws Exception {
-        return trackingDAO.createEmployee(employee);
+        log.info("Start of createEmployee in Service");
+        Employee createdEmployee = trackingDAO.createEmployee(employee);
+        log.info("End of createEmployee in Service");
+        return createdEmployee;
+
     }
 
     public Employee getEmployee(int id) throws Exception {
-        return trackingDAO.getEmployeeById(id);
+        log.info("Start of getEmployee in Service with id " + id);
+        Employee employee = trackingDAO.getEmployeeById(id);
+        log.info("End of getEmployee in Service with id " + id);
+        return employee;
+
     }
 
     public Employee updateEmployee(int id, Employee employee) throws Exception {
-
+        log.info("Start of updateEmployee in Service with id " + id);
+        Employee updatedEmployee = null;
         if (getEmployee(id) == null) {
             log.error("Employee with id " + id + " not found");
-            return null;
         } else {
-            return trackingDAO.updateEmployee(id, employee);
+            updatedEmployee = trackingDAO.updateEmployee(id, employee);
         }
+        log.info("Start of updateEmployee in Service with id " + id);
+        return updatedEmployee;
+
     }
 
     public boolean removeEmployee(int id) throws Exception {
-        return trackingDAO.removeEmployee(id);
+        boolean removed;
+        log.info("Start of removeEmployee in Service with id " + id);
+        removed =  trackingDAO.removeEmployee(id);
+        log.info("End of removeEmployee in Service with id " + id);
+        return removed;
+
     }
 }
