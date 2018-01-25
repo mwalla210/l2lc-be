@@ -4,17 +4,14 @@ import com.line2linecoatings.api.tracking.models.Employee;
 import com.line2linecoatings.api.tracking.services.EmployeeService;
 import com.line2linecoatings.api.tracking.utils.TrackingError;
 import com.line2linecoatings.api.tracking.utils.TrackingValidationHelper;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.util.List;
 
 @Path("/employee")
-public class EmployeeResource
+public class EmployeeResource extends BasicResource
 {
     public static final Log log = LogFactory.getLog(EmployeeResource.class);
     public static EmployeeService employeeService;
@@ -33,10 +30,10 @@ public class EmployeeResource
         TrackingError error = trackingValidationHelper.validateEmployee(employee);
         if (error != null) {
             log.error(headers);
-            return Response.status(Response.Status.NOT_ACCEPTABLE).entity(error).build();
+            return getResponse(Response.Status.NOT_ACCEPTABLE, error);
         }
         createdEmployee = employeeService.createEmployee(employee);
-        return Response.ok(createdEmployee).build();
+        return getResponse(Response.Status.OK, employee);
     }
 
     @GET
@@ -47,9 +44,9 @@ public class EmployeeResource
         employee = employeeService.getEmployee(employeeId);
 
         if (employee == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return getResponse(Response.Status.NOT_FOUND);
         } else {
-            return Response.ok(employee).build();
+            return getResponse(Response.Status.OK, employee);
         }
     }
 
@@ -62,15 +59,15 @@ public class EmployeeResource
         TrackingError error = trackingValidationHelper.validateEmployee(employee);
         if (error != null) {
             log.error(headers);
-            return Response.status(Response.Status.NOT_ACCEPTABLE).entity(error).build();
+            return getResponse(Response.Status.NOT_ACCEPTABLE, error);
         }
-        
+
         updatedEmployee = employeeService.updateEmployee(id, employee);
 
         if (updatedEmployee == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return getResponse(Response.Status.NOT_FOUND);
         } else {
-            return Response.ok(updatedEmployee).build();
+            return getResponse(Response.Status.OK, updatedEmployee);
         }
     }
 
@@ -82,9 +79,9 @@ public class EmployeeResource
 
         removed = employeeService.removeEmployee(id);
         if (removed) {
-            return Response.ok().build();
+            return getResponse(Response.Status.OK);
         } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return getResponse(Response.Status.NOT_FOUND);
         }
     }
 }
