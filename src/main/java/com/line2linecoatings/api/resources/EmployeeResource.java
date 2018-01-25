@@ -32,7 +32,14 @@ public class EmployeeResource extends BasicResource
             log.error(headers);
             return getResponse(Response.Status.NOT_ACCEPTABLE, error);
         }
-        createdEmployee = employeeService.createEmployee(employee);
+
+        try {
+            createdEmployee = employeeService.createEmployee(employee);
+        } catch (Exception ex) {
+            log.error(headers);
+            throw ex;
+        }
+
         return getResponse(Response.Status.OK, employee);
     }
 
@@ -62,7 +69,12 @@ public class EmployeeResource extends BasicResource
             return getResponse(Response.Status.NOT_ACCEPTABLE, error);
         }
 
-        updatedEmployee = employeeService.updateEmployee(id, employee);
+        try {
+            updatedEmployee = employeeService.updateEmployee(id, employee);
+        } catch (Exception ex) {
+            log.error(headers);
+            throw ex;
+        }
 
         if (updatedEmployee == null) {
             return getResponse(Response.Status.NOT_FOUND);
@@ -77,7 +89,13 @@ public class EmployeeResource extends BasicResource
     public Response removeEmployee(@PathParam("id") int id, @Context HttpHeaders headers) throws Exception {
         boolean removed;
 
-        removed = employeeService.removeEmployee(id);
+        try {
+            removed = employeeService.removeEmployee(id);
+        } catch (Exception ex) {
+            log.error(headers);
+            throw ex;
+        }
+        
         if (removed) {
             return getResponse(Response.Status.OK);
         } else {
