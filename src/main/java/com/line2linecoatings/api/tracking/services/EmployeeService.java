@@ -16,7 +16,21 @@ public class EmployeeService {
         return trackingDAO.createEmployee(employee);
     }
 
-    public Employee getEmployee(int id) throws Exception{
+    public Employee getEmployee(int id) throws Exception {
         return trackingDAO.getEmployeeById(id);
+    }
+
+    public Employee updateEmployee(int id, Employee employee) throws Exception {
+
+        if (getEmployee(id) == null) {
+            log.error("Employee with id " + id + " not found");
+            return null;
+        } else {
+            return trackingDAO.updateEmployee(id, employee);
+        }
+    }
+
+    public boolean removeEmployee(int id) throws Exception {
+        return trackingDAO.removeEmployee(id);
     }
 }

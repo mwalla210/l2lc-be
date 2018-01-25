@@ -43,6 +43,23 @@ public class TrackingDAOImpl {
         return employee;
     }
 
+    public Employee updateEmployee(int id, Employee employee) throws Exception {
+        Connection conn = createConnection();
+
+        String query = "UPDATE Employee " +
+                "SET first_name = ?, last_name = ? "+
+                "WHERE id = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setString(1, employee.getFirstName());
+        preparedStatement.setString(2, employee.getLastName());
+        preparedStatement.setInt(3, id);
+
+        preparedStatement.executeUpdate();
+
+        employee.setId(id);
+        return employee;
+    }
+
     public Employee getEmployeeById(int id) throws Exception {
         Employee employee = null;
 
@@ -58,6 +75,19 @@ public class TrackingDAOImpl {
         st.close();
         conn.close();
         return employee;
+    }
+
+    public boolean removeEmployee(int id) throws Exception {
+        Connection conn = createConnection();
+        int count;
+
+        String query = "DELETE FROM Employee WHERE id = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, id);
+
+        count = preparedStatement.executeUpdate();
+
+        return count==1?true:false;
     }
 
     private Employee mapEmployeeFromResultSet(ResultSet rs) throws Exception {

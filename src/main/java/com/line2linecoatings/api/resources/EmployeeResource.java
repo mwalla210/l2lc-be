@@ -26,13 +26,7 @@ public class EmployeeResource
     @Produces(MediaType.APPLICATION_JSON)
     public Response createEmployee(Employee employee, @Context HttpHeaders headers) throws Exception {
         Employee createdEmployee = null;
-        try {
-            createdEmployee = employeeService.createEmployee(employee);
-        } catch (Exception ex) {
-            log.error(ex.toString());
-            throw ex;
-        }
-
+        createdEmployee = employeeService.createEmployee(employee);
         return Response.ok(createdEmployee).build();
     }
 
@@ -41,13 +35,41 @@ public class EmployeeResource
     @Produces(MediaType.APPLICATION_JSON)
     public Response getEmployeeById(@PathParam("id") int employeeId, @Context HttpHeaders headers) throws Exception{
         Employee employee = null;
-        try {
-            employee = employeeService.getEmployee(employeeId);
-        } catch (Exception ex) {
-            log.error(ex.toString());
-            throw ex;
-        }
+        employee = employeeService.getEmployee(employeeId);
 
-        return Response.ok(employee).build();
+        if (employee == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } else {
+            return Response.ok(employee).build();
+        }
+    }
+
+    @POST
+    @Path("/update/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateEmployee(@PathParam("id") int id, Employee employee, @Context HttpHeaders headers) throws Exception {
+        Employee updatedEmployee = null;
+
+        updatedEmployee = employeeService.updateEmployee(id, employee);
+
+        if (updatedEmployee == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } else {
+            return Response.ok(updatedEmployee).build();
+        }
+    }
+
+    @GET
+    @Path("/remove/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response removeEmployee(@PathParam("id") int id, @Context HttpHeaders headers) throws Exception {
+        boolean removed;
+
+        removed = employeeService.removeEmployee(id);
+        if (removed) {
+            return Response.ok().build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
     }
 }

@@ -39,13 +39,12 @@
 							"raw": "{\n\t\"firstName\": \"Joel\",\n\t\"lastName\": \"Bornemann\"\n}"
 						},
 						"url": {
-							"raw": "{{host}}/l2lc/api/employee/create",
+							"raw": "{{host}}/{{basepath}}/employee/create",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
-								"l2lc",
-								"api",
+								"{{basepath}}",
 								"employee",
 								"create"
 							]
@@ -71,6 +70,64 @@
 							"path": [
 								"{{basepath}}",
 								"employee",
+								"{{empid}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Remove_EmployeeById",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/employee/remove/{{empid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"employee",
+								"remove",
+								"{{empid}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update_Employee",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstName\": \"Jlbo\",\n\t\"lastName\": \"Bornemann\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/employee/update/{{empid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"employee",
+								"update",
 								"{{empid}}"
 							]
 						},
