@@ -99,46 +99,6 @@ public class TrackingDAOImpl {
         return removed;
     }
 
-    public Station createStation(Station station) throws Exception {
-        log.info("Start of createStation in DAO");
-        Connection conn = createConnection();
-
-        String query = "INSERT INTO Station (name) VALUES (?)";
-
-        PreparedStatement preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-        preparedStatement.setString(1, station.getName());
-
-        preparedStatement.executeUpdate();
-        int affectedRows = preparedStatement.executeUpdate();
-
-        if (affectedRows == 0) {
-            throw new SQLException("Creating station failed, no rows affected.");
-        }
-
-        try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-            if (generatedKeys.next()) {
-                station.setId(generatedKeys.getInt(1));
-                log.info("Station Created with id " + station.getId());
-
-            }
-            else {
-                throw new SQLException("Creating station failed, no ID obtained.");
-            }
-        }
-        preparedStatement.close();
-        conn.close();
-        log.info("End of createStation in DAO");
-        return station;
-    }
-
-    public boolean removeStation(int id) throws Exception {
-        log.info("Start of removeStation in DAO with id " + id);
-        boolean removed;
-        removed = removeFromTableById("Station", id);
-        log.info("End of removeEmployee in DAO with id " + id);
-        return removed;
-    }
-
     public List<Station> getAllStations() throws Exception {
         log.info("Start of getAllStations in DAO");
         List<Station> stations = new ArrayList<>();

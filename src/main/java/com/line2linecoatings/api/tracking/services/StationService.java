@@ -16,23 +16,6 @@ public class StationService {
         dao = new TrackingDAOImpl();
     }
 
-    public Station createStation(Station station) throws Exception{
-        log.info("Start of createStation in service");
-        Station newStation = null;
-        newStation = dao.createStation(station);
-        log.info("End of createStation in service");
-        return newStation;
-    }
-
-    public boolean removeStation(int id) throws Exception{
-        log.info("Start of removeStation in service");
-        boolean removed;
-        removed = dao.removeStation(id);
-        log.info("End of removeStation in service");
-        return removed;
-
-    }
-
     public List<Station> getAllStations() throws Exception {
         log.info("Start of getAllStations in service");
         List<Station> stations;
