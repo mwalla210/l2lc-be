@@ -3,6 +3,7 @@ package com.line2linecoatings.api.dao;
 import com.line2linecoatings.api.tracking.models.Address;
 import com.line2linecoatings.api.tracking.models.Customer;
 import com.line2linecoatings.api.tracking.models.Employee;
+import com.line2linecoatings.api.tracking.models.Station;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -10,6 +11,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TrackingDAOImpl {
     public static final Log log = LogFactory.getLog(TrackingDAOImpl.class);
@@ -109,9 +112,10 @@ public class TrackingDAOImpl {
             if (generatedKeys.next()) {
                 employee.setId(generatedKeys.getInt(1));
                 log.info("Employee Created with id " + employee.getId());
-
-            } else {
-                throw new SQLException("Creating user failed, no ID obtained.");
+                generatedKeys.close();
+            }
+            else {
+                throw new SQLException("Creating employee failed, no ID obtained.");
             }
         }
         preparedStatement.close();
@@ -135,6 +139,9 @@ public class TrackingDAOImpl {
         preparedStatement.executeUpdate();
 
         employee.setId(id);
+
+        preparedStatement.close();
+        conn.close();
         log.info("End of createEmployee in DAO with id " + id);
         return employee;
     }
@@ -149,32 +156,6 @@ public class TrackingDAOImpl {
         Statement st = conn.createStatement();
 
         ResultSet rs = st.executeQuery(query);
-        employee = mapEmployeeFromResultSet(rs);
-
-        st.close();
-        conn.close();
-        return employee;
-    }
-
-    public boolean removeEmployee(int id) throws Exception {
-        log.info("Start of removeEmployee in DAO with id " + id);
-        int count;
-        boolean removed;
-
-        Connection conn = createConnection();
-
-        String query = "DELETE FROM Employee WHERE id = ?";
-        PreparedStatement preparedStatement = conn.prepareStatement(query);
-        preparedStatement.setInt(1, id);
-
-        count = preparedStatement.executeUpdate();
-        removed = count==1?true:false;
-        log.info("End of removeEmployee in DAO with id " + id);
-        return removed;
-    }
-
-    private Employee mapEmployeeFromResultSet(ResultSet rs) throws Exception {
-        Employee employee = null;
         if (rs.next()) {
             employee = new Employee();
             employee.setId(rs.getInt("id"));
@@ -182,7 +163,65 @@ public class TrackingDAOImpl {
             employee.setLastName(rs.getString("last_name"));
         }
 
+        rs.close();
+        st.close();
+        conn.close();
         return employee;
+    }
+
+    public boolean removeEmployee(int id) throws Exception {
+        log.info("Start of removeEmployee in DAO with id " + id);
+        boolean removed;
+
+        removed = removeFromTableById("Employee", id);
+
+        log.info("End of removeEmployee in DAO with id " + id);
+        return removed;
+    }
+
+    public List<Station> getAllStations() throws Exception {
+        log.info("Start of getAllStations in DAO");
+        List<Station> stations = new ArrayList<>();
+
+        Connection conn = createConnection();
+
+        String query = "SELECT * FROM Station";
+
+        Statement st = conn.createStatement();
+
+        ResultSet rs = st.executeQuery(query);
+        while (rs.next()) {
+            Station station = new Station();
+            station.setId(rs.getInt("id"));
+            station.setName(rs.getString("name"));
+            stations.add(station);
+        }
+
+        rs.close();
+        st.close();
+        conn.close();
+        return stations;
+    }
+
+    private boolean removeFromTableById(String table, int id) throws Exception {
+        log.info("Start of removeFromTableById with table "  + table + " and id " + id);
+        int count;
+        boolean removed;
+
+        Connection conn = createConnection();
+
+        String query = "DELETE FROM ? WHERE id = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setString(1, table);
+        preparedStatement.setInt(2, id);
+
+        count = preparedStatement.executeUpdate();
+        removed = count==1?true:false;
+
+        preparedStatement.close();
+        conn.close();
+        log.info("End of removeFromTableById with table "  + table + " and id " + id);
+        return removed;
     }
 
     private Connection createConnection() throws Exception{

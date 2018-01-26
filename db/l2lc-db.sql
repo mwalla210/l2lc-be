@@ -113,3 +113,11 @@ CREATE TABLE ProjectHold (
 	FOREIGN KEY (project_id) REFERENCES Project (id),
 	FOREIGN KEY (employee_id) REFERENCES Employee (id)
 );
+
+INSERT INTO Station VALUES (1, "Receiving");
+INSERT INTO Station VALUES (2, "Ticketing");
+INSERT INTO Station VALUES (3, "Preperation");
+INSERT INTO Station VALUES (4, "Coating and Curing");
+INSERT INTO Station VALUES (5, "Quality Control and Packaging");
+
+
