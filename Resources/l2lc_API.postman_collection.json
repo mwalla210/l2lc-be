@@ -151,13 +151,13 @@
 						"header": [],
 						"body": {},
 						"url": {
-							"raw": "{{host}}/{{basepath}}/stations",
+							"raw": "{{host}}/{{basepath}}/station",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{basepath}}",
-								"stations"
+								"station"
 							]
 						},
 						"description": ""
