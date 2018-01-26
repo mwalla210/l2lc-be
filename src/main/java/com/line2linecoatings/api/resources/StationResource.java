@@ -2,7 +2,6 @@ package com.line2linecoatings.api.resources;
 
 import com.line2linecoatings.api.tracking.models.Station;
 import com.line2linecoatings.api.tracking.services.StationService;
-import jdk.nashorn.internal.objects.annotations.Getter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -20,43 +19,6 @@ public class StationResource extends BasicResource {
 
     public StationResource() {
         stationService = new StationService();
-    }
-
-    @POST
-    @Path("/create")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response createStation(Station station, @Context HttpHeaders headers) throws Exception {
-        log.info("Start of createStation in Resource");
-        Station createdStation = null;
-
-        try {
-            createdStation = stationService.createStation(station);
-        } catch (Exception ex) {
-            log.error(headers);
-            throw ex;
-        }
-
-        return getResponse(Response.Status.CREATED, createdStation);
-    }
-
-    @GET
-    @Path("/remove/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response removeStation(@PathParam("id") int id, @Context HttpHeaders headers) throws Exception {
-        log.info("Start of removeStation in Resource");
-        boolean removed;
-        try {
-            removed = stationService.removeStation(id);
-        } catch (Exception ex) {
-            log.error(headers);
-            throw ex;
-        }
-
-        if (removed) {
-            return getResponse(Response.Status.OK);
-        } else {
-            return getResponse(Response.Status.NOT_FOUND);
-        }
     }
 
     @GET
