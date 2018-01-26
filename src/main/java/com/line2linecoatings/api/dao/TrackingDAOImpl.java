@@ -110,7 +110,7 @@ public class TrackingDAOImpl {
         Statement st = conn.createStatement();
 
         ResultSet rs = st.executeQuery(query);
-        if (rs.next()) {
+        while (rs.next()) {
             Station station = new Station();
             station.setId(rs.getInt("id"));
             station.setName(rs.getString("name"));
