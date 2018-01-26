@@ -4,18 +4,19 @@ CREATE TABLE Address (
 	city TEXT,
 	state TEXT,
 	country TEXT,
-	zip TEXT NOT NULL
+	zip TEXT NOT NULL,
+	UNIQUE (street, city)
 );
 
 CREATE TABLE Customer (
 	id INTEGER PRIMARY KEY,
 	name TEXT NOT NULL,
-	email TEXT,
+	email TEXT UNIQUE,
 	website TEXT,
 	shipping_addr_id INTEGER NOT NULL,
 	billing_addr_id INTEGER,
-	is_past_due INTEGER,
-	phone TEXT NOT NULL,
+	is_past_due BOOLEAN,
+	phone TEXT NOT NULL UNIQUE,
 	FOREIGN KEY (shipping_addr_id) REFERENCES Address (id),
 	FOREIGN KEY (billing_addr_id) REFERENCES Address (id)
 );
