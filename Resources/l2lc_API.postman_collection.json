@@ -1,14 +1,13 @@
 {
 	"info": {
 		"name": "l2lc_API",
-		"_postman_id": "c0fa2e13-bfd5-72cb-2178-43ccfa375732",
+		"_postman_id": "09557e5a-19ee-1e24-4b9c-59aed1b19b97",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
 			"name": "Employees",
-			"description": "",
 			"item": [
 				{
 					"name": "Create_Employee",
@@ -48,8 +47,7 @@
 								"employee",
 								"create"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -61,7 +59,10 @@
 						},
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{host}}/{{basepath}}/employee/{{empid}}",
 							"host": [
@@ -72,8 +73,7 @@
 								"employee",
 								"{{empid}}"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -85,7 +85,10 @@
 						},
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{host}}/{{basepath}}/employee/remove/{{empid}}",
 							"host": [
@@ -97,8 +100,7 @@
 								"remove",
 								"{{empid}}"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -130,8 +132,7 @@
 								"update",
 								"{{empid}}"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				}
@@ -139,7 +140,6 @@
 		},
 		{
 			"name": "Stations",
-			"description": "",
 			"item": [
 				{
 					"name": "Get_AllStations",
@@ -149,7 +149,10 @@
 						},
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{host}}/{{basepath}}/station",
 							"host": [
@@ -158,6 +161,69 @@
 							"path": [
 								"{{basepath}}",
 								"station"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customers",
+			"description": "",
+			"item": [
+				{
+					"name": "Create_Customer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Jeff Salvage's Scooter Racing Company\",\n\t\"email\": \"salvage@drexel.edu\",\n\t\"website\": \"salvagescooters.com\",\n\t\"shippingAddr\": {\n\t\t\"street\": \"123 fake st\",\n\t\t\"city\": \"Philadelphia\",\n\t\t\"state\": \"PA\",\n\t\t\"country\": \"USA\",\n\t\t\"zip\": \"19104\"\n\t},\n\t\"billingAddr\": {\n\t\t\"street\": \"123 fake st\",\n\t\t\"city\": \"Philadelphia\",\n\t\t\"state\": \"PA\",\n\t\t\"country\": \"USA\",\n\t\t\"zip\": \"19104\"\n\t},\n\t\"isPastDue\": false,\n\t\"phoneNumber\": \"911\"\n}\n"
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/customer/create",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"customer",
+								"create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create_CustomerMultAddr",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Jeff Salvage's Scooter Racing Company\",\n\t\"email\": \"salvage@drexel.edu\",\n\t\"website\": \"salvagescooters.com\",\n\t\"shippingAddr\": {\n\t\t\"street\": \"123 fake st\",\n\t\t\"city\": \"Philadelphia\",\n\t\t\"state\": \"PA\",\n\t\t\"country\": \"USA\",\n\t\t\"zip\": \"19104\"\n\t},\n\t\"billingAddr\": {\n\t\t\"street\": \"123 fake st\",\n\t\t\"city\": \"Philadelphia\",\n\t\t\"state\": \"PA\",\n\t\t\"country\": \"USA\",\n\t\t\"zip\": \"19104\"\n\t},\n\t\"isPastDue\": false,\n\t\"phoneNumber\": \"911\"\n}\n"
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/customer/create",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"customer",
+								"create"
 							]
 						},
 						"description": ""

@@ -1,5 +1,6 @@
 package com.line2linecoatings.api.tracking.utils;
 
+import com.line2linecoatings.api.tracking.models.Customer;
 import com.line2linecoatings.api.tracking.models.Employee;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -34,4 +35,33 @@ public class TrackingValidationHelper {
         return error;
     }
 
+    public TrackingError validateCustomer(Customer customer) {
+        log.info("Start of validateCustomer");
+        TrackingError error = null;
+        List<String> errorMessages = new ArrayList<>();
+        if (StringUtils.isEmpty(customer.getName())) {
+            errorMessages.add("Invalid Customer Name");
+        }
+
+        if (customer.getShippingAddr() == null) {
+            errorMessages.add("Invalid shipping address");
+        }
+
+        if (customer.getPastDue() == null) {
+            errorMessages.add("Invalid past due");
+        }
+
+        if (customer.getPhoneNumber() == null) {
+            errorMessages.add("Invalid phone number");
+        }
+
+        if (!errorMessages.isEmpty()) {
+            error = new TrackingError();
+            error.setErrorMessages(errorMessages);
+            error.setStatus(Response.Status.NOT_ACCEPTABLE);
+        }
+
+        log.info("End of validateCustomer");
+        return error;
+    }
 }
