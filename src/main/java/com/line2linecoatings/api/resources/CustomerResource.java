@@ -30,7 +30,13 @@ public class CustomerResource extends BasicResource {
             log.error(headers);
             return getResponse(Response.Status.NOT_ACCEPTABLE, error);
         }
-        customerService.createCustomer(customer);
-        return getResponse(Response.Status.OK, customer);
+
+        try {
+            customerService.createCustomer(customer);
+        } catch (Exception e) {
+            log.error(e);
+            throw e;
+        }
+        return getResponse(Response.Status.CREATED, customer);
     }
 }
