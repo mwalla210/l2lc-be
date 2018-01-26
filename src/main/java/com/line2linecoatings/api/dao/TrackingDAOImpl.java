@@ -25,7 +25,6 @@ public class TrackingDAOImpl {
         preparedStatement.setString(1, employee.getFirstName());
         preparedStatement.setString(2, employee.getLastName());
 
-        preparedStatement.executeUpdate();
         int affectedRows = preparedStatement.executeUpdate();
 
         if (affectedRows == 0) {
@@ -36,7 +35,7 @@ public class TrackingDAOImpl {
             if (generatedKeys.next()) {
                 employee.setId(generatedKeys.getInt(1));
                 log.info("Employee Created with id " + employee.getId());
-
+                generatedKeys.close();
             }
             else {
                 throw new SQLException("Creating employee failed, no ID obtained.");
@@ -63,6 +62,9 @@ public class TrackingDAOImpl {
         preparedStatement.executeUpdate();
 
         employee.setId(id);
+
+        preparedStatement.close();
+        conn.close();
         log.info("End of createEmployee in DAO with id " + id);
         return employee;
     }
@@ -84,6 +86,7 @@ public class TrackingDAOImpl {
             employee.setLastName(rs.getString("last_name"));
         }
 
+        rs.close();
         st.close();
         conn.close();
         return employee;
@@ -117,6 +120,7 @@ public class TrackingDAOImpl {
             stations.add(station);
         }
 
+        rs.close();
         st.close();
         conn.close();
         return stations;
@@ -136,6 +140,9 @@ public class TrackingDAOImpl {
 
         count = preparedStatement.executeUpdate();
         removed = count==1?true:false;
+
+        preparedStatement.close();
+        conn.close();
         log.info("End of removeFromTableById with table "  + table + " and id " + id);
         return removed;
     }
