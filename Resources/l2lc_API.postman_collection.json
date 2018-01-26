@@ -136,6 +136,35 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Stations",
+			"description": "",
+			"item": [
+				{
+					"name": "Get_AllStations",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/stations",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"stations"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
