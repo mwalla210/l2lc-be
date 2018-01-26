@@ -1,5 +1,7 @@
 package com.line2linecoatings.api.dao;
 
+import com.line2linecoatings.api.tracking.models.Address;
+import com.line2linecoatings.api.tracking.models.Customer;
 import com.line2linecoatings.api.tracking.models.Employee;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,6 +14,48 @@ import java.sql.*;
 public class TrackingDAOImpl {
     public static final Log log = LogFactory.getLog(TrackingDAOImpl.class);
 
+    public Address insertAddress(Address address) throws Exception {
+        String query = "SELECT id FROM Address WHERE street=? AND city=? LIMIT 1;";
+        Connection conn = createConnection();
+
+        PreparedStatement preparedStatement = createConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        preparedStatement.setString(1, address.street);
+        preparedStatement.setString(2, address.city);
+        ResultSet rs = preparedStatement.executeQuery();
+
+        if (!rs.next()) {
+            log.info("Inserting new address in DAO");
+            preparedStatement.close();
+            rs.close();
+
+            query = "INSERT INTO Address (street, city, state, country, zip) VALUES (?, ?, ?, ?, ?)";
+
+            preparedStatement = createConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, address.street);
+            preparedStatement.setString(2, address.city);
+            preparedStatement.setString(3, address.state);
+            preparedStatement.setString(4, address.country);
+            preparedStatement.setString(5, address.zip);
+
+            try (ResultSet generatedKeys = preparedStatement.executeQuery()) {
+                if (!generatedKeys.next()) {
+                    address.setId(generatedKeys.getInt(1));
+                    log.info("Address created with id " + address.id);
+                    generatedKeys.close();
+                } else {
+                    throw new SQLException("Creating address failed, no ID obtained.");
+                }
+            }
+        } else {
+            address.setId(rs.getInt(1));
+        }
+
+        preparedStatement.close();
+        conn.close();
+        rs.close();
+        return address;
+    }
+
     public Employee createEmployee(Employee employee) throws Exception {
         log.info("Start of createEmployee in DAO");
         Connection conn = createConnection();
@@ -22,7 +66,6 @@ public class TrackingDAOImpl {
         preparedStatement.setString(1, employee.getFirstName());
         preparedStatement.setString(2, employee.getLastName());
 
-        preparedStatement.executeUpdate();
         int affectedRows = preparedStatement.executeUpdate();
 
         if (affectedRows == 0) {
@@ -34,8 +77,7 @@ public class TrackingDAOImpl {
                 employee.setId(generatedKeys.getInt(1));
                 log.info("Employee Created with id " + employee.getId());
 
-            }
-            else {
+            } else {
                 throw new SQLException("Creating user failed, no ID obtained.");
             }
         }
@@ -109,6 +151,7 @@ public class TrackingDAOImpl {
 
         return employee;
     }
+
     private Connection createConnection() throws Exception{
         log.info("Start of createConnection");
         Connection conn = null;
