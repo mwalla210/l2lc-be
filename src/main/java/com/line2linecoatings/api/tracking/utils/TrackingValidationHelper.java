@@ -1,5 +1,6 @@
 package com.line2linecoatings.api.tracking.utils;
 
+import com.line2linecoatings.api.tracking.models.Customer;
 import com.line2linecoatings.api.tracking.models.Employee;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -34,4 +35,8 @@ public class TrackingValidationHelper {
         return error;
     }
 
+    public TrackingError validateCustomer(Customer customer) {
+        // NOT IMPLEMENTED
+        return null;
+    }
 }
