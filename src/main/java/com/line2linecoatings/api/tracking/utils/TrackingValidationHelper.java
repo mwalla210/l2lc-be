@@ -47,10 +47,6 @@ public class TrackingValidationHelper {
             errorMessages.add("Invalid shipping address");
         }
 
-        if (customer.getBillingAddr() == null) {
-            customer.setBillingAddr(customer.getShippingAddr());
-        }
-
         if (customer.getPastDue() == null) {
             errorMessages.add("Invalid past due");
         }

@@ -31,6 +31,10 @@ public class CustomerResource extends BasicResource {
             return getResponse(Response.Status.NOT_ACCEPTABLE, error);
         }
 
+        if (customer.getBillingAddr() == null) {
+            customer.setBillingAddr(customer.getShippingAddr());
+        }
+
         try {
             customerService.createCustomer(customer);
         } catch (Exception e) {
