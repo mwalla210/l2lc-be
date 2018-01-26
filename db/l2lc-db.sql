@@ -1,7 +1,7 @@
 CREATE TABLE Address (
 	id INTEGER PRIMARY KEY,
-	street TEXT,
-	city TEXT,
+	street TEXT NOT NULL,
+	city TEXT NOT NULL,
 	state TEXT,
 	country TEXT,
 	zip TEXT NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE Customer (
 	website TEXT,
 	shipping_addr_id INTEGER NOT NULL,
 	billing_addr_id INTEGER,
-	is_past_due BOOLEAN,
+	is_past_due BOOLEAN NOT NULL,
 	phone TEXT NOT NULL UNIQUE,
 	FOREIGN KEY (shipping_addr_id) REFERENCES Address (id),
 	FOREIGN KEY (billing_addr_id) REFERENCES Address (id)
