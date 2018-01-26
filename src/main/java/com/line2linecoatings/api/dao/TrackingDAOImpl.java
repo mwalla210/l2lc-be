@@ -21,7 +21,7 @@ public class TrackingDAOImpl {
         String query = "SELECT id FROM Address WHERE street=? AND city=? LIMIT 1;";
         Connection conn = createConnection();
 
-        PreparedStatement preparedStatement = createConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         preparedStatement.setString(1, address.street);
         preparedStatement.setString(2, address.city);
         ResultSet rs = preparedStatement.executeQuery();
@@ -40,8 +40,14 @@ public class TrackingDAOImpl {
             preparedStatement.setString(4, address.country);
             preparedStatement.setString(5, address.zip);
 
-            try (ResultSet generatedKeys = preparedStatement.executeQuery()) {
-                if (!generatedKeys.next()) {
+            int affectedRows = preparedStatement.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Creating address failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
                     address.setId(generatedKeys.getInt(1));
                     log.info("Address created with id " + address.id);
                     generatedKeys.close();
@@ -77,13 +83,19 @@ public class TrackingDAOImpl {
         preparedStatement.setBoolean(6, customer.getPastDue());
         preparedStatement.setString(7, customer.getPhoneNumber());
 
-        try (ResultSet rs = preparedStatement.executeQuery()) {
+        int affectedRows = preparedStatement.executeUpdate();
+
+        if (affectedRows == 0) {
+            throw new SQLException("Creating customer failed, no rows affected.");
+        }
+
+        try (ResultSet rs = preparedStatement.getGeneratedKeys()) {
             if (rs.next()) {
                 customer.setId(rs.getInt(1));
                 log.info("Customer created with id" + customer.getId());
                 rs.close();
             } else {
-                throw new SQLException("Creating customer failed, no rows affected.");
+                throw new SQLException("Creating customer failed, no id obtained.");
             }
         }
 
