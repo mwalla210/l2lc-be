@@ -30,7 +30,7 @@ public class TrackingDAOImpl {
 
             query = "INSERT INTO Address (street, city, state, country, zip) VALUES (?, ?, ?, ?, ?)";
 
-            preparedStatement = createConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, address.street);
             preparedStatement.setString(2, address.city);
             preparedStatement.setString(3, address.state);
@@ -56,6 +56,39 @@ public class TrackingDAOImpl {
         return address;
     }
 
+    public Customer createCustomer(Customer customer) throws Exception {
+        log.info("Start of CreateCustomer in DAO");
+
+        customer.setBillingAddr(insertAddress(customer.billingAddr));
+        customer.setShippingAddr(insertAddress(customer.shippingAddr));
+
+        String query = "INSERT INTO Customer (name, email, website, shipping_addr_id, billing_addr_id, is_past_due, phone) values (?, ?, ?, ?, ?, ?, ?);";
+        Connection conn = createConnection();
+
+        PreparedStatement preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        preparedStatement.setString(1, customer.getName());
+        preparedStatement.setString(2, customer.getEmail());
+        preparedStatement.setString(3, customer.getWebsite());
+        preparedStatement.setInt(4, customer.getShippingAddr().getId());
+        preparedStatement.setInt(5, customer.getBillingAddr().getId());
+        preparedStatement.setBoolean(6, customer.getPastDue());
+        preparedStatement.setString(7, customer.getPhoneNumber());
+
+        try (ResultSet rs = preparedStatement.executeQuery()) {
+            if (rs.next()) {
+                customer.setId(rs.getInt(1));
+                log.info("Customer created with id" + customer.getId());
+                rs.close();
+            } else {
+                throw new SQLException("Creating customer failed, no rows affected.");
+            }
+        }
+
+        preparedStatement.close();
+        conn.close();
+        return customer;
+    }
+
     public Employee createEmployee(Employee employee) throws Exception {
         log.info("Start of createEmployee in DAO");
         Connection conn = createConnection();
@@ -69,7 +102,7 @@ public class TrackingDAOImpl {
         int affectedRows = preparedStatement.executeUpdate();
 
         if (affectedRows == 0) {
-            throw new SQLException("Creating user failed, no rows affected.");
+            throw new SQLException("Creating employee failed, no rows affected.");
         }
 
         try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
