@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "l2lc_API",
-		"_postman_id": "09557e5a-19ee-1e24-4b9c-59aed1b19b97",
+		"_postman_id": "47ff44ea-ef52-b915-2fad-6d0ea65d87e6",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -170,10 +170,23 @@
 		},
 		{
 			"name": "Customers",
-			"description": "",
 			"item": [
 				{
 					"name": "Create_Customer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ce15efbb-4af1-4a56-9cb9-039135f51ec8",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)",
+									"pm.environment.set(\"custid\", jsonData.id);",
+									""
+								]
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -196,13 +209,52 @@
 								"customer",
 								"create"
 							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_Customer",
+					"request": {
+						"auth": {
+							"type": "noauth"
 						},
-						"description": ""
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/customer/{{custid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"customer",
+								"{{custid}}"
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "Create_CustomerMultAddr",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f8fae293-47f4-4687-ac54-afe90ee597c3",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)",
+									"pm.environment.set(\"custid\", jsonData.id);",
+									""
+								]
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -225,8 +277,7 @@
 								"customer",
 								"create"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				}
