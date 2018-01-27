@@ -93,7 +93,7 @@ public class TrackingDAOImpl {
         try (ResultSet rs = preparedStatement.getGeneratedKeys()) {
             if (rs.next()) {
                 customer.setId(rs.getInt(1));
-                log.info("Customer created with id" + customer.getId());
+                log.info("Customer created with id " + customer.getId());
                 rs.close();
             } else {
                 throw new SQLException("Creating customer failed, no id obtained.");
@@ -107,8 +107,14 @@ public class TrackingDAOImpl {
 
     public Address getAddressById(int id) throws Exception {
         log.info("Start of getAddressById in DAO");
+
         Address address = null;
-        ResultSet rs = getObjectById("Address", id);
+        Connection conn = createConnection();
+        String query = "SELECT * FROM Address WHERE id = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, id);
+
+        ResultSet rs = preparedStatement.executeQuery();
 
         if (rs.next()) {
             address = new Address();
@@ -120,13 +126,20 @@ public class TrackingDAOImpl {
         }
 
         rs.close();
+        conn.close();
         return address;
     }
 
     public Customer getCustomerById(int id) throws Exception {
         log.info("Start of getCustomerById in DAO");
+        
         Customer customer = null;
-        ResultSet rs = getObjectById("Customer", id);
+        Connection conn = createConnection();
+        String query = "SELECT * FROM Customer WHERE id = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, id);
+
+        ResultSet rs = preparedStatement.executeQuery();
 
         if(rs.next()) {
             customer = new Customer();
@@ -144,9 +157,12 @@ public class TrackingDAOImpl {
             } else {
                 customer.setShippingAddr(getAddressById(billingAddrId));
             }
+
+            log.info("customer found with id " + customer.getId());
         }
 
         rs.close();
+        conn.close();
         return customer;
     }
 
@@ -259,21 +275,6 @@ public class TrackingDAOImpl {
         st.close();
         conn.close();
         return stations;
-    }
-
-    private ResultSet getObjectById(String table, int id) throws Exception {
-        log.info("Start of getObjectById from " + table + " with id " + id);
-        Connection conn = createConnection();
-
-        String query = "SELECT * FROM ? WHERE id = ?";
-        PreparedStatement preparedStatement = conn.prepareStatement(query);
-        preparedStatement.setString(1, table);
-        preparedStatement.setInt(2, id);
-
-        ResultSet rs = preparedStatement.executeQuery();
-        preparedStatement.close();
-        conn.close();
-        return rs;
     }
 
     private boolean removeFromTableById(String table, int id) throws Exception {

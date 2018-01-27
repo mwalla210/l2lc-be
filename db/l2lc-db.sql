@@ -39,6 +39,11 @@ CREATE TABLE JobType (
 	FOREIGN KEY (cost_center_id) REFERENCES CostCenter (id)
 );
 
+CREATE TABLE Priority (
+	id INTEGER PRIMARY KEY,
+	name TEXT
+);
+
 CREATE TABLE Project (
 	id INTEGER PRIMARY KEY,
 	job_type_id INTEGER NOT NULL,
@@ -114,10 +119,10 @@ CREATE TABLE ProjectHold (
 	FOREIGN KEY (employee_id) REFERENCES Employee (id)
 );
 
-INSERT INTO Station VALUES (1, "Receiving");
-INSERT INTO Station VALUES (2, "Ticketing");
-INSERT INTO Station VALUES (3, "Preperation");
-INSERT INTO Station VALUES (4, "Coating and Curing");
-INSERT INTO Station VALUES (5, "Quality Control and Packaging");
+INSERT INTO Station (id, name) VALUES (1, "Receiving");
+INSERT INTO Station (id, name) VALUES (2, "Ticketing");
+INSERT INTO Station (id, name) VALUES (3, "Preperation");
+INSERT INTO Station (id, name) VALUES (4, "Coating and Curing");
+INSERT INTO Station (id, name) VALUES (5, "Quality Control and Packaging");
 
 
