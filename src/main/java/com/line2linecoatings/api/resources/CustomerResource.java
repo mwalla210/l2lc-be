@@ -43,4 +43,24 @@ public class CustomerResource extends BasicResource {
         }
         return getResponse(Response.Status.CREATED, customer);
     }
+
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCustomerById(@PathParam("id") int customerId, @Context HttpHeaders headers) throws Exception {
+        Customer customer = null;
+
+        try {
+            customer = customerService.getCustomer(customerId);
+        } catch (Exception ex) {
+            log.error(headers);
+            throw ex;
+        }
+
+        if (customer == null) {
+            return getResponse(Response.Status.NOT_FOUND);
+        }
+
+        return getResponse(Response.Status.OK, customer);
+    }
 }

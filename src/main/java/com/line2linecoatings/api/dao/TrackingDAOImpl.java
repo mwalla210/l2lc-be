@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
+import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +93,7 @@ public class TrackingDAOImpl {
         try (ResultSet rs = preparedStatement.getGeneratedKeys()) {
             if (rs.next()) {
                 customer.setId(rs.getInt(1));
-                log.info("Customer created with id" + customer.getId());
+                log.info("Customer created with id " + customer.getId());
                 rs.close();
             } else {
                 throw new SQLException("Creating customer failed, no id obtained.");
@@ -100,6 +101,67 @@ public class TrackingDAOImpl {
         }
 
         preparedStatement.close();
+        conn.close();
+        return customer;
+    }
+
+    public Address getAddressById(int id) throws Exception {
+        log.info("Start of getAddressById in DAO");
+
+        Address address = null;
+        Connection conn = createConnection();
+        String query = "SELECT * FROM Address WHERE id = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, id);
+
+        ResultSet rs = preparedStatement.executeQuery();
+
+        if (rs.next()) {
+            address = new Address();
+            address.setId(rs.getInt("id"));
+            address.setStreet(rs.getString("street"));
+            address.setCity(rs.getString("city"));
+            address.setCountry(rs.getString("country"));
+            address.setZip(rs.getString("zip"));
+        }
+
+        rs.close();
+        conn.close();
+        return address;
+    }
+
+    public Customer getCustomerById(int id) throws Exception {
+        log.info("Start of getCustomerById in DAO");
+        
+        Customer customer = null;
+        Connection conn = createConnection();
+        String query = "SELECT * FROM Customer WHERE id = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, id);
+
+        ResultSet rs = preparedStatement.executeQuery();
+
+        if(rs.next()) {
+            customer = new Customer();
+            customer.setId(rs.getInt("id"));
+            customer.setName(rs.getString("name"));
+            customer.setEmail(rs.getString("email"));
+            customer.setWebsite(rs.getString("website"));
+            customer.setPastDue(rs.getBoolean("is_past_due"));
+            customer.setPhoneNumber(rs.getString("phone"));
+            customer.setShippingAddr(getAddressById(rs.getInt("shipping_addr_id")));
+
+            int billingAddrId = rs.getInt("billing_addr_id");
+            if (billingAddrId == customer.getShippingAddr().getId()) {
+                customer.setBillingAddr(customer.getShippingAddr());
+            } else {
+                customer.setShippingAddr(getAddressById(billingAddrId));
+            }
+
+            log.info("customer found with id " + customer.getId());
+        }
+
+        rs.close();
         conn.close();
         return customer;
     }
