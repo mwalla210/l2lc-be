@@ -22,4 +22,11 @@ public class CustomerService {
         log.info("End of createCustomer in Service");
         return createdCustomer;
     }
+
+    public Customer getCustomer(int id) throws Exception {
+        log.info("Start of getCustomer in Service");
+        Customer customer = trackingDAO.getCustomerById(id);
+        log.info("End of getCustomer in Service");
+        return customer;
+    }
 }

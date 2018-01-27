@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
+import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,6 +102,51 @@ public class TrackingDAOImpl {
 
         preparedStatement.close();
         conn.close();
+        return customer;
+    }
+
+    public Address getAddressById(int id) throws Exception {
+        log.info("Start of getAddressById in DAO");
+        Address address = null;
+        ResultSet rs = getObjectById("Address", id);
+
+        if (rs.next()) {
+            address = new Address();
+            address.setId(rs.getInt("id"));
+            address.setStreet(rs.getString("street"));
+            address.setCity(rs.getString("city"));
+            address.setCountry(rs.getString("country"));
+            address.setZip(rs.getString("zip"));
+        }
+
+        rs.close();
+        return address;
+    }
+
+    public Customer getCustomerById(int id) throws Exception {
+        log.info("Start of getCustomerById in DAO");
+        Customer customer = null;
+        ResultSet rs = getObjectById("Customer", id);
+
+        if(rs.next()) {
+            customer = new Customer();
+            customer.setId(rs.getInt("id"));
+            customer.setName(rs.getString("name"));
+            customer.setEmail(rs.getString("email"));
+            customer.setWebsite(rs.getString("website"));
+            customer.setPastDue(rs.getBoolean("is_past_due"));
+            customer.setPhoneNumber(rs.getString("phone"));
+            customer.setShippingAddr(getAddressById(rs.getInt("shipping_addr_id")));
+
+            int billingAddrId = rs.getInt("billing_addr_id");
+            if (billingAddrId == customer.getShippingAddr().getId()) {
+                customer.setBillingAddr(customer.getShippingAddr());
+            } else {
+                customer.setShippingAddr(getAddressById(billingAddrId));
+            }
+        }
+
+        rs.close();
         return customer;
     }
 
@@ -213,6 +259,21 @@ public class TrackingDAOImpl {
         st.close();
         conn.close();
         return stations;
+    }
+
+    private ResultSet getObjectById(String table, int id) throws Exception {
+        log.info("Start of getObjectById from " + table + " with id " + id);
+        Connection conn = createConnection();
+
+        String query = "SELECT * FROM ? WHERE id = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setString(1, table);
+        preparedStatement.setInt(2, id);
+
+        ResultSet rs = preparedStatement.executeQuery();
+        preparedStatement.close();
+        conn.close();
+        return rs;
     }
 
     private boolean removeFromTableById(String table, int id) throws Exception {
