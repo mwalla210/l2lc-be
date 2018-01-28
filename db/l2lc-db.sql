@@ -128,7 +128,7 @@ INSERT INTO Station (id, name) VALUES (5, "Quality Control and Packaging");
 
 /* Insert priorities into Priority table */
 INSERT INTO Priority (id, name) VALUES (1, "Low");
-INSERT INTO Priority (id, name) VALUES (1, "High");
+INSERT INTO Priority (id, name) VALUES (2, "High");
 
 /* Insert cost centers into CostCenter table */
 INSERT INTO CostCenter (id, name) VALUES (1, "APC Job");
