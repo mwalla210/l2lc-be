@@ -119,10 +119,32 @@ CREATE TABLE ProjectHold (
 	FOREIGN KEY (employee_id) REFERENCES Employee (id)
 );
 
+/* Inserting stations into Station table */
 INSERT INTO Station (id, name) VALUES (1, "Receiving");
 INSERT INTO Station (id, name) VALUES (2, "Ticketing");
 INSERT INTO Station (id, name) VALUES (3, "Preperation");
 INSERT INTO Station (id, name) VALUES (4, "Coating and Curing");
 INSERT INTO Station (id, name) VALUES (5, "Quality Control and Packaging");
+
+/* Insert priorities into Priority table */
+INSERT INTO Priority (id, name) VALUES (1, "Low");
+INSERT INTO Priority (id, name) VALUES (1, "High");
+
+/* Insert cost centers into CostCenter table */
+INSERT INTO CostCenter (id, name) VALUES (1, "APC Job");
+INSERT INTO CostCenter (id, name) VALUES (2, "Decorative Job");
+INSERT INTO CostCenter (id, name) VALUES (3, "Maintenance");
+INSERT INTO CostCenter (id, name) VALUES (4, "Administration");
+INSERT INTO CostCenter (id, name) VALUES (5, "Production");
+INSERT INTO CostCenter (id, name) VALUES (6, "Research and Development");
+INSERT INTO CostCenter (id, name) VALUES (7, "Other");
+
+/* Insert job types into JobType table */
+INSERT INTO JobType (id, title, cost_center_id) VALUES (1, "Piston", 1);
+INSERT INTO JobType (id, title, cost_center_id) VALUES (2, "Turbo", 1);
+INSERT INTO JobType (id, title, cost_center_id) VALUES (3, "Rotor", 1);
+INSERT INTO JobType (id, title, cost_center_id) VALUES (4, "Pump", 1);
+INSERT INTO JobType (id, title, cost_center_id) VALUES (5, "Avaslick", 1);
+INSERT INTO JobType (id, title, cost_center_id) VALUES (6, "Specialty", 1);
 
 
