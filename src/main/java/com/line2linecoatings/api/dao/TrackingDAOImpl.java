@@ -277,6 +277,27 @@ public class TrackingDAOImpl {
         return stations;
     }
 
+    public Station getStation(int id) throws Exception {
+        log.info("Start of getStation in DAO with id " + id);
+        Connection conn = createConnection();
+        Station station = null;
+
+        String query = "SELECT * FROM Station WHERE id = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, id);
+
+        ResultSet rs = preparedStatement.executeQuery();
+
+        if (rs.next()) {
+            station = new Station();
+            station.setId(rs.getInt("id"));
+            station.setName(rs.getString("name"));
+        }
+        rs.close();
+        preparedStatement.close();
+        conn.close();
+        return station;
+    }
     private boolean removeFromTableById(String table, int id) throws Exception {
         log.info("Start of removeFromTableById with table "  + table + " and id " + id);
         int count;
