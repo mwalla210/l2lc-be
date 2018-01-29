@@ -50,6 +50,10 @@ public class StationResource extends BasicResource {
             throw ex;
         }
 
+        if (station == null) {
+            return getResponse(Response.Status.NOT_FOUND);
+        }
+
         return getResponse(Response.Status.OK, station);
     }
 }
