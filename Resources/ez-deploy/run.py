@@ -2,10 +2,7 @@ import paramiko
 import os
 import traceback
 import sys
-import socket
-from paramiko.py3compat import u
-from multiprocessing import Process
-
+from optparse import OptionParser
 
 port = 22
 
@@ -19,6 +16,13 @@ DoGSSAPIKeyExchange = True
 paramiko.util.log_to_file('demo.log')
 
 def main():
+    DEPLOYDB = False
+    parser = OptionParser()
+    parser.add_option("-d", "--db", dest='deploydb', help="deploy db to server")
+    (options, args) = parser.parse_args()
+    
+    if options.deploydb == 'true':
+        DEPLOYDB = True
     config = readConfigs(configFileName)
     username = config['username']
     password = config['password']
@@ -28,9 +32,16 @@ def main():
     readFromHost(stdout_)
     stdin_, stdout_, stderr = client.exec_command("git -C ~/l2lc-db pull")
     readFromHost(stdout_)
-    stdin_, stdout_, stder =  client.exec_command("mvn -f ~/l2lc-db/pom.xml clean tomcat7:deploy")
+    stdin_, stdout_, stderr =  client.exec_command("mvn -f ~/l2lc-db/pom.xml clean tomcat7:deploy")
     readFromHost(stdout_)
-
+    if DEPLOYDB:
+        print("deploying db")
+        stdin_, stdout_, stderr = client.exec_command("sqlite3 l2lc.db < ~/l2lc-db/db/l2lc-db.sql")
+        readFromHost(stdout_)
+        stdin_, stdout_, stderr = client.exec_command("chmod 0777 l2lc.db")
+        readFromHost(stdout_)
+        stdin_, stdout_, stderr = client.exec_command("mv l2lc.db /var/tomcat/db/")
+        readFromHost(stdout_)
     client.close()
 def readFromHost(stdout_):
     stdout_.channel.recv_exit_status()
