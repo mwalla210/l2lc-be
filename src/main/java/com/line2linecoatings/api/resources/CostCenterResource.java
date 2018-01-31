@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("costcenter")
+@Path("cost-center")
 public class CostCenterResource extends BasicResource{
     public static final Log log = LogFactory.getLog(CostCenterResource.class);
     public static CostCenterService costCenterService;
