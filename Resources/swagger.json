@@ -1,0 +1,445 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "API Development Document with current endpoints hosted on l2lc-dev",
+    "version": "1.0.0",
+    "title": "l2lc API"
+  },
+  "host": "138.197.88.198:8080",
+  "basePath": "/l2lc/api",
+  "tags": [
+    {
+      "name": "Employee",
+      "description": "Access to Employee Informatin"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/employee/create": {
+      "post": {
+        "tags": [
+          "Employee"
+        ],
+        "summary": "Add a new employee",
+        "description": "",
+        "operationId": "addEmployee",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Employee object to be added to database",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Create_Employee_Input"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Create_Employee_Output"
+            }
+          },
+          "406": {
+            "description": "Not Acceptable input",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/employee/update/{id}": {
+      "post": {
+        "tags": [
+          "Employee"
+        ],
+        "summary": "Add a new employee",
+        "description": "",
+        "operationId": "updateEmployeeById",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric Id of the employee"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Employee object to be added to database",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Create_Employee_Input"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK, update successful",
+            "schema": {
+              "$ref": "#/definitions/Create_Employee_Output"
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "406": {
+            "description": "Not Acceptable input",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/employee/{id}": {
+      "get": {
+        "tags": [
+          "Employee"
+        ],
+        "summary": "Get an employee's information from their id",
+        "operationId": "getEmployeeById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric Id of the employee"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Employee was successfully retrieved",
+            "schema": {
+              "$ref": "#/definitions/Create_Employee_Output"
+            }
+          },
+          "404": {
+            "description": "Employee Not found"
+          }
+        }
+      }
+    },
+    "/employee/remove/{id}": {
+      "get": {
+        "tags": [
+          "Employee"
+        ],
+        "summary": "Remove an employee",
+        "operationId": "removeEmployeeById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric Id of the employee"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Employee Not Found"
+          }
+        }
+      }
+    },
+    "/customer/create": {
+      "post": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Create a customer",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Create_Customer_Input"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Customer created",
+            "schema": {
+              "$ref": "#/definitions/Create_Customer_Output"
+            }
+          },
+          "406": {
+            "description": "Not Acceptable input",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/customer/{id}": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Get customer information",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK, customer was found",
+            "schema": {
+              "$ref": "#/definitions/Create_Customer_Output"
+            }
+          },
+          "404": {
+            "description": "Customer not found"
+          }
+        }
+      }
+    },
+    "/station": {
+      "get": {
+        "tags": [
+          "Station"
+        ],
+        "summary": "Get all registered stations",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AllStations"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Create_Employee_Input": {
+      "type": "object",
+      "required": [
+        "firstName",
+        "lastName"
+      ],
+      "properties": {
+        "firstName": {
+          "type": "string",
+          "example": "Joel"
+        },
+        "lastName": {
+          "type": "string",
+          "example": "Bornemann"
+        }
+      }
+    },
+    "Create_Employee_Output": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 12
+        },
+        "firstName": {
+          "type": "string",
+          "example": "Joel"
+        },
+        "lastName": {
+          "type": "string",
+          "example": "Bornemann"
+        }
+      }
+    },
+    "Create_Customer_Input": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Jeff Salvage's Scooter Racing Company"
+        },
+        "email": {
+          "type": "string",
+          "example": "salvage@drexel.edu"
+        },
+        "website": {
+          "type": "string",
+          "example": "salvagescooters.com"
+        },
+        "shippingAddr": {
+          "$ref": "#/definitions/Address_Input"
+        },
+        "billingAddr": {
+          "$ref": "#/definitions/Address_Input"
+        },
+        "isPastDue": {
+          "type": "boolean",
+          "example": false
+        },
+        "phoneNumber": {
+          "type": "string",
+          "example": "911"
+        }
+      }
+    },
+    "Create_Customer_Output": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 12
+        },
+        "name": {
+          "type": "string",
+          "example": "Jeff Salvage's Scooter Racing Company"
+        },
+        "email": {
+          "type": "string",
+          "example": "salvage@drexel.edu"
+        },
+        "website": {
+          "type": "string",
+          "example": "salvagescooters.com"
+        },
+        "shippingAddr": {
+          "$ref": "#/definitions/Address_Output"
+        },
+        "billingAddr": {
+          "$ref": "#/definitions/Address_Output"
+        },
+        "isPastDue": {
+          "type": "boolean",
+          "example": false
+        },
+        "phoneNumber": {
+          "type": "string",
+          "example": "911"
+        }
+      }
+    },
+    "Address_Output": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 2
+        },
+        "street": {
+          "type": "string",
+          "example": "123 fake st"
+        },
+        "city": {
+          "type": "string",
+          "example": "Philadelphia"
+        },
+        "state": {
+          "type": "string",
+          "example": "PA"
+        },
+        "country": {
+          "type": "string",
+          "example": "USA"
+        },
+        "zip": {
+          "type": "string",
+          "example": "19104"
+        }
+      }
+    },
+    "Address_Input": {
+      "type": "object",
+      "properties": {
+        "street": {
+          "type": "string",
+          "example": "123 fake st"
+        },
+        "city": {
+          "type": "string",
+          "example": "Philadelphia"
+        },
+        "state": {
+          "type": "string",
+          "example": "PA"
+        },
+        "country": {
+          "type": "string",
+          "example": "USA"
+        },
+        "zip": {
+          "type": "string",
+          "example": "19104"
+        }
+      }
+    },
+    "AllStations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 12
+          },
+          "name": {
+            "type": "string",
+            "example": "Coating and Curing"
+          }
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "NOT_ACCEPTABLE"
+        },
+        "errorMessages": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "Some Error Message"
+          }
+        }
+      }
+    }
+  }
+}
