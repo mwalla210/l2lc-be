@@ -37,5 +37,23 @@ public class StationResource extends BasicResource {
         return getResponse(Response.Status.OK, allStations);
     }
 
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getStationById(@PathParam("id") int id, @Context HttpHeaders headers) throws Exception{
+        Station station = null;
 
+        try {
+            station = stationService.getStation(id);
+        } catch (Exception ex) {
+            log.error(headers);
+            throw ex;
+        }
+
+        if (station == null) {
+            return getResponse(Response.Status.NOT_FOUND);
+        }
+
+        return getResponse(Response.Status.OK, station);
+    }
 }
