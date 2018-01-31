@@ -29,19 +29,19 @@ CREATE TABLE Employee (
 
 CREATE TABLE CostCenter (
 	id INTEGER PRIMARY KEY,
-	name TEXT NOT NULL
+	name TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE JobType (
 	id INTEGER PRIMARY KEY,
-	title TEXT NOT NULL,
+	title TEXT NOT NULL UNIQUE,
 	cost_center_id INTEGER,
 	FOREIGN KEY (cost_center_id) REFERENCES CostCenter (id)
 );
 
 CREATE TABLE Priority (
 	id INTEGER PRIMARY KEY,
-	name TEXT
+	name TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE Project (
@@ -62,7 +62,7 @@ CREATE TABLE Project (
 
 CREATE TABLE Station (
 	id INTEGER PRIMARY KEY,
-	name TEXT NOT NULL
+	name TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE ProjectStatus (
