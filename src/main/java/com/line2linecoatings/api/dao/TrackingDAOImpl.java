@@ -342,6 +342,120 @@ public class TrackingDAOImpl {
         log.info("End of getCostCenter in DAO with id " + id);
         return costCenter;
     }
+
+    public User createUser(User user) throws Exception {
+        log.info("Start of createUser in DAO");
+        Connection conn = createConnection();
+
+        String query = "INSERT INTO Login (username, password, is_admin, station_id) VALUES (?, ?, ?, ?)";
+
+        PreparedStatement preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        preparedStatement.setString(1, user.getUsername());
+        preparedStatement.setString(2, user.getPassword());
+        preparedStatement.setBoolean(3, user.isAdmin().booleanValue());
+        if (user.getStationId() != null) {
+            preparedStatement.setInt(4, user.getStationId());
+        }
+        preparedStatement.setBoolean(3, user.isAdmin());
+        preparedStatement.setInt(4, user.getStationId());
+
+        int affectedRows = preparedStatement.executeUpdate();
+
+        if (affectedRows == 0) {
+            throw new SQLException("Creating user failed, no rows affected.");
+        }
+
+        try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                user.setId(generatedKeys.getInt(1));
+                log.info("User Created with id " + user.getId());
+                generatedKeys.close();
+            }
+            else {
+                throw new SQLException("Creating User failed, no ID obtained.");
+            }
+        }
+
+        preparedStatement.close();
+        conn.close();
+        log.info("End of createUser in DAO");
+        return user;
+    }
+
+    public User getUser(int id) throws Exception {
+        log.info("Start of getUser in DAO with id " + id);
+
+        User user = null;
+
+        Connection conn = createConnection();
+
+        String query = String.format("SELECT * FROM Login WHERE id='%d'", id);
+
+        Statement st = conn.createStatement();
+
+        ResultSet rs = st.executeQuery(query);
+        if (rs.next()) {
+            user = new User();
+            user.setId(rs.getInt("id"));
+            user.setUsername(rs.getString("username"));
+            user.setAdmin(rs.getBoolean("is_admin"));
+            user.setStationId(rs.getInt("station_id"));
+        }
+
+        rs.close();
+        st.close();
+        conn.close();
+        log.info("End of getUser in DAO with id " + id);
+        return user;
+    }
+
+    public User login(User user) throws Exception {
+        log.info("Start of login in DAO");
+        User loginUser = null;
+
+        Connection conn = createConnection();
+
+        String query = "SELECT * FROM Login WHERE username = ? AND password = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setString(1, user.getUsername());
+        preparedStatement.setString(2, user.getPassword());
+
+        ResultSet rs = preparedStatement.executeQuery();
+
+        if (rs.next()) {
+            loginUser = new User();
+            loginUser.setId(rs.getInt("id"));
+            loginUser.setUsername(rs.getString("username"));
+            loginUser.setStationId(rs.getInt("station_id"));
+            loginUser.setAdmin(rs.getBoolean("is_admin"));
+        }
+        rs.close();
+        preparedStatement.close();
+        conn.close();
+        log.info("End of login in DAO");
+        return loginUser;
+
+    }
+
+    public boolean doesUsernameExist(String username) throws Exception {
+        log.info("Start of doesUsernameExist in DAO");
+        boolean exists = false;
+
+        Connection conn = createConnection();
+
+        String query = "SELECT * FROM Login WHERE username = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setString(1, username);
+        ResultSet rs = preparedStatement.executeQuery();
+        if (rs.next()) {
+            exists = true;
+        }
+        log.info("End of doesUsernameExist in DAO");
+        return exists;
+
+
+    }
+
     private boolean removeFromTableById(String table, int id) throws Exception {
         log.info("Start of removeFromTableById with table "  + table + " and id " + id);
         int count;
