@@ -83,7 +83,7 @@ public class EmployeeResource extends BasicResource
         }
     }
 
-    @GET
+    @DELETE
     @Path("/remove/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response removeEmployee(@PathParam("id") int id, @Context HttpHeaders headers) throws Exception {
