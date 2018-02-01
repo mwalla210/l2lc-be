@@ -282,6 +282,120 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "User",
+			"description": "",
+			"item": [
+				{
+					"name": "Create_User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f4457424-94bd-4cd4-9e93-ead01d36e4bf",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)",
+									"pm.environment.set(\"userid\", jsonData.id);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"Jlbornemann\",\n\t\"password\": \"dipshit\",\n\t\"admin\": false,\n\t\"stationId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/user/create",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"user",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login_User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a2818c33-aefb-45e3-b1fe-a351fa4a3503",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n \"username\": \"Jlbornemann\",\n \"password\": \"dipshit\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/user/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/user/{{userid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"user",
+								"{{userid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
