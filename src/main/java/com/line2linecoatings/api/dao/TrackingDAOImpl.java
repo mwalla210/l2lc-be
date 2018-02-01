@@ -66,6 +66,57 @@ public class TrackingDAOImpl {
         return address;
     }
 
+    public Address getAddressById(int id) throws Exception {
+        log.info("Start of getAddressById in DAO");
+
+        Address address = null;
+        Connection conn = createConnection();
+        String query = "SELECT * FROM Address WHERE id = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, id);
+
+        ResultSet rs = preparedStatement.executeQuery();
+
+        if (rs.next()) {
+            address = new Address();
+            address.setId(rs.getInt("id"));
+            address.setStreet(rs.getString("street"));
+            address.setCity(rs.getString("city"));
+            address.setCountry(rs.getString("country"));
+            address.setZip(rs.getString("zip"));
+        }
+
+        rs.close();
+        conn.close();
+        return address;
+    }
+
+    public Address updateAddress(int id, Address address) throws Exception {
+        log.info("Start of updateAddress in DAO");
+        Connection conn = createConnection();
+
+        String query = "UPDATE Address " +
+                        "SET street = ?, city = ?, state = ?, country = ?, zip = ? " +
+                        "WHERE id = ?";
+
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setString(1, address.getStreet());
+        preparedStatement.setString(2, address.getCity());
+        preparedStatement.setString(3, address.getState());
+        preparedStatement.setString(4, address.getCountry());
+        preparedStatement.setString(5, address.getZip());
+        preparedStatement.setInt(6, id);
+
+        preparedStatement.executeUpdate();
+
+        address.setId(id);
+
+        preparedStatement.close();
+        conn.close();
+        log.info("End of updateAddress in DAO");
+        return address;
+    }
+
     public Customer createCustomer(Customer customer) throws Exception {
         log.info("Start of CreateCustomer in DAO");
 
@@ -105,34 +156,9 @@ public class TrackingDAOImpl {
         return customer;
     }
 
-    public Address getAddressById(int id) throws Exception {
-        log.info("Start of getAddressById in DAO");
-
-        Address address = null;
-        Connection conn = createConnection();
-        String query = "SELECT * FROM Address WHERE id = ?";
-        PreparedStatement preparedStatement = conn.prepareStatement(query);
-        preparedStatement.setInt(1, id);
-
-        ResultSet rs = preparedStatement.executeQuery();
-
-        if (rs.next()) {
-            address = new Address();
-            address.setId(rs.getInt("id"));
-            address.setStreet(rs.getString("street"));
-            address.setCity(rs.getString("city"));
-            address.setCountry(rs.getString("country"));
-            address.setZip(rs.getString("zip"));
-        }
-
-        rs.close();
-        conn.close();
-        return address;
-    }
-
     public Customer getCustomerById(int id) throws Exception {
         log.info("Start of getCustomerById in DAO");
-        
+
         Customer customer = null;
         Connection conn = createConnection();
         String query = "SELECT * FROM Customer WHERE id = ?";
@@ -163,6 +189,40 @@ public class TrackingDAOImpl {
 
         rs.close();
         conn.close();
+        return customer;
+    }
+
+    public Customer updateCustomer(int id, Customer customer) throws Exception {
+        log.info("Start of updateCustomer in DAO");
+
+        customer.setShippingAddr(updateAddress(id, customer.getShippingAddr()));
+        customer.setBillingAddr(updateAddress(id, customer.getBillingAddr()));
+
+        Connection conn = createConnection();
+
+        String query = "UPDATE Customer " +
+                        "SET name = ?, email = ?, website = ?, shipping_addr_id = ?, " +
+                        "billing_addr_id = ?, is_past_due = ?, phone = ?" +
+                        "WHERE id = ?";
+
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setString(1, customer.getName());
+        preparedStatement.setString(2, customer.getEmail());
+        preparedStatement.setString(3, customer.getWebsite());
+        preparedStatement.setInt(4, customer.getShippingAddr().getId());
+        preparedStatement.setInt(5, customer.getBillingAddr().getId());
+        preparedStatement.setBoolean(6, customer.getPastDue());
+        preparedStatement.setString(7, customer.getPhoneNumber());
+        preparedStatement.setInt(8, id);
+
+        preparedStatement.executeUpdate();
+
+        customer.setId(id);
+
+        preparedStatement.close();
+        conn.close();
+
+        log.info("End of updateCustomer in DAO");
         return customer;
     }
 
