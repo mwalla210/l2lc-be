@@ -222,7 +222,7 @@ public class TrackingDAOImpl {
         Connection conn = createConnection();
 
         String query = "SELECT * FROM Employee WHERE id=?";
-        PreparedStatement preparedStatement = conn.prepareCall(query);
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
         preparedStatement.setInt(1, id);
         ResultSet rs = preparedStatement.executeQuery();
         if (rs.next()) {
