@@ -90,11 +90,7 @@ public class TrackingValidationHelper {
         if (StringUtils.isEmpty(user.getPassword())) {
             errorMessages.add("password can not be empty");
         }
-
-        if (user.isAdmin() == null) {
-            errorMessages.add("admin must not be null");
-        }
-
+        
         if (user.getStationId() != null && !stationIds.contains(user.getStationId())) {
             errorMessages.add("Invalid stationId associated with user");
         }

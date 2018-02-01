@@ -221,11 +221,10 @@ public class TrackingDAOImpl {
 
         Connection conn = createConnection();
 
-        String query = String.format("SELECT * FROM Employee WHERE id='%d'", id);
-
-        Statement st = conn.createStatement();
-
-        ResultSet rs = st.executeQuery(query);
+        String query = "SELECT * FROM Employee WHERE id=?";
+        PreparedStatement preparedStatement = conn.prepareCall(query);
+        preparedStatement.setInt(1, id);
+        ResultSet rs = preparedStatement.executeQuery();
         if (rs.next()) {
             employee = new Employee();
             employee.setId(rs.getInt("id"));
@@ -234,7 +233,7 @@ public class TrackingDAOImpl {
         }
 
         rs.close();
-        st.close();
+        preparedStatement.close();
         conn.close();
         return employee;
     }
@@ -370,8 +369,7 @@ public class TrackingDAOImpl {
                 user.setId(generatedKeys.getInt(1));
                 log.info("User Created with id " + user.getId());
                 generatedKeys.close();
-            }
-            else {
+            } else {
                 throw new SQLException("Creating User failed, no ID obtained.");
             }
         }
@@ -389,11 +387,11 @@ public class TrackingDAOImpl {
 
         Connection conn = createConnection();
 
-        String query = String.format("SELECT * FROM Login WHERE id='%d'", id);
+        String query = "SELECT * FROM Login WHERE id=?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, id);
 
-        Statement st = conn.createStatement();
-
-        ResultSet rs = st.executeQuery(query);
+        ResultSet rs = preparedStatement.executeQuery(query);
         if (rs.next()) {
             user = new User();
             user.setId(rs.getInt("id"));
@@ -403,7 +401,7 @@ public class TrackingDAOImpl {
         }
 
         rs.close();
-        st.close();
+        preparedStatement.close();
         conn.close();
         log.info("End of getUser in DAO with id " + id);
         return user;
@@ -452,8 +450,6 @@ public class TrackingDAOImpl {
         }
         log.info("End of doesUsernameExist in DAO");
         return exists;
-
-
     }
 
     private boolean removeFromTableById(String table, int id) throws Exception {

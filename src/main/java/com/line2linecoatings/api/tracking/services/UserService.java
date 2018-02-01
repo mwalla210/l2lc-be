@@ -16,6 +16,10 @@ public class UserService {
     public User createUser(User user) throws Exception{
         log.info("Start of createUser() in service");
         User createdUser = null;
+
+        if (user.isAdmin() == null) {
+            user.setAdmin(false);
+        }
         createdUser = dao.createUser(user);
         log.info("End of createUser() in service");
         return createdUser;
