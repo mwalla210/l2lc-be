@@ -2,6 +2,7 @@ package com.line2linecoatings.api.tracking.services;
 
 import com.line2linecoatings.api.dao.TrackingDAOImpl;
 import com.line2linecoatings.api.tracking.models.Employee;
+import com.line2linecoatings.api.tracking.models.Page;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -48,5 +49,12 @@ public class EmployeeService {
         log.info("End of removeEmployee in Service with id " + id);
         return removed;
 
+    }
+
+    public Page getEmployeePage(int limit, int offset) throws Exception {
+        log.info("Start of getEmployeePage in Service");
+        Page employeePage = trackingDAO.getEmployeePage(limit, offset);
+        log.info("End of getEmployeePage in Service");
+        return employeePage;
     }
 }

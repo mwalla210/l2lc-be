@@ -276,6 +276,37 @@ public class TrackingDAOImpl {
         return employee;
     }
 
+    public Page getEmployeePage(int limit, int offset) throws Exception {
+        log.info("Start of getEmployeePage in DAO");
+
+        Connection conn = createConnection();
+        Page employeePage = new Page();
+        List<Employee> employees = new ArrayList<>();
+
+        String query = "Select * FROM Employee ORDER BY id DESC LIMIT ? OFFSET ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, limit);
+        preparedStatement.setInt(2, offset);
+
+        ResultSet rs = preparedStatement.executeQuery();
+        while(rs.next()) {
+            Employee employee = new Employee();
+            employee.setId(rs.getInt("id"));
+            employee.setFirstName(rs.getString("first_name"));
+            employee.setLastName(rs.getString("last_name"));
+            employees.add(employee);
+        }
+
+        rs.close();
+        preparedStatement.close();
+        conn.close();
+
+        employeePage.setLimit(limit);
+        employeePage.setOffset(offset);
+        employeePage.setItems(employees);
+        return employeePage;
+    }
+
     public boolean removeEmployee(int id) throws Exception {
         log.info("Start of removeEmployee in DAO with id " + id);
         boolean removed;
