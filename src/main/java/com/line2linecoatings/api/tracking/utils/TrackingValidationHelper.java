@@ -64,4 +64,26 @@ public class TrackingValidationHelper {
         log.info("End of validateCustomer");
         return error;
     }
+
+    public TrackingError validatePage(int limit, int offset) {
+        log.info("Start of validatePage");
+        TrackingError error = null;
+        List<String> errorMessages = new ArrayList<>();
+
+        if (limit < 1) {
+            errorMessages.add("limit can not be less than one");
+        }
+
+        if (offset < 0) {
+            errorMessages.add("offset can not be less than zero");
+        }
+
+        if (!errorMessages.isEmpty()) {
+            error = new TrackingError();
+            error.setErrorMessages(errorMessages);
+            error.setStatus(Response.Status.NOT_ACCEPTABLE);
+        }
+        log.info("End of validatePage");
+        return error;
+    }
 }
