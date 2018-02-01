@@ -24,4 +24,11 @@ public class StationService {
         return stations;
 
     }
+
+    public Station getStation(int id) throws Exception {
+        log.info("Start of getStation in service with id " + id);
+        Station station = dao.getStation(id);
+        log.info("End of getStation in service with id " + id);
+        return station;
+    }
 }

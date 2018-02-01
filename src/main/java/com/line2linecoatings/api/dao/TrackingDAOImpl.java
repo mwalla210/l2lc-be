@@ -1,16 +1,12 @@
 package com.line2linecoatings.api.dao;
 
-import com.line2linecoatings.api.tracking.models.Address;
-import com.line2linecoatings.api.tracking.models.Customer;
-import com.line2linecoatings.api.tracking.models.Employee;
-import com.line2linecoatings.api.tracking.models.Station;
+import com.line2linecoatings.api.tracking.models.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -337,6 +333,75 @@ public class TrackingDAOImpl {
         return stations;
     }
 
+    public Station getStation(int id) throws Exception {
+        log.info("Start of getStation in DAO with id " + id);
+        Connection conn = createConnection();
+        Station station = null;
+
+        String query = "SELECT * FROM Station WHERE id = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, id);
+
+        ResultSet rs = preparedStatement.executeQuery();
+
+        if (rs.next()) {
+            station = new Station();
+            station.setId(rs.getInt("id"));
+            station.setName(rs.getString("name"));
+        }
+        rs.close();
+        preparedStatement.close();
+        conn.close();
+        return station;
+    }
+
+    public List<CostCenter> getAllCostCenters() throws Exception {
+        log.info("Start of getAllCostCenters in DAO");
+        List<CostCenter> costCenters = new ArrayList<>();
+
+        Connection conn = createConnection();
+
+        String query = "SELECT * FROM CostCenter";
+
+        Statement st = conn.createStatement();
+
+        ResultSet rs = st.executeQuery(query);
+        while (rs.next()) {
+            CostCenter costCenter = new CostCenter();
+            costCenter.setId(rs.getInt("id"));
+            costCenter.setName(rs.getString("name"));
+            costCenters.add(costCenter);
+        }
+
+        rs.close();
+        st.close();
+        conn.close();
+        log.info("End of getAllCostCenters in DAO");
+        return costCenters;
+    }
+
+    public CostCenter getCostCenter(int id) throws Exception {
+        log.info("Start of getCostCenter in DAO with id " + id);
+        Connection conn = createConnection();
+        CostCenter costCenter = null;
+
+        String query = "SELECT * FROM Station WHERE id = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, id);
+
+        ResultSet rs = preparedStatement.executeQuery();
+
+        if (rs.next()) {
+            costCenter = new CostCenter();
+            costCenter.setId(rs.getInt("id"));
+            costCenter.setName(rs.getString("name"));
+        }
+        rs.close();
+        preparedStatement.close();
+        conn.close();
+        log.info("End of getCostCenter in DAO with id " + id);
+        return costCenter;
+    }
     private boolean removeFromTableById(String table, int id) throws Exception {
         log.info("Start of removeFromTableById with table "  + table + " and id " + id);
         int count;
