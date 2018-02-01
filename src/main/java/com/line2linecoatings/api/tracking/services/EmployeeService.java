@@ -25,7 +25,6 @@ public class EmployeeService {
         Employee employee = trackingDAO.getEmployeeById(id);
         log.info("End of getEmployee in Service with id " + id);
         return employee;
-
     }
 
     public Employee updateEmployee(int id, Employee employee) throws Exception {

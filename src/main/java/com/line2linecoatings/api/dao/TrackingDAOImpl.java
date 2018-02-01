@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
+import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,30 +88,62 @@ public class TrackingDAOImpl {
         return address;
     }
 
-    public Address updateAddress(int id, Address address) throws Exception {
+    public Address updateAddress(Address address) throws Exception {
         log.info("Start of updateAddress in DAO");
         Connection conn = createConnection();
 
-        String query = "UPDATE Address " +
-                        "SET street = ?, city = ?, state = ?, country = ?, zip = ? " +
-                        "WHERE id = ?";
-
-        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        // see if this address exists
+        String query = "SELECT (id) FROM Address WHERE street = ? AND city = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         preparedStatement.setString(1, address.getStreet());
         preparedStatement.setString(2, address.getCity());
-        preparedStatement.setString(3, address.getState());
-        preparedStatement.setString(4, address.getCountry());
-        preparedStatement.setString(5, address.getZip());
-        preparedStatement.setInt(6, id);
 
-        preparedStatement.executeUpdate();
+        ResultSet rs = preparedStatement.executeQuery();
+        if (rs.next()) {
+            // address exists, check references
+            int id = rs.getInt("id");
+            preparedStatement.close();
+            rs.close();
 
-        address.setId(id);
+            query = "SELECT COUNT(*) as rowcount FROM Customer " +
+                    "WHERE shipping_addr_id = ? OR billing_addr_id = ?";
 
-        preparedStatement.close();
-        conn.close();
-        log.info("End of updateAddress in DAO");
-        return address;
+            preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setInt(1, id);
+            preparedStatement.setInt(2, id);
+
+            rs = preparedStatement.executeQuery();
+
+            if (!rs.next()) {
+                throw new SQLException("This should be impossible");
+            }
+            int refCount = rs.getInt("rowcount");
+
+            preparedStatement.close();
+            rs.close();
+
+            if (refCount <= 1) {
+                // one customer references this, safe to update it
+                query = "UPDATE Address " +
+                        "SET street = ?, city = ?, state = ?, country = ?, zip = ?" +
+                        "WHERE id = ?";
+
+                preparedStatement = conn.prepareStatement(query);
+                preparedStatement.setString(1, address.getStreet());
+                preparedStatement.setString(2, address.getCity());
+                preparedStatement.setString(3, address.getState());
+                preparedStatement.setString(4, address.getCountry());
+                preparedStatement.setString(5, address.getZip());
+                preparedStatement.setInt(6, id);
+                preparedStatement.executeUpdate();
+
+                address.setId(id);
+                return address;
+            }
+        }
+
+        // address does not exist or is referenced, insert a new row
+        return insertAddress(address);
     }
 
     public Customer createCustomer(Customer customer) throws Exception {
@@ -191,8 +224,8 @@ public class TrackingDAOImpl {
     public Customer updateCustomer(int id, Customer customer) throws Exception {
         log.info("Start of updateCustomer in DAO");
 
-        customer.setShippingAddr(updateAddress(id, customer.getShippingAddr()));
-        customer.setBillingAddr(updateAddress(id, customer.getBillingAddr()));
+        customer.setShippingAddr(updateAddress(customer.getShippingAddr()));
+        customer.setBillingAddr(updateAddress(customer.getBillingAddr()));
 
         Connection conn = createConnection();
 
