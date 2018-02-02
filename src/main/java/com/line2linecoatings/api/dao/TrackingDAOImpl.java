@@ -162,6 +162,43 @@ public class TrackingDAOImpl {
         return customer;
     }
 
+    public Page getCustomerPage(int limit, int offset) throws Exception {
+        log.info("Start of getCustomerPage in DAO");
+
+        Connection conn = createConnection();
+        Page customerPage = new Page();
+        List<Customer> customers = new ArrayList<>();
+
+        String query = "Select * FROM Customer ORDER BY id DESC LIMIT ? OFFSET ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, limit);
+        preparedStatement.setInt(2, offset);
+
+        ResultSet rs = preparedStatement.executeQuery();
+        while (rs.next()) {
+            Customer customer = new Customer();
+            customer.setId(rs.getInt("id"));
+            customer.setName(rs.getString("name"));
+            customer.setEmail(rs.getString("email"));
+            customer.setWebsite(rs.getString("website"));
+            customer.setPastDue(rs.getBoolean("is_past_due"));
+            customer.setPhoneNumber(rs.getString("phone"));
+            customer.setShippingAddr(getAddressById(rs.getInt("shipping_addr_id")));
+
+            int billingAddrId = rs.getInt("billing_addr_id");
+            if (billingAddrId == customer.getShippingAddr().getId()) {
+                customer.setBillingAddr(customer.getShippingAddr());
+            } else {
+                customer.setShippingAddr(getAddressById(billingAddrId));
+            }
+            customers.add(customer);
+        }
+        customerPage.setLimit(limit);
+        customerPage.setOffset(offset);
+        customerPage.setItems(customers);
+        log.info("End of getCustomerPage in DAO");
+        return customerPage;
+    }
     public Employee createEmployee(Employee employee) throws Exception {
         log.info("Start of createEmployee in DAO");
         Connection conn = createConnection();
@@ -236,6 +273,37 @@ public class TrackingDAOImpl {
         preparedStatement.close();
         conn.close();
         return employee;
+    }
+
+    public Page getEmployeePage(int limit, int offset) throws Exception {
+        log.info("Start of getEmployeePage in DAO");
+
+        Connection conn = createConnection();
+        Page employeePage = new Page();
+        List<Employee> employees = new ArrayList<>();
+
+        String query = "Select * FROM Employee ORDER BY id DESC LIMIT ? OFFSET ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, limit);
+        preparedStatement.setInt(2, offset);
+
+        ResultSet rs = preparedStatement.executeQuery();
+        while(rs.next()) {
+            Employee employee = new Employee();
+            employee.setId(rs.getInt("id"));
+            employee.setFirstName(rs.getString("first_name"));
+            employee.setLastName(rs.getString("last_name"));
+            employees.add(employee);
+        }
+
+        rs.close();
+        preparedStatement.close();
+        conn.close();
+
+        employeePage.setLimit(limit);
+        employeePage.setOffset(offset);
+        employeePage.setItems(employees);
+        return employeePage;
     }
 
     public boolean removeEmployee(int id) throws Exception {

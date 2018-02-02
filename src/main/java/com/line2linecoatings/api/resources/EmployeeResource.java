@@ -1,12 +1,14 @@
 package com.line2linecoatings.api.resources;
 
 import com.line2linecoatings.api.tracking.models.Employee;
+import com.line2linecoatings.api.tracking.models.Page;
 import com.line2linecoatings.api.tracking.services.EmployeeService;
 import com.line2linecoatings.api.tracking.utils.TrackingError;
 import com.line2linecoatings.api.tracking.utils.TrackingValidationHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
@@ -101,5 +103,21 @@ public class EmployeeResource extends BasicResource
         } else {
             return getResponse(Response.Status.NOT_FOUND);
         }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllEmployees(@QueryParam("limit") int limit, @QueryParam("offset") int offset,
+                                    @Context HttpHeaders headers) throws Exception{
+        Page employeePage = null;
+        TrackingError error = trackingValidationHelper.validatePage(limit, offset);
+
+        if (error != null) {
+            log.error(headers);
+            return getResponse(Response.Status.NOT_ACCEPTABLE, error);
+        }
+
+        employeePage = employeeService.getEmployeePage(limit, offset);
+        return getResponse(Response.Status.OK, employeePage);
     }
 }
