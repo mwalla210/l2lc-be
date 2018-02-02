@@ -43,11 +43,16 @@ CREATE TABLE Priority (
 	id INTEGER PRIMARY KEY,
 	name TEXT NOT NULL UNIQUE
 );
+CREATE TABLE ProjectStatus (
+  id INTEGER PRIMARY KEY,
+  title TEXT NOT NULL
+);
 
 CREATE TABLE Project (
 	id INTEGER PRIMARY KEY,
 	job_type_id INTEGER NOT NULL,
 	customer_id INTEGER,
+	project_status_id INTEGER NOT NULL,
 	created DATE NOT NULL,
 	finished DATE,
 	title TEXT NOT NULL,
@@ -55,6 +60,7 @@ CREATE TABLE Project (
 	priority INTEGER,
 	part_count INTEGER,
 	ref_name TEXT,
+	FOREIGN KEY (project_status_id) REFERENCES ProjectStatus (id),
 	FOREIGN KEY (job_type_id) REFERENCES JobType (id),
 	FOREIGN KEY (customer_id) REFERENCES Customer (id),
 	FOREIGN KEY (priority) REFERENCES Priority (id)
@@ -63,11 +69,6 @@ CREATE TABLE Project (
 CREATE TABLE Station (
 	id INTEGER PRIMARY KEY,
 	name TEXT NOT NULL UNIQUE
-);
-
-CREATE TABLE ProjectStatus (
-	id INTEGER PRIMARY KEY,
-	title TEXT NOT NULL
 );
 
 CREATE TABLE Task (
@@ -146,5 +147,13 @@ INSERT INTO JobType (id, title, cost_center_id) VALUES (3, "Rotor", 1);
 INSERT INTO JobType (id, title, cost_center_id) VALUES (4, "Pump", 1);
 INSERT INTO JobType (id, title, cost_center_id) VALUES (5, "Avaslick", 1);
 INSERT INTO JobType (id, title, cost_center_id) VALUES (6, "Specialty", 1);
+
+/* Insert project statuses into ProjectStatus table */
+INSERT INTO ProjectStatus (id, title) VALUES (1, "Recieved");
+INSERT INTO ProjectStatus (id, title) VALUES (2, "In Progress");
+INSERT INTO ProjectStatus (id, title) VALUES (3, "Completed");
+INSERT INTO ProjectStatus (id, title) VALUES (4, "Dropped");
+INSERT INTO ProjectStatus (id, title) VALUES (5, "On Hold");
+
 
 
