@@ -1,6 +1,7 @@
 package com.line2linecoatings.api.resources;
 
 import com.line2linecoatings.api.tracking.models.Customer;
+import com.line2linecoatings.api.tracking.models.Page;
 import com.line2linecoatings.api.tracking.services.CustomerService;
 import com.line2linecoatings.api.tracking.utils.TrackingError;
 import com.line2linecoatings.api.tracking.utils.TrackingValidationHelper;
@@ -9,6 +10,8 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Path("/customer")
 public class CustomerResource extends BasicResource {
@@ -87,5 +90,21 @@ public class CustomerResource extends BasicResource {
             return getResponse(Response.Status.NOT_FOUND);
         }
         return getResponse(Response.Status.OK, updatedCustomer);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllCustomers(@QueryParam("limit") int limit, @QueryParam("offset") int offset,
+                                    @Context HttpHeaders headers) throws Exception {
+        Page customerPage = null;
+        TrackingError error = trackingValidationHelper.validatePage(limit, offset);
+
+        if (error != null) {
+            log.error(headers);
+            return getResponse(Response.Status.NOT_ACCEPTABLE, error);
+        }
+
+        customerPage = customerService.getCustomerPage(limit, offset);
+        return getResponse(Response.Status.OK, customerPage);
     }
 }

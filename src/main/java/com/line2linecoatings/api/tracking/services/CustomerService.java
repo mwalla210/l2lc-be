@@ -2,8 +2,11 @@ package com.line2linecoatings.api.tracking.services;
 
 import com.line2linecoatings.api.dao.TrackingDAOImpl;
 import com.line2linecoatings.api.tracking.models.Customer;
+import com.line2linecoatings.api.tracking.models.Page;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.List;
 
 /**
  * Created by eriksuman on 1/25/18.
@@ -40,5 +43,11 @@ public class CustomerService {
         Customer updatedCustomer = trackingDAO.updateCustomer(id, customer);
         log.info("End of updateEmploee in Service with id " + id);
         return updatedCustomer;
+    }
+    public Page getCustomerPage(int limit, int offset) throws Exception{
+        log.info("Start of getCustomerPage in Service");
+        Page customerPage = trackingDAO.getCustomerPage(limit, offset);
+        log.info("End of getCustomerPage in Service");
+        return customerPage;
     }
 }
