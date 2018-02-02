@@ -33,6 +33,17 @@ public class CustomerService {
         return customer;
     }
 
+    public Customer updateCustomer(int id, Customer customer) throws Exception {
+        log.info("Start of updateCustomer in Service with id " + id);
+        if (getCustomer(id) == null) {
+            log.error("Customer with id " + id + " not found");
+            return null;
+        }
+
+        Customer updatedCustomer = trackingDAO.updateCustomer(id, customer);
+        log.info("End of updateEmploee in Service with id " + id);
+        return updatedCustomer;
+    }
     public Page getCustomerPage(int limit, int offset) throws Exception{
         log.info("Start of getCustomerPage in Service");
         Page customerPage = trackingDAO.getCustomerPage(limit, offset);

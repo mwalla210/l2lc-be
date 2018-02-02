@@ -67,6 +67,31 @@ public class CustomerResource extends BasicResource {
         return getResponse(Response.Status.OK, customer);
     }
 
+    @POST
+    @Path("/update/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateCustomer(@PathParam("id") int id, Customer customer, @Context HttpHeaders headers) throws Exception {
+        Customer updatedCustomer;
+
+        TrackingError err = trackingValidationHelper.validateCustomer(customer);
+        if (err != null) {
+            log.error(headers);
+            return getResponse(Response.Status.NOT_ACCEPTABLE, err);
+        }
+
+        try {
+            updatedCustomer = customerService.updateCustomer(id, customer);
+        } catch (Exception e) {
+            log.error(headers);
+            throw e;
+        }
+
+        if (updatedCustomer == null) {
+            return getResponse(Response.Status.NOT_FOUND);
+        }
+        return getResponse(Response.Status.OK, updatedCustomer);
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllCustomers(@QueryParam("limit") int limit, @QueryParam("offset") int offset,
@@ -81,6 +106,5 @@ public class CustomerResource extends BasicResource {
 
         customerPage = customerService.getCustomerPage(limit, offset);
         return getResponse(Response.Status.OK, customerPage);
-
     }
 }
