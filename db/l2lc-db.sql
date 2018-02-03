@@ -34,7 +34,7 @@ CREATE TABLE CostCenter (
 
 CREATE TABLE JobType (
 	id INTEGER PRIMARY KEY,
-	title TEXT NOT NULL UNIQUE,
+	title TEXT NOT NULL,
 	cost_center_id INTEGER,
 	FOREIGN KEY (cost_center_id) REFERENCES CostCenter (id)
 );
@@ -132,8 +132,8 @@ INSERT INTO Priority (id, name) VALUES (1, "Low");
 INSERT INTO Priority (id, name) VALUES (2, "High");
 
 /* Insert cost centers into CostCenter table */
-INSERT INTO CostCenter (id, name) VALUES (1, "APC Job");
-INSERT INTO CostCenter (id, name) VALUES (2, "Decorative Job");
+INSERT INTO CostCenter (id, name) VALUES (1, "APC");
+INSERT INTO CostCenter (id, name) VALUES (2, "Decorative");
 INSERT INTO CostCenter (id, name) VALUES (3, "Maintenance");
 INSERT INTO CostCenter (id, name) VALUES (4, "Administration");
 INSERT INTO CostCenter (id, name) VALUES (5, "Production");
@@ -147,6 +147,17 @@ INSERT INTO JobType (id, title, cost_center_id) VALUES (3, "Rotor", 1);
 INSERT INTO JobType (id, title, cost_center_id) VALUES (4, "Pump", 1);
 INSERT INTO JobType (id, title, cost_center_id) VALUES (5, "Avaslick", 1);
 INSERT INTO JobType (id, title, cost_center_id) VALUES (6, "Specialty", 1);
+INSERT INTO JobType (id, title, cost_center_id) VALUES (7, "Decorative", 2);
+INSERT INTO JobType (id, title, cost_center_id) VALUES (8, "Maintenance", 3);
+INSERT INTO JobType (id, title, cost_center_id) VALUES (9, "ISO", 4);
+INSERT INTO JobType (id, title, cost_center_id) VALUES (10, "Other", 4);
+INSERT INTO JobType (id, title, cost_center_id) VALUES (11, "Production", 5);
+INSERT INTO JobType (id, title, cost_center_id) VALUES (12, "Research and Development", 6);
+INSERT INTO JobType (id, title, cost_center_id) VALUES (13, "Other", 7);
+
+
+
+
 
 /* Insert project statuses into ProjectStatus table */
 INSERT INTO ProjectStatus (id, title) VALUES (1, "Recieved");

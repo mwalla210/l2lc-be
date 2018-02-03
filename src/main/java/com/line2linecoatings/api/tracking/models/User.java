@@ -10,7 +10,7 @@ public class User {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean admin;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Integer stationId;
+    private String station;
 
     public Boolean isAdmin() {
         return admin;
@@ -45,12 +45,12 @@ public class User {
         this.password = password;
     }
 
-    public Integer getStationId() {
-        return stationId;
+    public String getStation() {
+        return station;
     }
 
-    public void setStationId(Integer stationId) {
-        this.stationId = stationId;
+    public void setStation(String station) {
+        this.station = station;
     }
 
 

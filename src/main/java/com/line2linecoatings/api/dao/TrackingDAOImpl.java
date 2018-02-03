@@ -1,6 +1,7 @@
 package com.line2linecoatings.api.dao;
 
 import com.line2linecoatings.api.tracking.models.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -9,8 +10,7 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 import javax.xml.transform.Result;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class TrackingDAOImpl {
     public static final Log log = LogFactory.getLog(TrackingDAOImpl.class);
@@ -410,9 +410,9 @@ public class TrackingDAOImpl {
         return removed;
     }
 
-    public List<Station> getAllStations() throws Exception {
+    public List<String> getAllStations() throws Exception {
         log.info("Start of getAllStations in DAO");
-        List<Station> stations = new ArrayList<>();
+        List<String> stations = new ArrayList<>();
 
         Connection conn = createConnection();
 
@@ -422,10 +422,7 @@ public class TrackingDAOImpl {
 
         ResultSet rs = st.executeQuery(query);
         while (rs.next()) {
-            Station station = new Station();
-            station.setId(rs.getInt("id"));
-            station.setName(rs.getString("name"));
-            stations.add(station);
+            stations.add(rs.getString("name"));
         }
 
         rs.close();
@@ -434,78 +431,35 @@ public class TrackingDAOImpl {
         return stations;
     }
 
-    public Station getStation(int id) throws Exception {
-        log.info("Start of getStation in DAO with id " + id);
-        Connection conn = createConnection();
-        Station station = null;
-
-        String query = "SELECT * FROM Station WHERE id = ?";
-        PreparedStatement preparedStatement = conn.prepareStatement(query);
-        preparedStatement.setInt(1, id);
-
-        ResultSet rs = preparedStatement.executeQuery();
-
-        if (rs.next()) {
-            station = new Station();
-            station.setId(rs.getInt("id"));
-            station.setName(rs.getString("name"));
-        }
-        rs.close();
-        preparedStatement.close();
-        conn.close();
-        return station;
-    }
-
-    public List<CostCenter> getAllCostCenters() throws Exception {
-        log.info("Start of getAllCostCenters in DAO");
-        List<CostCenter> costCenters = new ArrayList<>();
+    public List<String> getCostCentersEnum() throws Exception {
+        log.info("Start of getCostCentersEnum in DAO");
+        List<String> costCenters = new ArrayList<>();
 
         Connection conn = createConnection();
 
-        String query = "SELECT * FROM CostCenter";
+        String query = "SELECT * FROM CostCenter ORDER BY Id";
 
         Statement st = conn.createStatement();
 
         ResultSet rs = st.executeQuery(query);
         while (rs.next()) {
-            CostCenter costCenter = new CostCenter();
-            costCenter.setId(rs.getInt("id"));
-            costCenter.setName(rs.getString("name"));
-            costCenters.add(costCenter);
+            costCenters.add(rs.getString("name"));
         }
 
         rs.close();
         st.close();
         conn.close();
-        log.info("End of getAllCostCenters in DAO");
+        log.info("End of getCostCentersEnum in DAO");
         return costCenters;
-    }
-
-    public CostCenter getCostCenter(int id) throws Exception {
-        log.info("Start of getCostCenter in DAO with id " + id);
-        Connection conn = createConnection();
-        CostCenter costCenter = null;
-
-        String query = "SELECT * FROM Station WHERE id = ?";
-        PreparedStatement preparedStatement = conn.prepareStatement(query);
-        preparedStatement.setInt(1, id);
-
-        ResultSet rs = preparedStatement.executeQuery();
-
-        if (rs.next()) {
-            costCenter = new CostCenter();
-            costCenter.setId(rs.getInt("id"));
-            costCenter.setName(rs.getString("name"));
-        }
-        rs.close();
-        preparedStatement.close();
-        conn.close();
-        log.info("End of getCostCenter in DAO with id " + id);
-        return costCenter;
     }
 
     public User createUser(User user) throws Exception {
         log.info("Start of createUser in DAO");
+
+        Integer stationId = null;
+        if (StringUtils.isNotEmpty(user.getStation())) {
+            stationId = findStationId(user.getStation());
+        }
         Connection conn = createConnection();
 
         String query = "INSERT INTO Login (username, password, is_admin, station_id) VALUES (?, ?, ?, ?)";
@@ -513,12 +467,13 @@ public class TrackingDAOImpl {
         PreparedStatement preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         preparedStatement.setString(1, user.getUsername());
         preparedStatement.setString(2, user.getPassword());
-        preparedStatement.setBoolean(3, user.isAdmin().booleanValue());
-        if (user.getStationId() != null) {
-            preparedStatement.setInt(4, user.getStationId());
-        }
         preparedStatement.setBoolean(3, user.isAdmin());
-        preparedStatement.setInt(4, user.getStationId());
+
+        if (stationId != null) {
+            preparedStatement.setInt(4, stationId);
+        } else {
+            preparedStatement.setNull(4, Types.INTEGER);
+        }
 
         int affectedRows = preparedStatement.executeUpdate();
 
@@ -542,6 +497,49 @@ public class TrackingDAOImpl {
         return user;
     }
 
+    private int findStationId(String station) throws Exception{
+        Connection conn = createConnection();
+
+        String query = "SELECT * FROM Station WHERE name=?";
+
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setString(1, station);
+
+        ResultSet rs = preparedStatement.executeQuery();
+        int stationId;
+        if (rs.next()) {
+            stationId = rs.getInt("id");
+        } else {
+            throw new SQLException("Invalid name for stations");
+        }
+
+        rs.close();
+        preparedStatement.close();
+        conn.close();
+        return stationId;
+    }
+
+    private String findStationName(int id) throws Exception {
+        Connection conn = createConnection();
+
+        String query = "SELECT * FROM Station WHERE id=?";
+
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, id);
+
+        ResultSet rs = preparedStatement.executeQuery();
+        String stationName;
+        if (rs.next()) {
+            stationName = rs.getString("name");
+        } else {
+            throw new SQLException("Invalid id for stations");
+        }
+
+        rs.close();
+        preparedStatement.close();
+        conn.close();
+        return stationName;
+    }
     public User getUser(int id) throws Exception {
         log.info("Start of getUser in DAO with id " + id);
 
@@ -553,18 +551,26 @@ public class TrackingDAOImpl {
         PreparedStatement preparedStatement = conn.prepareStatement(query);
         preparedStatement.setInt(1, id);
 
-        ResultSet rs = preparedStatement.executeQuery(query);
+        ResultSet rs = preparedStatement.executeQuery();
+        Integer stationId = null;
         if (rs.next()) {
             user = new User();
             user.setId(rs.getInt("id"));
             user.setUsername(rs.getString("username"));
             user.setAdmin(rs.getBoolean("is_admin"));
-            user.setStationId(rs.getInt("station_id"));
+            stationId = rs.getInt("station_id");
+            if (rs.wasNull()) {
+                stationId = null;
+            }
         }
 
         rs.close();
         preparedStatement.close();
         conn.close();
+
+        if (stationId != null) {
+            user.setStation(findStationName(stationId));
+        }
         log.info("End of getUser in DAO with id " + id);
         return user;
     }
@@ -586,7 +592,7 @@ public class TrackingDAOImpl {
             loginUser = new User();
             loginUser.setId(rs.getInt("id"));
             loginUser.setUsername(rs.getString("username"));
-            loginUser.setStationId(rs.getInt("station_id"));
+            loginUser.setStation(findStationName(rs.getInt("station_id")));
             loginUser.setAdmin(rs.getBoolean("is_admin"));
         }
         rs.close();
@@ -614,6 +620,65 @@ public class TrackingDAOImpl {
         return exists;
     }
 
+    public Set<String> getProjectStatusEnum() throws Exception {
+        Set<String> statuses = new HashSet<>();
+
+        Connection conn = createConnection();
+
+        String query = "SELECT * FROM ProjectStatus";
+        Statement stm = conn.createStatement();
+        ResultSet rs = stm.executeQuery(query);
+
+        while (rs.next()) {
+            statuses.add(rs.getString("title"));
+        }
+        rs.close();
+        stm.close();
+        conn.close();
+        return statuses;
+    }
+
+    public List<JobType> getJobTypeEnum() throws Exception {
+        List<JobType> jobTypes = new ArrayList<>();
+
+        Connection conn = createConnection();
+        Statement stm = conn.createStatement();
+
+        String query = "SELECT * FROM JobType";
+
+        ResultSet rs = stm.executeQuery(query);
+        List<String> costCenters = this.getCostCentersEnum();
+
+        while (rs.next()) {
+            JobType jobType = new JobType();
+            jobType.setJobType(rs.getString("title"));
+            jobType.setCostCenter(costCenters.get(rs.getInt("cost_center_id")));
+        }
+
+        rs.close();
+        stm.close();
+        conn.close();
+        return jobTypes;
+    }
+
+    public Set<String> getPriorityEnum() throws Exception {
+        Set<String> priorities = new HashSet<>();
+        Connection conn = createConnection();
+        Statement stm = conn.createStatement();
+
+        String query = "SELECT * FROM Priority";
+
+        ResultSet rs = stm.executeQuery(query);
+
+        while (rs.next()) {
+            priorities.add(rs.getString("name"));
+        }
+
+        rs.close();
+        stm.close();
+        conn.close();
+        return priorities;
+    }
     private boolean removeFromTableById(String table, int id) throws Exception {
         log.info("Start of removeFromTableById with table "  + table + " and id " + id);
         int count;
