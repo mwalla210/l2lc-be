@@ -644,7 +644,7 @@ public class TrackingDAOImpl {
         Connection conn = createConnection();
         Statement stm = conn.createStatement();
 
-        String query = "SELECT * FROM JobType";
+        String query = "SELECT * FROM JobType ORDER BY id";
 
         ResultSet rs = stm.executeQuery(query);
         List<String> costCenters = this.getCostCentersEnum();
@@ -682,7 +682,7 @@ public class TrackingDAOImpl {
     }
 
     public Project createProject(Project project) throws Exception {
-
+        log.info("Start of createProject in DAO");
         int jobTypeId = findJobTypeId(project.getJobType());
         int projectStatusId = findProjectStatusId(project.getProjectStatus());
         Integer priorityId = null;
@@ -729,8 +729,103 @@ public class TrackingDAOImpl {
 
         preparedStatement.close();
         conn.close();
+        log.info("End of createProject in DAO");
         return project;
     }
+
+    public Project getProject(int id) throws Exception {
+        log.info("Start of getProject in DAO with id " + id);
+        Connection conn = createConnection();
+        String query = "SELECT * FROM Project WHERE id=?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, id);
+        ResultSet rs = preparedStatement.executeQuery();
+        Project project = null;
+
+        int jobTypeid;
+        int projectStatusId;
+        Integer priorityId;
+
+        if (rs.next()) {
+            project = new Project();
+            jobTypeid = rs.getInt("job_type_id");
+            projectStatusId = rs.getInt("project_status_id");
+            priorityId = rs.getInt("priority");
+            if (rs.wasNull()) {
+                priorityId = null;
+            }
+
+            project.setId(rs.getInt("id"));
+            project.setCustomerId(rs.getInt("customer_id"));
+            if (rs.wasNull()) {
+                project.setCustomerId(null);
+            }
+            project.setCreated(rs.getTime("created"));
+            project.setFinished(rs.getTime("finished"));
+            project.setTitle(rs.getString("title"));
+            project.setDescription(rs.getString("description"));
+            project.setPartCount(rs.getInt("part_count"));
+            if (rs.wasNull()) {
+                project.setPartCount(null);
+            }
+            project.setRefName(rs.getString("ref_name"));
+            rs.close();
+            preparedStatement.close();
+            conn.close();
+
+            JobType jobType = getJobTypeById(jobTypeid);
+            project.setJobType(jobType.getJobType());
+            project.setCostCenter(jobType.getCostCenter());
+            project.setProjectStatus(getProjectStatusById(projectStatusId));
+            project.setPriority(getPriorityById(priorityId));
+        }
+        log.info("End of getProject in DAO with id " + id);
+        return project;
+    }
+
+    private JobType getJobTypeById(int id) throws Exception {
+        List<JobType> jobTypes = getJobTypeEnum();
+        if (id > jobTypes.size()) {
+            throw new SQLException("Invalid Job Type id");
+        }
+
+        return jobTypes.get(id-1);
+    }
+
+    private String getPriorityById(int id) throws Exception {
+        Connection conn = createConnection();
+        String query = "SELECT * FROM Priority WHERE id=?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, id);
+
+        ResultSet rs = preparedStatement.executeQuery();
+
+        String priority;
+        if (rs.next()) {
+            priority = rs.getString("name");
+        } else {
+            throw new SQLException("Invalid Priority Id");
+        }
+        return priority;
+    }
+
+    private String getProjectStatusById(int id) throws Exception {
+        Connection conn = createConnection();
+        String query = "SELECT * FROM ProjectStatus WHERE id=?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, id);
+
+        ResultSet rs = preparedStatement.executeQuery();
+
+        String projectStatus;
+        if (rs.next()) {
+            projectStatus = rs.getString("title");
+        } else {
+            throw new SQLException("Invalid Project Status Id");
+        }
+        return projectStatus;
+    }
+
     private int findJobTypeId(String jobTypeTitle) throws Exception {
         Connection conn = createConnection();
 

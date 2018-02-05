@@ -7,9 +7,7 @@ import com.line2linecoatings.api.tracking.utils.TrackingValidationHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -47,6 +45,25 @@ public class ProjectResource extends BasicResource {
         }
 
         return getResponse(Response.Status.CREATED, createdProject);
+    }
 
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProject(@PathParam("id") int id, @Context HttpHeaders headers) throws Exception {
+        Project project = null;
+
+        try {
+            project = projectService.getProject(id);
+        } catch (Exception ex) {
+            log.error(headers);
+            throw ex;
+        }
+
+        if (project == null) {
+            return getResponse(Response.Status.NOT_FOUND);
+        } else {
+            return getResponse(Response.Status.OK, project);
+        }
     }
 }
