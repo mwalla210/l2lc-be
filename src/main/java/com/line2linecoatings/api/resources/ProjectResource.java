@@ -1,5 +1,6 @@
 package com.line2linecoatings.api.resources;
 
+import com.line2linecoatings.api.tracking.models.Page;
 import com.line2linecoatings.api.tracking.models.Project;
 import com.line2linecoatings.api.tracking.services.ProjectService;
 import com.line2linecoatings.api.tracking.utils.TrackingError;
@@ -65,5 +66,32 @@ public class ProjectResource extends BasicResource {
         } else {
             return getResponse(Response.Status.OK, project);
         }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllProjects(@QueryParam("limit") Integer limit,
+                                   @QueryParam("offset") int offset,
+                                   @Context HttpHeaders headers) throws Exception {
+        Page page = null;
+
+        if (limit == null) {
+            limit = 50;
+        }
+
+        TrackingError error = validationHelper.validatePage(limit, offset);
+
+        if (error != null) {
+            return getResponse(Response.Status.NOT_ACCEPTABLE, error);
+        }
+
+        try {
+            page = projectService.getProjectPage(limit, offset);
+        } catch (Exception ex) {
+            log.error(headers);
+            throw ex;
+        }
+
+        return getResponse(Response.Status.OK, page);
     }
 }

@@ -777,10 +777,83 @@ public class TrackingDAOImpl {
             project.setJobType(jobType.getJobType());
             project.setCostCenter(jobType.getCostCenter());
             project.setProjectStatus(getProjectStatusById(projectStatusId));
-            project.setPriority(getPriorityById(priorityId));
+
+            if (priorityId != null) {
+                project.setPriority(getPriorityById(priorityId));
+            }
         }
         log.info("End of getProject in DAO with id " + id);
         return project;
+    }
+
+    public Page getProjectPage(int limit, int offset) throws Exception {
+        log.info("Start of getProjectPage in DAO");
+        Connection conn = createConnection();
+
+        Page page = new Page();
+
+        String query = "SELECT * FROM Project";
+
+        Statement stm = conn.createStatement();
+        ResultSet rs = stm.executeQuery(query);
+
+        List<Integer> jobTypeIds = new ArrayList<>();
+        List<Integer> projectStatusIds = new ArrayList<>();
+        List<Integer> priorityIds = new ArrayList<>();
+        List<Project> projects = new ArrayList<>();
+        while(rs.next()) {
+            Project project = new Project();
+            int jobTypeid = rs.getInt("job_type_id");
+            int projectStatusId = rs.getInt("project_status_id");
+            Integer priorityId = rs.getInt("priority");
+            if (rs.wasNull()) {
+                priorityId = null;
+            }
+
+            project.setId(rs.getInt("id"));
+            project.setCustomerId(rs.getInt("customer_id"));
+            if (rs.wasNull()) {
+                project.setCustomerId(null);
+            }
+            project.setCreated(rs.getTime("created"));
+            project.setFinished(rs.getTime("finished"));
+            project.setTitle(rs.getString("title"));
+            project.setDescription(rs.getString("description"));
+            project.setPartCount(rs.getInt("part_count"));
+            if (rs.wasNull()) {
+                project.setPartCount(null);
+            }
+            project.setRefName(rs.getString("ref_name"));
+
+            jobTypeIds.add(jobTypeid);
+            projectStatusIds.add(projectStatusId);
+            priorityIds.add(priorityId);
+            projects.add(project);
+        }
+        rs.close();
+        stm.close();
+        conn.close();
+
+        for (int x = 0; x < projects.size(); x++) {
+            Project project = projects.get(x);
+            int jobTypeid = jobTypeIds.get(x);
+            int projectStatusId = projectStatusIds.get(x);
+            Integer priorityId = priorityIds.get(x);
+
+            JobType jobType = getJobTypeById(jobTypeid);
+            project.setJobType(jobType.getJobType());
+            project.setCostCenter(jobType.getCostCenter());
+            project.setProjectStatus(getProjectStatusById(projectStatusId));
+
+            if (priorityId != null) {
+                project.setPriority(getPriorityById(priorityId));
+            }
+        }
+        page.setItems(projects);
+        page.setOffset(offset);
+        page.setLimit(limit);
+        log.info("End of getProjectPage in DAO");
+        return page;
     }
 
     private JobType getJobTypeById(int id) throws Exception {
