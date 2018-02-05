@@ -73,7 +73,7 @@ public class TrackingValidationHelper {
         return error;
     }
 
-    public TrackingError validatePage(int limit, int offset) {
+    public TrackingError validatePage(Integer limit, Integer offset) {
         log.info("Start of validatePage");
         TrackingError error = null;
         List<String> errorMessages = new ArrayList<>();
@@ -82,8 +82,8 @@ public class TrackingValidationHelper {
             errorMessages.add("limit can not be less than one");
         }
 
-        if (offset < 0) {
-            errorMessages.add("offset can not be less than zero");
+        if (offset == null || offset < 0) {
+            errorMessages.add("offset can not be less than zero or null");
         }
 
         if (!errorMessages.isEmpty()) {

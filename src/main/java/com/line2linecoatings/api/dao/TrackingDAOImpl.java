@@ -493,6 +493,7 @@ public class TrackingDAOImpl {
 
         preparedStatement.close();
         conn.close();
+        user.setPassword(null);
         log.info("End of createUser in DAO");
         return user;
     }
