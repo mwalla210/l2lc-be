@@ -26,12 +26,27 @@ public class ProjectResource extends BasicResource {
         validationHelper = new TrackingValidationHelper();
     }
 
-//    @POST
-//    @Path("/create")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response createProject(Project project, @Context HttpHeaders headers) throws Exception {
-//        Project createdProject = null;
-//
-//        TrackingError trackingError = validationHelper.
-//    }
+    @POST
+    @Path("/create")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createProject(Project project, @Context HttpHeaders headers) throws Exception {
+        Project createdProject = null;
+
+        TrackingError trackingError = validationHelper.createProject(project);
+
+        if (trackingError != null) {
+            log.error(headers);
+            return getResponse(Response.Status.NOT_ACCEPTABLE, trackingError);
+        }
+
+        try {
+            createdProject = projectService.createProject(project);
+        } catch (Exception ex) {
+            log.error(headers);
+            throw ex;
+        }
+
+        return getResponse(Response.Status.CREATED, createdProject);
+
+    }
 }

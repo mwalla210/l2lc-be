@@ -652,7 +652,8 @@ public class TrackingDAOImpl {
         while (rs.next()) {
             JobType jobType = new JobType();
             jobType.setJobType(rs.getString("title"));
-            jobType.setCostCenter(costCenters.get(rs.getInt("cost_center_id")));
+            jobType.setCostCenter(costCenters.get(rs.getInt("cost_center_id")-1));
+            jobTypes.add(jobType);
         }
 
         rs.close();
@@ -678,6 +679,116 @@ public class TrackingDAOImpl {
         stm.close();
         conn.close();
         return priorities;
+    }
+
+    public Project createProject(Project project) throws Exception {
+
+        int jobTypeId = findJobTypeId(project.getJobType());
+        int projectStatusId = findProjectStatusId(project.getProjectStatus());
+        Integer priorityId = null;
+        if (StringUtils.isNotEmpty(project.getPriority())) {
+            priorityId = findPriorityId(project.getPriority());
+        }
+        Connection conn = createConnection();
+        String query = "INSERT INTO "+
+                "Project (job_type_id, customer_id, project_status_id," +
+                " created, title, description, priority, part_count, ref_name)" +
+                " VALUES (?,?,?,?,?,?,?,?,?)";
+        PreparedStatement preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        preparedStatement.setInt(1, jobTypeId);
+        if (project.getCustomerId() != null) {
+            preparedStatement.setInt(2, project.getCustomerId());
+        }
+        preparedStatement.setInt(3, projectStatusId);
+        preparedStatement.setDate(4, new java.sql.Date(project.getCreated().getTime()));
+        preparedStatement.setString(5, project.getTitle());
+        preparedStatement.setString(6, project.getDescription());
+        if (priorityId != null) {
+            preparedStatement.setInt(7, priorityId);
+        }
+        if (project.getPartCount() != null) {
+            preparedStatement.setInt(8, project.getPartCount());
+        }
+        preparedStatement.setString(9, project.getRefName());
+
+        int affectedRows = preparedStatement.executeUpdate();
+
+        if (affectedRows == 0) {
+            throw new SQLException("Creating project failed, no rows affected");
+        }
+
+        try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                project.setId(generatedKeys.getInt(1));
+                log.info("Project Created with id " + project.getId());
+                generatedKeys.close();
+            } else {
+                throw new SQLException("Creating Project failed, no ID obtained");
+            }
+        }
+
+        preparedStatement.close();
+        conn.close();
+        return project;
+    }
+    private int findJobTypeId(String jobTypeTitle) throws Exception {
+        Connection conn = createConnection();
+
+        String query = "SELECT * FROM JobType WHERE title=?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setString(1, jobTypeTitle);
+        ResultSet rs = preparedStatement.executeQuery();
+
+        int jobTypeId;
+        if (rs.next()) {
+            jobTypeId = rs.getInt("id");
+        } else {
+            throw new SQLException("Invalid Job Type Title");
+        }
+        rs.close();
+        preparedStatement.close();
+        conn.close();
+        return jobTypeId;
+    }
+
+    private int findProjectStatusId(String title) throws Exception {
+        Connection conn = createConnection();
+
+        String query = "SELECT * FROM ProjectStatus WHERE title=?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setString(1, title);
+        ResultSet rs = preparedStatement.executeQuery();
+
+        int projectStatusId;
+        if (rs.next()) {
+            projectStatusId = rs.getInt("id");
+        } else {
+            throw new SQLException("Invalid Project Status Id");
+        }
+        rs.close();
+        preparedStatement.close();
+        conn.close();
+        return projectStatusId;
+    }
+
+    private int findPriorityId(String priority) throws Exception {
+        Connection conn = createConnection();
+
+        String query = "SELECT * FROM Priority WHERE name=?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setString(1, priority);
+        ResultSet rs = preparedStatement.executeQuery();
+
+        int priorityId;
+        if (rs.next()) {
+            priorityId = rs.getInt("id");
+        } else {
+            throw new SQLException("Invalid Priority id");
+        }
+        rs.close();
+        preparedStatement.close();
+        conn.close();
+        return priorityId;
     }
     private boolean removeFromTableById(String table, int id) throws Exception {
         log.info("Start of removeFromTableById with table "  + table + " and id " + id);

@@ -1,5 +1,6 @@
 package com.line2linecoatings.api.tracking.models;
 
+
 import java.util.Date;
 
 public class Project {

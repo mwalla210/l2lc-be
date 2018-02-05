@@ -19,5 +19,4 @@ public class JobType {
     public void setJobType(String jobType) {
         this.jobType = jobType;
     }
-
 }

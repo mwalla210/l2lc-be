@@ -412,7 +412,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"username\": \"Jlbornemann\",\n\t\"password\": \"dipshit\",\n\t\"admin\": false,\n\t\"stationId\": 1\n}"
+							"raw": "{\n\t\"username\": \"Jlbornemann\",\n\t\"password\": \"dipshit\",\n\t\"admin\": false,\n\t\"station\": 1\n}"
 						},
 						"url": {
 							"raw": "{{host}}/{{basepath}}/user/create",
@@ -548,6 +548,33 @@
 								"1"
 							]
 						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Projects",
+			"description": "",
+			"item": [
+				{
+					"name": "Create_Project",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/project/create",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"project",
+								"create"
+							]
+						},
+						"description": ""
 					},
 					"response": []
 				}

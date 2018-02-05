@@ -172,6 +172,11 @@ public class TrackingValidationHelper {
             errorMessages.add("Project must have a title");
         }
 
+        // check for valid part count
+        if (project.getPartCount() != null && project.getPartCount() < 1) {
+            errorMessages.add("Part Count can not be less than 1");
+        }
+
         // check for job type
         if (StringUtils.isNotEmpty(project.getJobType()) &&
                 StringUtils.isNotEmpty(project.getCostCenter())) {
@@ -183,9 +188,9 @@ public class TrackingValidationHelper {
             errorMessages.add(project.getPriority() + " is not a valid priority");
         }
 
-        // check for valid part count
-        if (project.getPartCount() != null && project.getPartCount() < 1) {
-            errorMessages.add("Part Count can not be less than 1");
+        // checking for valid Customer
+        if (project.getCustomerId() != null && !doesCustomerExist(project.getCustomerId())) {
+            errorMessages.add(project.getCustomerId() + " is not a valid customer id");
         }
 
         if (!errorMessages.isEmpty()) {
@@ -194,6 +199,10 @@ public class TrackingValidationHelper {
             error.setStatus(Response.Status.NOT_ACCEPTABLE);
         }
         return error;
+    }
+
+    private boolean doesCustomerExist(int customerId) throws Exception {
+        return !(dao.getCustomerById(customerId)==null);
     }
 
     private List<String> isValidJobType(String jobType, String costCenter) throws Exception {
@@ -205,17 +214,17 @@ public class TrackingValidationHelper {
         JobType myType = null;
 
         for (JobType type : jobTypes) {
-            if (jobType == type.getJobType()) {
+            if (jobType.equals(type.getJobType())) {
                 myType = type;
                 break;
             }
         }
         if (myType == null) {
-            errorMessages.add("Invalid Job Type");
+            errorMessages.add(jobType + " is an invalid Job Type");
         }
 
-        if (!costCenters.contains(myType.getCostCenter())) {
-            errorMessages.add("Invalid Cost Center");
+        if (!costCenters.contains(costCenter)) {
+            errorMessages.add(costCenter + " is an invalid Cost Center");
         }
 
         if (!errorMessages.isEmpty()) {
