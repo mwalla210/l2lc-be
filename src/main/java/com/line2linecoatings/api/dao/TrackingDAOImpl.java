@@ -293,6 +293,13 @@ public class TrackingDAOImpl {
         return customerPage;
     }
 
+    public boolean removeCustomer(int id) throws Exception {
+        log.info("Start of removeCustomer in DAO");
+        boolean removed = removeFromTableById("Customer", id);
+        log.info("End of removeCustomer in DAO");
+        return removed;
+    }
+
     public Employee createEmployee(Employee employee) throws Exception {
         log.info("Start of createEmployee in DAO");
         Connection conn = createConnection();
