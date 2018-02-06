@@ -293,6 +293,13 @@ public class TrackingDAOImpl {
         return customerPage;
     }
 
+    public boolean removeCustomer(int id) throws Exception {
+        log.info("Start of removeCustomer in DAO");
+        boolean removed = removeFromTableById("Customer", id);
+        log.info("End of removeCustomer in DAO");
+        return removed;
+    }
+
     public Employee createEmployee(Employee employee) throws Exception {
         log.info("Start of createEmployee in DAO");
         Connection conn = createConnection();
@@ -966,10 +973,9 @@ public class TrackingDAOImpl {
 
         Connection conn = createConnection();
 
-        String query = "DELETE FROM ? WHERE id = ?";
+        String query = "DELETE FROM "+ table + " WHERE id = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(query);
-        preparedStatement.setString(1, table);
-        preparedStatement.setInt(2, id);
+        preparedStatement.setInt(1, id);
 
         count = preparedStatement.executeUpdate();
         removed = count==1?true:false;

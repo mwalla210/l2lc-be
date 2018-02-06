@@ -107,4 +107,20 @@ public class CustomerResource extends BasicResource {
         customerPage = customerService.getCustomerPage(limit, offset);
         return getResponse(Response.Status.OK, customerPage);
     }
+
+    @DELETE
+    @Path("/remove/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response removeCustomer(@PathParam("id") int id, @Context HttpHeaders headers) throws Exception {
+        try {
+            if (customerService.removeCustomer(id)) {
+                return getResponse(Response.Status.OK);
+            }
+
+            return getResponse(Response.Status.NOT_FOUND);
+        } catch (Exception e) {
+            log.error(headers);
+            throw e;
+        }
+    }
 }
