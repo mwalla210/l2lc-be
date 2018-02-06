@@ -188,6 +188,10 @@ public class TrackingValidationHelper {
         if (isProjectEmpty(project)) {
             errorMessages.add("Invalid Project Update Object");
         }
+
+        if (project.getProjectStatus() != null) {
+            errorMessages.add("Project Status can not be updated through this endpoint");
+        }
         errorMessages.addAll(validateProject(project));
 
         if (!errorMessages.isEmpty()) {
