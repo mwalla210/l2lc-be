@@ -44,6 +44,14 @@ public class CustomerService {
         log.info("End of updateEmploee in Service with id " + id);
         return updatedCustomer;
     }
+
+    public boolean removeCustomer(int id) throws Exception {
+        log.info("Start of removeCustomer in Service with id " + id);
+        boolean removed = trackingDAO.removeCustomer(id);
+        log.info("End of removeCustomer in Service");
+        return removed;
+    }
+
     public Page getCustomerPage(int limit, int offset) throws Exception{
         log.info("Start of getCustomerPage in Service");
         Page customerPage = trackingDAO.getCustomerPage(limit, offset);
