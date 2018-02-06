@@ -151,10 +151,8 @@ public class TrackingValidationHelper {
         return error;
     }
 
-    public TrackingError createProject(Project project) throws Exception {
+    public TrackingError validateCreatedProject(Project project) throws Exception {
         log.info("Start of validateProject");
-
-        Set<String> priorities = dao.getPriorityEnum();
 
         TrackingError error = null;
         List<String> errorMessages = new ArrayList<>();
@@ -172,15 +170,58 @@ public class TrackingValidationHelper {
             errorMessages.add("Project must have a title");
         }
 
+        errorMessages.addAll(validateProject(project));
+
+        if (!errorMessages.isEmpty()) {
+            error = new TrackingError();
+            error.setErrorMessages(errorMessages);
+            error.setStatus(Response.Status.NOT_ACCEPTABLE);
+        }
+        return error;
+    }
+
+    public TrackingError validateUpdatedProject(Project project) throws Exception {
+
+        TrackingError error = null;
+        List<String> errorMessages = new ArrayList<>();
+
+        if (isProjectEmpty(project)) {
+            errorMessages.add("Invalid Project Update Object");
+        }
+        errorMessages.addAll(validateProject(project));
+
+        if (!errorMessages.isEmpty()) {
+            error = new TrackingError();
+            error.setErrorMessages(errorMessages);
+            error.setStatus(Response.Status.NOT_ACCEPTABLE);
+        }
+        return error;
+
+    }
+
+    private boolean isProjectEmpty(Project project) {
+        return project.getTitle() == null && project.getJobType() == null && project.getCostCenter() == null &&
+                project.getCustomerId() == null && project.getTitle() == null && project.getDescription() == null &&
+                project.getPriority() == null && project.getPartCount() == null && project.getRefName() == null;
+    }
+
+    private List<String> validateProject(Project project) throws Exception {
+        List<String> errorMessages = new ArrayList<>();
+        Set<String> priorities = dao.getPriorityEnum();
+
         // check for valid part count
         if (project.getPartCount() != null && project.getPartCount() < 1) {
             errorMessages.add("Part Count can not be less than 1");
         }
 
         // check for job type
-        if (StringUtils.isNotEmpty(project.getJobType()) &&
-                StringUtils.isNotEmpty(project.getCostCenter())) {
-            errorMessages.addAll(isValidJobType(project.getJobType(), project.getCostCenter()));
+        if (StringUtils.isNotEmpty(project.getJobType()) && !isValidJobType(project.getJobType())) {
+            errorMessages.add(project.getJobType() + " is not a valid Job Type");
+        }
+
+        // checking for cost center
+        if (StringUtils.isNotEmpty(project.getCostCenter()) && !isValidCostCenter(project.getCostCenter())) {
+            errorMessages.add(project.getCostCenter() + " is not a valid cost center");
         }
 
         // checking for valid priority
@@ -193,47 +234,18 @@ public class TrackingValidationHelper {
             errorMessages.add(project.getCustomerId() + " is not a valid customer id");
         }
 
-        if (!errorMessages.isEmpty()) {
-            error = new TrackingError();
-            error.setErrorMessages(errorMessages);
-            error.setStatus(Response.Status.NOT_ACCEPTABLE);
-        }
-        return error;
+        return errorMessages;
     }
 
     private boolean doesCustomerExist(int customerId) throws Exception {
         return !(dao.getCustomerById(customerId)==null);
     }
 
-    private List<String> isValidJobType(String jobType, String costCenter) throws Exception {
+    private boolean isValidJobType(String jobType) throws Exception {
+        return dao.getJobTypeEnum().contains(jobType);
+    }
 
-        List<String> errorMessages = new ArrayList<>();
-        List<JobType> jobTypes = dao.getJobTypeEnum();
-        List<String> costCenters = dao.getCostCentersEnum();
-
-        JobType myType = null;
-
-        for (JobType type : jobTypes) {
-            if (jobType.equals(type.getJobType())) {
-                myType = type;
-                break;
-            }
-        }
-        if (myType == null) {
-            errorMessages.add(jobType + " is an invalid Job Type");
-        }
-
-        if (!costCenters.contains(costCenter)) {
-            errorMessages.add(costCenter + " is an invalid Cost Center");
-        }
-
-        if (!errorMessages.isEmpty()) {
-            return errorMessages;
-        }
-
-        if (!myType.getCostCenter().equals(costCenter)) {
-            errorMessages.add("Job type " + jobType + " does not belong to the cost center " + costCenter);
-        }
-        return errorMessages;
+    private boolean isValidCostCenter(String costCenter) throws Exception {
+        return dao.getCostCentersEnum().contains(costCenter);
     }
 }

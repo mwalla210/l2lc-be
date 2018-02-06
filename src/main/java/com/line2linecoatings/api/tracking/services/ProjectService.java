@@ -41,4 +41,15 @@ public class ProjectService {
         return page;
     }
 
+    public Project updateProject(int id, Project project) throws Exception {
+        log.info("Start of updateProject in Service with id " + id);
+        if (getProject(id) == null) {
+            return null;
+        }
+
+        Project updatedProject = dao.updateProject(id, project);
+        log.info("End of updateProject in Service with id " + id);
+        return updatedProject;
+    }
+
 }

@@ -31,7 +31,7 @@ public class ProjectResource extends BasicResource {
     public Response createProject(Project project, @Context HttpHeaders headers) throws Exception {
         Project createdProject = null;
 
-        TrackingError trackingError = validationHelper.createProject(project);
+        TrackingError trackingError = validationHelper.validateCreatedProject(project);
 
         if (trackingError != null) {
             log.error(headers);
@@ -93,5 +93,31 @@ public class ProjectResource extends BasicResource {
         }
 
         return getResponse(Response.Status.OK, page);
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/update/{id}")
+    public Response updateProjectById(Project project, @PathParam("id") int id, @Context HttpHeaders headers) throws Exception{
+        Project updatedProject = null;
+
+        TrackingError error = validationHelper.validateUpdatedProject(project);
+
+        if (error != null) {
+            log.error(headers);
+            return getResponse(Response.Status.NOT_ACCEPTABLE, error);
+        }
+
+        try {
+            updatedProject = projectService.updateProject(id, project);
+        } catch (Exception ex) {
+            log.error(headers);
+            throw ex;
+        }
+
+        if (updatedProject == null) {
+            return getResponse(Response.Status.NOT_FOUND);
+        }
+        return getResponse(Response.Status.ACCEPTED, updatedProject);
     }
 }

@@ -1,6 +1,7 @@
 package com.line2linecoatings.api.dao;
 
 import com.line2linecoatings.api.tracking.models.*;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -8,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
+import javax.swing.plaf.nimbus.State;
 import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.*;
@@ -217,6 +219,7 @@ public class TrackingDAOImpl {
         }
 
         rs.close();
+        preparedStatement.close();
         conn.close();
         return customer;
     }
@@ -646,8 +649,8 @@ public class TrackingDAOImpl {
         return statuses;
     }
 
-    public List<JobType> getJobTypeEnum() throws Exception {
-        List<JobType> jobTypes = new ArrayList<>();
+    public List<String> getJobTypeEnum() throws Exception {
+        List<String> jobTypes = new ArrayList<>();
 
         Connection conn = createConnection();
         Statement stm = conn.createStatement();
@@ -658,10 +661,7 @@ public class TrackingDAOImpl {
         List<String> costCenters = this.getCostCentersEnum();
 
         while (rs.next()) {
-            JobType jobType = new JobType();
-            jobType.setJobType(rs.getString("title"));
-            jobType.setCostCenter(costCenters.get(rs.getInt("cost_center_id")-1));
-            jobTypes.add(jobType);
+            jobTypes.add(rs.getString("title"));
         }
 
         rs.close();
@@ -693,6 +693,7 @@ public class TrackingDAOImpl {
         log.info("Start of createProject in DAO");
         int jobTypeId = findJobTypeId(project.getJobType());
         int projectStatusId = findProjectStatusId(project.getProjectStatus());
+        int costCenterId = findCostCenterId(project.getCostCenter());
         Integer priorityId = null;
         if (StringUtils.isNotEmpty(project.getPriority())) {
             priorityId = findPriorityId(project.getPriority());
@@ -700,8 +701,8 @@ public class TrackingDAOImpl {
         Connection conn = createConnection();
         String query = "INSERT INTO "+
                 "Project (job_type_id, customer_id, project_status_id," +
-                " created, title, description, priority, part_count, ref_name)" +
-                " VALUES (?,?,?,?,?,?,?,?,?)";
+                " created, title, description, priority, part_count, ref_name, cost_center_id)" +
+                " VALUES (?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         preparedStatement.setInt(1, jobTypeId);
         if (project.getCustomerId() != null) {
@@ -718,7 +719,7 @@ public class TrackingDAOImpl {
             preparedStatement.setInt(8, project.getPartCount());
         }
         preparedStatement.setString(9, project.getRefName());
-
+        preparedStatement.setInt(10, costCenterId);
         int affectedRows = preparedStatement.executeUpdate();
 
         if (affectedRows == 0) {
@@ -750,13 +751,15 @@ public class TrackingDAOImpl {
         ResultSet rs = preparedStatement.executeQuery();
         Project project = null;
 
-        int jobTypeid;
+        int jobTypeId;
+        int costCenterId;
         int projectStatusId;
         Integer priorityId;
 
         if (rs.next()) {
             project = new Project();
-            jobTypeid = rs.getInt("job_type_id");
+            jobTypeId = rs.getInt("job_type_id");
+            costCenterId = rs.getInt("cost_center_id");
             projectStatusId = rs.getInt("project_status_id");
             priorityId = rs.getInt("priority");
             if (rs.wasNull()) {
@@ -781,9 +784,8 @@ public class TrackingDAOImpl {
             preparedStatement.close();
             conn.close();
 
-            JobType jobType = getJobTypeById(jobTypeid);
-            project.setJobType(jobType.getJobType());
-            project.setCostCenter(jobType.getCostCenter());
+            project.setJobType(getJobTypeById(jobTypeId));
+            project.setCostCenter(getCostCenterById(costCenterId));
             project.setProjectStatus(getProjectStatusById(projectStatusId));
 
             if (priorityId != null) {
@@ -808,12 +810,15 @@ public class TrackingDAOImpl {
         List<Integer> jobTypeIds = new ArrayList<>();
         List<Integer> projectStatusIds = new ArrayList<>();
         List<Integer> priorityIds = new ArrayList<>();
+        List<Integer> costCenterIds = new ArrayList<>();
         List<Project> projects = new ArrayList<>();
         while(rs.next()) {
             Project project = new Project();
             int jobTypeid = rs.getInt("job_type_id");
             int projectStatusId = rs.getInt("project_status_id");
             Integer priorityId = rs.getInt("priority");
+            int costCenterId = rs.getInt("cost_center_id");
+
             if (rs.wasNull()) {
                 priorityId = null;
             }
@@ -836,6 +841,7 @@ public class TrackingDAOImpl {
             jobTypeIds.add(jobTypeid);
             projectStatusIds.add(projectStatusId);
             priorityIds.add(priorityId);
+            costCenterIds.add(costCenterId);
             projects.add(project);
         }
         rs.close();
@@ -846,11 +852,11 @@ public class TrackingDAOImpl {
             Project project = projects.get(x);
             int jobTypeid = jobTypeIds.get(x);
             int projectStatusId = projectStatusIds.get(x);
+            int costCenterId = costCenterIds.get(x);
             Integer priorityId = priorityIds.get(x);
 
-            JobType jobType = getJobTypeById(jobTypeid);
-            project.setJobType(jobType.getJobType());
-            project.setCostCenter(jobType.getCostCenter());
+            project.setJobType(getJobTypeById(jobTypeid));
+            project.setCostCenter(getCostCenterById(costCenterId));
             project.setProjectStatus(getProjectStatusById(projectStatusId));
 
             if (priorityId != null) {
@@ -864,13 +870,116 @@ public class TrackingDAOImpl {
         return page;
     }
 
-    private JobType getJobTypeById(int id) throws Exception {
-        List<JobType> jobTypes = getJobTypeEnum();
-        if (id > jobTypes.size()) {
-            throw new SQLException("Invalid Job Type id");
+    public Project updateProject(int id, Project project) throws Exception {
+
+        String query = "UPDATE Project SET ";
+        List<String> updates = new ArrayList<>();
+
+        if (StringUtils.isNotEmpty(project.getJobType())) {
+            int jobType = findJobTypeId(project.getJobType());
+            updates.add("job_type_id = " + jobType);
         }
 
-        return jobTypes.get(id-1);
+        if (StringUtils.isNotEmpty(project.getCostCenter())) {
+            int costCenter = findCostCenterId(project.getCostCenter());
+            updates.add("cost_center_id = " + costCenter);
+        }
+
+        if (project.getCustomerId() != null) {
+            updates.add("customer_id = " + project.getCustomerId());
+        }
+
+        if (project.getTitle() != null) {
+            updates.add("title = " + '"' + project.getTitle() + '"');
+        }
+
+        if (project.getDescription() != null) {
+            updates.add("description = " + '"' + project.getDescription() + '"');
+        }
+
+        if (project.getPriority() != null) {
+            int priority = findPriorityId(project.getPriority());
+            updates.add("priority = " + priority);
+        }
+
+        if (project.getPartCount() != null) {
+            updates.add("part_count = " + project.getPartCount());
+        }
+
+        if (project.getRefName() != null) {
+            updates.add("ref_name = " + '"' + project.getRefName() + '"');
+        }
+
+        query += String.join(",", updates);
+        log.info(query);
+        Connection conn = createConnection();
+        Statement stm = conn.createStatement();
+        stm.executeUpdate(query);
+        stm.close();
+        conn.close();
+        return this.getProject(id);
+    }
+
+    private int findCostCenterId(String costCenter) throws Exception{
+        Connection conn = createConnection();
+
+        String query = "SELECT * FROM CostCenter WHERE name=?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setString(1, costCenter);
+        ResultSet rs = preparedStatement.executeQuery();
+
+        int costCenterId;
+        if (rs.next()) {
+            costCenterId = rs.getInt("id");
+        } else {
+            throw new SQLException("Invalid Cost Center name");
+        }
+        rs.close();
+        preparedStatement.close();
+        conn.close();
+        return costCenterId;
+    }
+
+    private String getJobTypeById(int id) throws Exception {
+        Connection conn = createConnection();
+
+        String query = "SELECT * FROM JobType WHERE id=?";
+
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, id);
+        ResultSet rs = preparedStatement.executeQuery();
+
+        String jobType;
+        if (rs.next()) {
+            jobType = rs.getString("title");
+        } else {
+            throw new SQLException("Invalid JobType id");
+        }
+        rs.close();
+        preparedStatement.close();
+        conn.close();
+        return jobType;
+    }
+
+    private String getCostCenterById(int id) throws Exception {
+        Connection conn = createConnection();
+
+        String query = "SELECT * FROM CostCenter WHERE id=?";
+
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, id);
+        ResultSet rs = preparedStatement.executeQuery();
+
+        String costCenter;
+        if (rs.next()) {
+            costCenter = rs.getString("name");
+        } else {
+            throw new SQLException("Invalid Cost Center id");
+        }
+        rs.close();
+        preparedStatement.close();
+        conn.close();
+        return costCenter;
     }
 
     private String getPriorityById(int id) throws Exception {
@@ -887,6 +996,9 @@ public class TrackingDAOImpl {
         } else {
             throw new SQLException("Invalid Priority Id");
         }
+        rs.close();
+        preparedStatement.close();
+        conn.close();
         return priority;
     }
 
@@ -904,6 +1016,9 @@ public class TrackingDAOImpl {
         } else {
             throw new SQLException("Invalid Project Status Id");
         }
+        rs.close();
+        preparedStatement.close();
+        conn.close();
         return projectStatus;
     }
 
