@@ -345,6 +345,30 @@
         }
       }
     },
+    "/customer/remove/{id}": {
+      "delete": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Delete a customer",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/user/create": {
       "post": {
         "tags": [
