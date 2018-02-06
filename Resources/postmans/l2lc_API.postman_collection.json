@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "l2lc_API",
-		"_postman_id": "bf35fbc3-db8b-8513-f305-26dd60a06321",
+		"_postman_id": "5c3eba69-23fb-f66b-392b-397f22b23521",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -72,6 +72,43 @@
 								"{{basepath}}",
 								"employee",
 								"{{empid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_All_Employees",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/employee?limit=50&offset=0",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"employee"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "50",
+									"equals": true
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"equals": true
+								}
 							]
 						}
 					},
@@ -161,6 +198,32 @@
 							"path": [
 								"{{basepath}}",
 								"station"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_StationById",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/station/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"station",
+								"1"
 							]
 						}
 					},
@@ -344,6 +407,63 @@
 								"{{basepath}}",
 								"customer",
 								"create"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cost_Centers",
+			"description": "",
+			"item": [
+				{
+					"name": "Get_AllCostCenters",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/cost-center",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"cost-center"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_CostCenterById",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/cost-center/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"cost-center",
+								"1"
 							]
 						}
 					},

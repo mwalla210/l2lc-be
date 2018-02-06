@@ -107,9 +107,14 @@ public class EmployeeResource extends BasicResource
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllEmployees(@QueryParam("limit") int limit, @QueryParam("offset") int offset,
+    public Response getAllEmployees(@QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
                                     @Context HttpHeaders headers) throws Exception{
         Page employeePage = null;
+
+        if (limit == null) {
+            limit = 50; // default limit
+        }
+
         TrackingError error = trackingValidationHelper.validatePage(limit, offset);
 
         if (error != null) {

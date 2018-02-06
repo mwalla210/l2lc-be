@@ -1,383 +1,814 @@
-swagger: "2.0"
-info:
-  description: "API Development Document with current endpoints hosted on l2lc-dev"
-  version: "1.0.1"
-  title: "l2lc API"
-host: "138.197.88.198:8080"
-basePath: "/l2lc/api"
-tags:
-- name: "Employee"
-  description: "Access to Employee Informatin"
-schemes:
-- "http"
-paths:
-  /employee/create:
-    post:
-      tags:
-      - "Employee"
-      summary: "Add a new employee"
-      description: ""
-      operationId: "addEmployee"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Employee object to be added to database"
-        required: true
-        schema:
-          $ref: "#/definitions/Create_Employee_Input"
-      responses:
-        406:
-          description: "Not Acceptable input"
-          schema:
-            $ref: '#/definitions/Error'
-        201:
-          description: "Created"
-          schema:
-            $ref: "#/definitions/Create_Employee_Output"
-        
-  /employee/update/{id}:
-    post:
-      tags:
-      - "Employee"
-      summary: "Add a new employee"
-      description: ""
-      operationId: "updateEmployeeById"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-        - in: path
-          name: id
-          type: integer
-          required: true
-          description: Numeric Id of the employee
-        - in: "body"
-          name: "body"
-          description: "Employee object to be added to database"
-          required: true
-          schema:
-            $ref: '#/definitions/Create_Employee_Input'
-      responses:
-        406:
-          description: "Not Acceptable input"
-          schema:
-            $ref: '#/definitions/Error'
-        404:
-          description: "Not Found"
-        200:
-          description: "OK, update successful"
-          schema:
-            $ref: "#/definitions/Create_Employee_Output"
-  /employee/{id}:
-    get:
-      tags:
-        - "Employee"
-      summary: "Get an employee's information from their id"
-      operationId: "getEmployeeById"
-      produces: 
-        - "application/json"
-      parameters: 
-        - in: path
-          name: id
-          type: integer
-          required: true
-          description: Numeric Id of the employee
-      responses:
-        200:
-          description: "Employee was successfully retrieved"
-          schema:
-            $ref: '#/definitions/Create_Employee_Output'
-        404:
-          description: "Employee Not found"
-  /employee/remove/{id}:
-    get:
-      tags:
-        - "Employee"
-      summary: "Remove an employee"
-      operationId: "removeEmployeeById"
-      produces: 
-        - "application/json"
-      parameters: 
-        - in: path
-          name: id
-          type: integer
-          required: true
-          description: Numeric Id of the employee
-      responses:
-        200:
-          description: OK
-        404:
-          description: Employee Not Found
-  /customer/create:
-    post:
-      tags:
-        - "Customer"
-      summary: "Create a customer"
-      produces: 
-        - "application/json"
-      parameters: 
-        - in: body
-          name: body
-          schema:
-            $ref: '#/definitions/Create_Customer_Input'
-      responses:
-        406:
-          description: "Not Acceptable input"
-          schema:
-            $ref: '#/definitions/Error'
-        201:
-          description: "Customer created"
-          schema:
-            $ref: '#/definitions/Create_Customer_Output'
-  /customer/{id}:
-    get:
-      tags:
-        - "Customer"
-      summary: "Get customer information"
-      produces: 
-        - "application/json"
-      parameters:
-        - in: path
-          name: id
-          type: integer
-          required: true
-      responses:
-        404:
-          description: "Customer not found"
-        200:
-          description: "OK, customer was found"
-          schema:
-            $ref: '#/definitions/Create_Customer_Output'
-  /station:
-    get:
-      tags:
-        - "Station"
-      summary: "Get all registered stations"
-      produces: 
-        - "application/json"
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: '#/definitions/AllStations'
-  /station/{id}:
-    get:
-      tags:
-        - "Station"
-      summary: "Get a station by its id"
-      produces: 
-        - "application/json"
-      parameters: 
-        - in: path
-          name: id
-          type: integer
-          required: true
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/Station'
-        404:
-          description: "Station not found"
-  /cost-center:
-    get:
-      tags:
-        - "Cost Center"
-      summary: "Get all Cost Centers"
-      produces: 
-        - "application/json"
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: '#/definitions/AllCostCenters'
-  /cost-center/{id}:
-    get:
-      tags:
-        - "Cost Center"
-      summary: "Get a cost center by its id"
-      produces: 
-        - "application/json"
-      parameters: 
-        - in: path
-          name: id
-          type: integer
-          required: true
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/CostCenter'
-        404:
-          description: "Cost Center not found"
-definitions:
-  Create_Employee_Input:
-    type: "object"
-    required:
-    - "firstName"
-    - "lastName"
-    properties:
-      firstName:
-        type: "string"
-        example: "Joel"
-      lastName:
-        type: "string"
-        example: "Bornemann"
-  Create_Employee_Output:
-    type: "object"
-    properties:
-      id:
-        type: integer
-        example: 12
-      firstName:
-        type: "string"
-        example: "Joel"
-      lastName:
-        type: "string"
-        example: "Bornemann"
-  Create_Customer_Input:
-    type: object
-    properties:
-      name:
-        type: string
-        example: "Jeff Salvage's Scooter Racing Company"
-      email:
-        type: string
-        example: "salvage@drexel.edu"
-      website:
-        type: string
-        example: "salvagescooters.com"
-      shippingAddr:
-        $ref: '#/definitions/Address_Input'
-      billingAddr:
-        $ref: '#/definitions/Address_Input'
-      isPastDue:
-        type: boolean
-        example: false
-      phoneNumber:
-        type: string
-        example: "911"
-  Create_Customer_Output:
-    type: object
-    properties:
-      id:
-        type: integer
-        example: 12
-      name:
-        type: string
-        example: "Jeff Salvage's Scooter Racing Company"
-      email:
-        type: string
-        example: "salvage@drexel.edu"
-      website:
-        type: string
-        example: "salvagescooters.com"
-      shippingAddr:
-        $ref: '#/definitions/Address_Output'
-      billingAddr:
-        $ref: '#/definitions/Address_Output'
-      isPastDue:
-        type: boolean
-        example: false
-      phoneNumber:
-        type: string
-        example: "911"
-      
-  Address_Output:
-    type: object
-    properties:
-      id:
-        type: integer
-        example: 2
-      street:
-        type: string
-        example: "123 fake st"
-      city:
-        type: string
-        example: "Philadelphia"
-      state:
-        type: string
-        example: "PA"
-      country:
-        type: string
-        example: "USA"
-      zip:
-        type: string
-        example: "19104"
-  Address_Input:
-    type: object
-    properties:
-      street:
-        type: string
-        example: "123 fake st"
-      city:
-        type: string
-        example: "Philadelphia"
-      state:
-        type: string
-        example: "PA"
-      country:
-        type: string
-        example: "USA"
-      zip:
-        type: string
-        example: "19104"
-  AllStations:
-    type: "array"
-    items:
-      type: object
-      properties:
-        id:
-          type: "integer"
-          example: 2
-        name:
-          type: "string"
-          example: "Coating and Curing"
-  Station:
-    type: object
-    properties:
-      id:
-        type: integer
-        example: 2
-      name:
-        type: string
-        example: "Coating and Curing"
-  AllCostCenters:
-    type: "array"
-    items:
-      type: object
-      properties:
-        id:
-          type: "integer"
-          example: 1
-        name:
-          type: "string"
-          example: "APC Job"
-  CostCenter:
-    type: object
-    properties:
-      id:
-        type: integer
-        example: 1
-      name:
-        type: "string"
-        example: "APC Job"
-  Error:
-    type: object
-    properties:
-      status:
-        type: string
-        example: "NOT_ACCEPTABLE"
-      errorMessages:
-        type: array
-        items:
-          type: string
-          example: "Some Error Message"
-
-      
-    
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "API Development Document with current endpoints hosted on l2lc-dev",
+    "version": "1.0.1",
+    "title": "l2lc API"
+  },
+  "host": "138.197.88.198:8080",
+  "basePath": "/l2lc/api",
+  "tags": [
+    {
+      "name": "Employee",
+      "description": "Access to Employee Informatin"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/employee/create": {
+      "post": {
+        "tags": [
+          "Employee"
+        ],
+        "summary": "Add a new employee",
+        "description": "",
+        "operationId": "addEmployee",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Employee object to be added to database",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Create_Employee_Input"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Create_Employee_Output"
+            }
+          },
+          "406": {
+            "description": "Not Acceptable input",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/employee/update/{id}": {
+      "post": {
+        "tags": [
+          "Employee"
+        ],
+        "summary": "Add a new employee",
+        "description": "",
+        "operationId": "updateEmployeeById",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric Id of the employee"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Employee object to be added to database",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Create_Employee_Input"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK, update successful",
+            "schema": {
+              "$ref": "#/definitions/Create_Employee_Output"
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "406": {
+            "description": "Not Acceptable input",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/employee/{id}": {
+      "get": {
+        "tags": [
+          "Employee"
+        ],
+        "summary": "Get an employee's information from their id",
+        "operationId": "getEmployeeById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric Id of the employee"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Employee was successfully retrieved",
+            "schema": {
+              "$ref": "#/definitions/Create_Employee_Output"
+            }
+          },
+          "404": {
+            "description": "Employee Not found"
+          }
+        }
+      }
+    },
+    "/employee/remove/{id}": {
+      "delete": {
+        "tags": [
+          "Employee"
+        ],
+        "summary": "Remove an employee",
+        "operationId": "removeEmployeeById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric Id of the employee"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Employee Not Found"
+          }
+        }
+      }
+    },
+    "/employee": {
+      "get": {
+        "tags": [
+          "Employee"
+        ],
+        "summary": "Get All Employees",
+        "operationId": "getAllEmployees",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "type": "integer",
+            "required": false,
+            "description": "The amount of maximum amount of items to be returned"
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "type": "integer",
+            "required": false,
+            "description": "The offset to be used when obtaining items."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Create_Employee_Output"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customer/create": {
+      "post": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Create a customer",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Create_Customer_Input"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Customer created",
+            "schema": {
+              "$ref": "#/definitions/Create_Customer_Output"
+            }
+          },
+          "406": {
+            "description": "Not Acceptable input",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/customer/{id}": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Get customer information",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK, customer was found",
+            "schema": {
+              "$ref": "#/definitions/Create_Customer_Output"
+            }
+          },
+          "404": {
+            "description": "Customer not found"
+          }
+        }
+      }
+    },
+    "/customer/update/{id}": {
+      "post": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Update a customer",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "in_body",
+            "schema": {
+              "$ref": "#/definitions/Create_Customer_Input"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Create_Customer_Output"
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "406": {
+            "description": "Not Acceptable"
+          }
+        }
+      }
+    },
+    "/customer": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Get all customers",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "type": "integer",
+            "required": false,
+            "description": "The amount of maximum amount of items to be returned"
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "type": "integer",
+            "required": false,
+            "description": "The offset to be used when obtaining items."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Create_Customer_Output"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/create": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Create a new User",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "in_body",
+            "schema": {
+              "$ref": "#/definitions/Create_User_Input"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Create_User_Output"
+            }
+          },
+          "406": {
+            "description": "Not_Acceptable",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "validate a username and password combination",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "in_body",
+            "schema": {
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "example": "jlbornemann"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "thisismytuxpassword"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Create_User_Output"
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED"
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get User by Id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Create_User_Output"
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND"
+          }
+        }
+      }
+    },
+    "/station": {
+      "get": {
+        "tags": [
+          "Station"
+        ],
+        "summary": "Get all registered stations",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AllStations"
+            }
+          }
+        }
+      }
+    },
+    "/station/{id}": {
+      "get": {
+        "tags": [
+          "Station"
+        ],
+        "summary": "Get a station by its id",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Station"
+            }
+          },
+          "404": {
+            "description": "Station not found"
+          }
+        }
+      }
+    },
+    "/cost-center": {
+      "get": {
+        "tags": [
+          "Cost Center"
+        ],
+        "summary": "Get all Cost Centers",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AllCostCenters"
+            }
+          }
+        }
+      }
+    },
+    "/cost-center/{id}": {
+      "get": {
+        "tags": [
+          "Cost Center"
+        ],
+        "summary": "Get a cost center by its id",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/CostCenter"
+            }
+          },
+          "404": {
+            "description": "Cost Center not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Create_Employee_Input": {
+      "type": "object",
+      "required": [
+        "firstName",
+        "lastName"
+      ],
+      "properties": {
+        "firstName": {
+          "type": "string",
+          "example": "Joel"
+        },
+        "lastName": {
+          "type": "string",
+          "example": "Bornemann"
+        }
+      }
+    },
+    "Create_Employee_Output": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 12
+        },
+        "firstName": {
+          "type": "string",
+          "example": "Joel"
+        },
+        "lastName": {
+          "type": "string",
+          "example": "Bornemann"
+        }
+      }
+    },
+    "Create_Customer_Input": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Jeff Salvage's Scooter Racing Company"
+        },
+        "email": {
+          "type": "string",
+          "example": "salvage@drexel.edu"
+        },
+        "website": {
+          "type": "string",
+          "example": "salvagescooters.com"
+        },
+        "shippingAddr": {
+          "$ref": "#/definitions/Address_Input"
+        },
+        "billingAddr": {
+          "$ref": "#/definitions/Address_Input"
+        },
+        "isPastDue": {
+          "type": "boolean",
+          "example": false
+        },
+        "phoneNumber": {
+          "type": "string",
+          "example": "911"
+        }
+      }
+    },
+    "Create_Customer_Output": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 12
+        },
+        "name": {
+          "type": "string",
+          "example": "Jeff Salvage's Scooter Racing Company"
+        },
+        "email": {
+          "type": "string",
+          "example": "salvage@drexel.edu"
+        },
+        "website": {
+          "type": "string",
+          "example": "salvagescooters.com"
+        },
+        "shippingAddr": {
+          "$ref": "#/definitions/Address_Output"
+        },
+        "billingAddr": {
+          "$ref": "#/definitions/Address_Output"
+        },
+        "isPastDue": {
+          "type": "boolean",
+          "example": false
+        },
+        "phoneNumber": {
+          "type": "string",
+          "example": "911"
+        }
+      }
+    },
+    "Address_Output": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 2
+        },
+        "street": {
+          "type": "string",
+          "example": "123 fake st"
+        },
+        "city": {
+          "type": "string",
+          "example": "Philadelphia"
+        },
+        "state": {
+          "type": "string",
+          "example": "PA"
+        },
+        "country": {
+          "type": "string",
+          "example": "USA"
+        },
+        "zip": {
+          "type": "string",
+          "example": "19104"
+        }
+      }
+    },
+    "Address_Input": {
+      "type": "object",
+      "properties": {
+        "street": {
+          "type": "string",
+          "example": "123 fake st"
+        },
+        "city": {
+          "type": "string",
+          "example": "Philadelphia"
+        },
+        "state": {
+          "type": "string",
+          "example": "PA"
+        },
+        "country": {
+          "type": "string",
+          "example": "USA"
+        },
+        "zip": {
+          "type": "string",
+          "example": "19104"
+        }
+      }
+    },
+    "AllStations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 2
+          },
+          "name": {
+            "type": "string",
+            "example": "Coating and Curing"
+          }
+        }
+      }
+    },
+    "Station": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 2
+        },
+        "name": {
+          "type": "string",
+          "example": "Coating and Curing"
+        }
+      }
+    },
+    "AllCostCenters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "APC Job"
+          }
+        }
+      }
+    },
+    "CostCenter": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "example": "APC Job"
+        }
+      }
+    },
+    "Create_User_Input": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "example": "jlbornemann"
+        },
+        "password": {
+          "type": "string",
+          "example": "thismytuxpassword"
+        },
+        "admin": {
+          "type": "boolean",
+          "example": true
+        },
+        "stationId": {
+          "type": "integer",
+          "example": 4
+        }
+      }
+    },
+    "Create_User_Output": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 12
+        },
+        "username": {
+          "type": "string",
+          "example": "jlbornemann"
+        },
+        "admin": {
+          "type": "boolean",
+          "example": true
+        },
+        "stationId": {
+          "type": "integer",
+          "example": 4
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "NOT_ACCEPTABLE"
+        },
+        "errorMessages": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "Some Error Message"
+          }
+        }
+      }
+    }
+  }
+}
