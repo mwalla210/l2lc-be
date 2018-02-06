@@ -559,22 +559,123 @@
 			"item": [
 				{
 					"name": "Create_Project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e8588f95-aa49-4de8-a9cb-6783be3965a3",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)",
+									"pm.environment.set(\"projid\", jsonData.id);",
+									""
+								]
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
-						"header": [],
-						"body": {},
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"jobType\": \"Piston\",\n\t\"costCenter\": \"APC\",\n\t\"title\": \"This is a title\",\n\t\"description\": \"fijeorpwfjeropiwjfreopw\",\n\t\"priority\": \"Low\",\n\t\"partCount\": 2,\n\t\"refName\": \"What even is this\"\n}"
+						},
 						"url": {
-							"raw": "{{host}}/{{basepath}}/project/create",
+							"raw": "{{host}}/{{basepath}}/project",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"project"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get_ProjectById",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e8588f95-aa49-4de8-a9cb-6783be3965a3",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)",
+									"pm.environment.set(\"projid\", jsonData.id);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"jobType\": \"Piston\",\n\t\"costCenter\": \"APC\",\n\t\"title\": \"This is a title\",\n\t\"description\": \"fijeorpwfjeropiwjfreopw\",\n\t\"priority\": \"Low\",\n\t\"partCount\": 2,\n\t\"refName\": \"What even is this\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/project/{{projid}}",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{basepath}}",
 								"project",
-								"create"
+								"{{projid}}"
 							]
 						},
 						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get_All_Projects",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/project?limit=50&offset=0",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"project"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "50",
+									"equals": true
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"equals": true
+								}
+							]
+						}
 					},
 					"response": []
 				}
