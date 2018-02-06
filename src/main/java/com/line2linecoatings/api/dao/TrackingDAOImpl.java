@@ -628,10 +628,9 @@ public class TrackingDAOImpl {
 
         Connection conn = createConnection();
 
-        String query = "DELETE FROM ? WHERE id = ?";
+        String query = "DELETE FROM "+ table + " WHERE id = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(query);
-        preparedStatement.setString(1, table);
-        preparedStatement.setInt(2, id);
+        preparedStatement.setInt(1, id);
 
         count = preparedStatement.executeUpdate();
         removed = count==1?true:false;

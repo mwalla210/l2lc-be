@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "l2lc_API",
-		"_postman_id": "47ff44ea-ef52-b915-2fad-6d0ea65d87e6",
+		"_postman_id": "bf35fbc3-db8b-8513-f305-26dd60a06321",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -214,7 +214,75 @@
 					"response": []
 				},
 				{
+					"name": "Update_Customer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ce15efbb-4af1-4a56-9cb9-039135f51ec8",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)",
+									"pm.environment.set(\"custid\", jsonData.id);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Jeff Salvage's Scooter Racing Company\",\n\t\"email\": \"salvage@drexel.edu\",\n\t\"website\": \"salvagescooters.com\",\n\t\"shippingAddr\": {\n\t\t\"street\": \"123 fake st\",\n\t\t\"city\": \"Philadelphia\",\n\t\t\"state\": \"PA\",\n\t\t\"country\": \"USA\",\n\t\t\"zip\": \"19104\"\n\t},\n\t\"billingAddr\": {\n\t\t\"street\": \"123 fake st\",\n\t\t\"city\": \"Philadelphia\",\n\t\t\"state\": \"PA\",\n\t\t\"country\": \"USA\",\n\t\t\"zip\": \"19104\"\n\t},\n\t\"isPastDue\": false,\n\t\"phoneNumber\": \"911\"\n}\n"
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/customer/create",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"customer",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get_Customer",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/customer/{{custid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"customer",
+								"{{custid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove_Customer",
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -276,120 +344,6 @@
 								"{{basepath}}",
 								"customer",
 								"create"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "User",
-			"description": "",
-			"item": [
-				{
-					"name": "Create_User",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "f4457424-94bd-4cd4-9e93-ead01d36e4bf",
-								"type": "text/javascript",
-								"exec": [
-									"var jsonData = JSON.parse(responseBody)",
-									"pm.environment.set(\"userid\", jsonData.id);",
-									""
-								]
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"username\": \"Jlbornemann\",\n\t\"password\": \"dipshit\",\n\t\"admin\": false,\n\t\"stationId\": 1\n}"
-						},
-						"url": {
-							"raw": "{{host}}/{{basepath}}/user/create",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"{{basepath}}",
-								"user",
-								"create"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Login_User",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "a2818c33-aefb-45e3-b1fe-a351fa4a3503",
-								"type": "text/javascript",
-								"exec": [
-									""
-								]
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n \"username\": \"Jlbornemann\",\n \"password\": \"dipshit\"\n}"
-						},
-						"url": {
-							"raw": "{{host}}/{{basepath}}/user/login",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"{{basepath}}",
-								"user",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get_User",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{host}}/{{basepath}}/user/{{userid}}",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"{{basepath}}",
-								"user",
-								"{{userid}}"
 							]
 						}
 					},
