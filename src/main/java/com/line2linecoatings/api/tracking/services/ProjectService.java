@@ -52,4 +52,17 @@ public class ProjectService {
         return updatedProject;
     }
 
+    public boolean updateProjectStatus(int id, String status) throws Exception {
+        if (getProject(id) == null) {
+            return false;
+        }
+
+        if (status.equals("Completed")) {
+            dao.updateProjectStatus(id, status, new Date());
+        } else {
+            dao.updateProjectStatus(id, status);
+        }
+        return true;
+    }
+
 }

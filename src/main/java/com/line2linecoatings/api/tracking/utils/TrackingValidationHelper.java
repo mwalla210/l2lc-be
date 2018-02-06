@@ -199,6 +199,36 @@ public class TrackingValidationHelper {
 
     }
 
+    public TrackingError validateProjectStatus(int id, String status) throws Exception {
+        TrackingError error = null;
+        List<String> errorMessages = new ArrayList<>();
+
+        Set<String> projectStatusEnum = dao.getProjectStatusEnum();
+        Project project = dao.getProject(id);
+
+        if (!projectStatusEnum.contains(status)) {
+            errorMessages.add(status + " is an invalid status");
+        } else if (project != null) {
+            if (project.getProjectStatus().equals(status)) {
+                errorMessages.add(status + " is already the current status");
+            }
+            if (status.equals("Created")) {
+                errorMessages.add("Projects can't be re-created");
+            }
+
+            if (project.getProjectStatus().equals("Completed")) {
+                errorMessages.add("Projects is completed, no status changes can be made");
+            }
+        }
+
+        if (!errorMessages.isEmpty()) {
+            error = new TrackingError();
+            error.setErrorMessages(errorMessages);
+            error.setStatus(Response.Status.NOT_ACCEPTABLE);
+        }
+        return error;
+    }
+
     private boolean isProjectEmpty(Project project) {
         return project.getTitle() == null && project.getJobType() == null && project.getCostCenter() == null &&
                 project.getCustomerId() == null && project.getTitle() == null && project.getDescription() == null &&

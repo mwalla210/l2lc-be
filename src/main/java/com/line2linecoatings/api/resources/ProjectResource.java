@@ -8,6 +8,7 @@ import com.line2linecoatings.api.tracking.utils.TrackingValidationHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.sound.midi.Track;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -119,5 +120,32 @@ public class ProjectResource extends BasicResource {
             return getResponse(Response.Status.NOT_FOUND);
         }
         return getResponse(Response.Status.ACCEPTED, updatedProject);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/status/{id}")
+    public Response updateProjectStatus(@QueryParam("status") String status, @PathParam("id") int id,
+                                        @Context HttpHeaders headers) throws Exception {
+
+        TrackingError error = validationHelper.validateProjectStatus(id, status);
+        boolean projectUpdated;
+        if (error != null) {
+            log.error(headers);
+            return getResponse(Response.Status.NOT_ACCEPTABLE, error);
+        }
+
+        try {
+            projectUpdated = projectService.updateProjectStatus(id, status);
+        } catch (Exception ex) {
+            log.error(headers);
+            throw ex;
+        }
+
+        if (projectUpdated == false) {
+            return getResponse(Response.Status.NOT_FOUND);
+        }
+
+        return getResponse(Response.Status.ACCEPTED);
     }
 }

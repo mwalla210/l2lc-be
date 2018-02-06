@@ -172,48 +172,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "Update_Customer",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "ce15efbb-4af1-4a56-9cb9-039135f51ec8",
-								"type": "text/javascript",
-								"exec": [
-									"var jsonData = JSON.parse(responseBody)",
-									"pm.environment.set(\"custid\", jsonData.id);",
-									""
-								]
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Jeff Salvage's Scooter Racing Company\",\n\t\"email\": \"salvage@drexel.edu\",\n\t\"website\": \"salvagescooters.com\",\n\t\"shippingAddr\": {\n\t\t\"street\": \"123 fake st\",\n\t\t\"city\": \"Philadelphia\",\n\t\t\"state\": \"PA\",\n\t\t\"country\": \"USA\",\n\t\t\"zip\": \"19104\"\n\t},\n\t\"billingAddr\": {\n\t\t\"street\": \"123 fake st\",\n\t\t\"city\": \"Philadelphia\",\n\t\t\"state\": \"PA\",\n\t\t\"country\": \"USA\",\n\t\t\"zip\": \"19104\"\n\t},\n\t\"isPastDue\": false,\n\t\"phoneNumber\": \"911\"\n}\n"
-						},
-						"url": {
-							"raw": "{{host}}/{{basepath}}/customer/create",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"{{basepath}}",
-								"customer",
-								"create"
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		},
@@ -710,6 +668,48 @@
 					"response": []
 				},
 				{
+					"name": "Update_Project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9c635f0a-f7fd-4fbe-b36b-335559770cac",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"Another change\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/project/update/{{projid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"project",
+								"update",
+								"{{projid}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
 					"name": "Get_ProjectById",
 					"event": [
 						{
@@ -746,6 +746,55 @@
 								"{{basepath}}",
 								"project",
 								"{{projid}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update_ProjectStatus",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "54c7abd2-d4f4-4ec7-ad18-ed0c89528071",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"jobType\": \"Piston\",\n\t\"costCenter\": \"APC\",\n\t\"title\": \"This is a title\",\n\t\"description\": \"fijeorpwfjeropiwjfreopw\",\n\t\"priority\": \"Low\",\n\t\"partCount\": 2,\n\t\"refName\": \"What even is this\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/project/status/{{projid}}?status=Completed",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"project",
+								"status",
+								"{{projid}}"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "Completed",
+									"equals": true
+								}
 							]
 						},
 						"description": ""

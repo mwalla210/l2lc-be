@@ -13,6 +13,7 @@ import javax.swing.plaf.nimbus.State;
 import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 public class TrackingDAOImpl {
     public static final Log log = LogFactory.getLog(TrackingDAOImpl.class);
@@ -918,6 +919,26 @@ public class TrackingDAOImpl {
         stm.close();
         conn.close();
         return this.getProject(id);
+    }
+
+    public void updateProjectStatus(int id, String status) throws Exception {
+        Connection conn = createConnection();
+        int projectStatusId = findProjectStatusId(status);
+        String query = "UPDATE Project SET project_status_id = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, projectStatusId);
+        preparedStatement.executeUpdate();
+    }
+
+    public void updateProjectStatus(int id, String status, Date finishDate) throws Exception {
+        Connection conn = createConnection();
+        int projectStatusId = findProjectStatusId(status);
+        String query = "UPDATE Project SET project_status_id = ?, finished = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, projectStatusId);
+        preparedStatement.setDate(2, new java.sql.Date(finishDate.getTime()));
+        preparedStatement.executeUpdate();
+
     }
 
     private int findCostCenterId(String costCenter) throws Exception{
