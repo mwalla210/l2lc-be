@@ -1,6 +1,7 @@
 package com.line2linecoatings.api.tracking.utils;
 
 import com.line2linecoatings.api.dao.TrackingDAOImpl;
+import com.line2linecoatings.api.tracking.enums.CostCenterCache;
 import com.line2linecoatings.api.tracking.models.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -236,7 +237,7 @@ public class TrackingValidationHelper {
     private boolean isProjectEmpty(Project project) {
         return project.getTitle() == null && project.getJobType() == null && project.getCostCenter() == null &&
                 project.getCustomerId() == null && project.getTitle() == null && project.getDescription() == null &&
-                project.getPriority() == null && project.getPartCount() == null && project.getRefName() == null;
+                project.getPriority() == null && project.getPartCount() == null && project.getRefNumber() == null;
     }
 
     private List<String> validateProject(Project project) throws Exception {
@@ -280,6 +281,6 @@ public class TrackingValidationHelper {
     }
 
     private boolean isValidCostCenter(String costCenter) throws Exception {
-        return dao.getCostCentersEnum().contains(costCenter);
+        return CostCenterCache.validateCostCenter(costCenter);
     }
 }

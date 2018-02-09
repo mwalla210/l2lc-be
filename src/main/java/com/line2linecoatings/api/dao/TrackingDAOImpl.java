@@ -1,5 +1,6 @@
 package com.line2linecoatings.api.dao;
 
+import com.line2linecoatings.api.tracking.enums.CostCenterCache;
 import com.line2linecoatings.api.tracking.models.*;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -674,7 +675,6 @@ public class TrackingDAOImpl {
         String query = "SELECT * FROM JobType ORDER BY id";
 
         ResultSet rs = stm.executeQuery(query);
-        List<String> costCenters = this.getCostCentersEnum();
 
         while (rs.next()) {
             jobTypes.add(rs.getString("title"));
@@ -709,7 +709,7 @@ public class TrackingDAOImpl {
         log.info("Start of createProject in DAO");
         int jobTypeId = findJobTypeId(project.getJobType());
         int projectStatusId = findProjectStatusId(project.getProjectStatus());
-        int costCenterId = findCostCenterId(project.getCostCenter());
+        int costCenterId = CostCenterCache.getCostCenterId(project.getCostCenter());
         Integer priorityId = null;
         if (StringUtils.isNotEmpty(project.getPriority())) {
             priorityId = findPriorityId(project.getPriority());
@@ -902,7 +902,7 @@ public class TrackingDAOImpl {
         }
 
         if (StringUtils.isNotEmpty(project.getCostCenter())) {
-            int costCenter = findCostCenterId(project.getCostCenter());
+            int costCenter = CostCenterCache.getCostCenterId(project.getCostCenter());
             updates.add("cost_center_id = " + costCenter);
         }
 
@@ -963,26 +963,6 @@ public class TrackingDAOImpl {
         preparedStatement.close();
         conn.close();
 
-    }
-
-    private int findCostCenterId(String costCenter) throws Exception{
-        Connection conn = createConnection();
-
-        String query = "SELECT * FROM CostCenter WHERE name=?";
-        PreparedStatement preparedStatement = conn.prepareStatement(query);
-        preparedStatement.setString(1, costCenter);
-        ResultSet rs = preparedStatement.executeQuery();
-
-        int costCenterId;
-        if (rs.next()) {
-            costCenterId = rs.getInt("id");
-        } else {
-            throw new SQLException("Invalid Cost Center name");
-        }
-        rs.close();
-        preparedStatement.close();
-        conn.close();
-        return costCenterId;
     }
 
     private String getJobTypeById(int id) throws Exception {
