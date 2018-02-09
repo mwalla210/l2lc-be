@@ -804,6 +804,10 @@ public class TrackingDAOImpl {
             if (priorityId != null) {
                 project.setPriority(getPriorityById(priorityId));
             }
+        } else {
+            rs.close();
+            preparedStatement.close();
+            conn.close();
         }
         log.info("End of getProject in DAO with id " + id);
         return project;
@@ -879,6 +883,7 @@ public class TrackingDAOImpl {
         page.setItems(projects);
         page.setOffset(offset);
         page.setLimit(limit);
+
         log.info("End of getProjectPage in DAO");
         return page;
     }
@@ -940,6 +945,8 @@ public class TrackingDAOImpl {
         PreparedStatement preparedStatement = conn.prepareStatement(query);
         preparedStatement.setInt(1, projectStatusId);
         preparedStatement.executeUpdate();
+        preparedStatement.close();
+        conn.close();
     }
 
     public void updateProjectStatus(int id, String status, Date finishDate) throws Exception {
@@ -950,6 +957,8 @@ public class TrackingDAOImpl {
         preparedStatement.setInt(1, projectStatusId);
         preparedStatement.setDate(2, new java.sql.Date(finishDate.getTime()));
         preparedStatement.executeUpdate();
+        preparedStatement.close();
+        conn.close();
 
     }
 
