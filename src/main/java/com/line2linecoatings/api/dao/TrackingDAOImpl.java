@@ -87,6 +87,7 @@ public class TrackingDAOImpl {
         }
 
         rs.close();
+        preparedStatement.close();
         conn.close();
         return address;
     }
@@ -141,6 +142,7 @@ public class TrackingDAOImpl {
                 preparedStatement.executeUpdate();
 
                 address.setId(id);
+                preparedStatement.close();
                 return address;
             }
         }
@@ -293,6 +295,9 @@ public class TrackingDAOImpl {
         customerPage.setLimit(limit);
         customerPage.setOffset(offset);
         customerPage.setItems(customers);
+        rs.close();
+        preparedStatement.close();
+        conn.close();
         log.info("End of getCustomerPage in DAO");
         return customerPage;
     }
@@ -401,13 +406,15 @@ public class TrackingDAOImpl {
             employees.add(employee);
         }
 
+        employeePage.setLimit(limit);
+        employeePage.setOffset(offset);
+        employeePage.setItems(employees);
+
         rs.close();
         preparedStatement.close();
         conn.close();
 
-        employeePage.setLimit(limit);
-        employeePage.setOffset(offset);
-        employeePage.setItems(employees);
+        log.info("End of getEmployeePage in DAO");
         return employeePage;
     }
 
@@ -628,6 +635,11 @@ public class TrackingDAOImpl {
         if (rs.next()) {
             exists = true;
         }
+
+        rs.close();
+        preparedStatement.close();
+        conn.close();
+        
         log.info("End of doesUsernameExist in DAO");
         return exists;
     }
