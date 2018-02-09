@@ -6,7 +6,6 @@ import java.util.Date;
 public class Project {
     private int id;
     private String jobType;
-
     private String costCenter;
     private Integer customerId;
     private Date created;
@@ -16,7 +15,7 @@ public class Project {
     private String projectStatus;
     private String priority;
     private Integer partCount;
-    private String refName;
+    private String refNumber;
 
     public int getId() {
         return id;
@@ -98,12 +97,12 @@ public class Project {
         this.partCount = partCount;
     }
 
-    public String getRefName() {
-        return refName;
+    public String getRefNumber() {
+        return refNumber;
     }
 
-    public void setRefName(String refName) {
-        this.refName = refName;
+    public void setRefNumber(String refNumber) {
+        this.refNumber = refNumber;
     }
 
     public String getCostCenter() {

@@ -651,16 +651,17 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"jobType\": \"Piston\",\n\t\"costCenter\": \"APC\",\n\t\"title\": \"This is a title\",\n\t\"description\": \"fijeorpwfjeropiwjfreopw\",\n\t\"priority\": \"Low\",\n\t\"partCount\": 2,\n\t\"refName\": \"What even is this\"\n}"
+							"raw": "{\n\t\"jobType\": \"Piston\",\n\t\"costCenter\": \"APC\",\n\t\"title\": \"This is a title\",\n\t\"description\": \"fijeorpwfjeropiwjfreopw\",\n\t\"priority\": \"Low\",\n\t\"refName\": \"What even is this\"\n}"
 						},
 						"url": {
-							"raw": "{{host}}/{{basepath}}/project",
+							"raw": "{{host}}/{{basepath}}/project/create",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{basepath}}",
-								"project"
+								"project",
+								"create"
 							]
 						},
 						"description": ""

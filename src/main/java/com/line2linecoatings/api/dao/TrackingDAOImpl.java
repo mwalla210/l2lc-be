@@ -731,7 +731,7 @@ public class TrackingDAOImpl {
         if (project.getPartCount() != null) {
             preparedStatement.setInt(8, project.getPartCount());
         }
-        preparedStatement.setString(9, project.getRefName());
+        preparedStatement.setString(9, project.getRefNumber());
         preparedStatement.setInt(10, costCenterId);
         int affectedRows = preparedStatement.executeUpdate();
 
@@ -792,7 +792,7 @@ public class TrackingDAOImpl {
             if (rs.wasNull()) {
                 project.setPartCount(null);
             }
-            project.setRefName(rs.getString("ref_name"));
+            project.setRefNumber(rs.getString("ref_name"));
             rs.close();
             preparedStatement.close();
             conn.close();
@@ -853,7 +853,7 @@ public class TrackingDAOImpl {
             if (rs.wasNull()) {
                 project.setPartCount(null);
             }
-            project.setRefName(rs.getString("ref_name"));
+            project.setRefNumber(rs.getString("ref_name"));
 
             jobTypeIds.add(jobTypeid);
             projectStatusIds.add(projectStatusId);
@@ -924,8 +924,8 @@ public class TrackingDAOImpl {
             updates.add("part_count = " + project.getPartCount());
         }
 
-        if (project.getRefName() != null) {
-            updates.add("ref_name = " + '"' + project.getRefName() + '"');
+        if (project.getRefNumber() != null) {
+            updates.add("ref_name = " + '"' + project.getRefNumber() + '"');
         }
 
         query += String.join(",", updates);
