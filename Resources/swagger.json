@@ -200,9 +200,22 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Create_Employee_Output"
+              "type": "object",
+              "properties": {
+                "limit": {
+                  "type": "integer",
+                  "example": 50
+                },
+                "offset": {
+                  "type": "integer",
+                  "example": 0
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Create_Employee_Output"
+                  }
+                }
               }
             }
           }
@@ -336,9 +349,22 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Create_Customer_Output"
+              "type": "object",
+              "properties": {
+                "limit": {
+                  "type": "integer",
+                  "example": 50
+                },
+                "offset": {
+                  "type": "integer",
+                  "example": 0
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Create_Customer_Output"
+                  }
+                }
               }
             }
           }
@@ -558,6 +584,153 @@
           },
           "404": {
             "description": "Cost Center not found"
+          }
+        }
+      }
+    },
+    "/project/create": {
+      "post": {
+        "tags": [
+          "Project"
+        ],
+        "summary": "Create a new project",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "in_body",
+            "schema": {
+              "$ref": "#/definitions/Create_Project_Input"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Create_Project_Output"
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/project/{id}": {
+      "get": {
+        "tags": [
+          "Project"
+        ],
+        "summary": "Get project by id",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "description": "The id of the project",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Create_Project_Output"
+            }
+          },
+          "404": {
+            "description": "Project Not Found"
+          }
+        }
+      }
+    },
+    "/project": {
+      "get": {
+        "tags": [
+          "Project"
+        ],
+        "summary": "Get A page of projects",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "limit": {
+                  "type": "integer",
+                  "example": 50
+                },
+                "offset": {
+                  "type": "integer",
+                  "example": 0
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Create_Project_Output"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/update/{id}": {
+      "post": {
+        "summary": "Update project by id",
+        "tags": [
+          "Project"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "in_body",
+            "schema": {
+              "$ref": "#/definitions/Create_Project_Input"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "schema": {
+              "$ref": "#/definitions/Create_Project_Output"
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       }
@@ -815,6 +988,92 @@
         "stationId": {
           "type": "integer",
           "example": 4
+        }
+      }
+    },
+    "Create_Project_Input": {
+      "type": "object",
+      "properties": {
+        "customerId": {
+          "type": "integer",
+          "example": 666
+        },
+        "jobType": {
+          "type": "string",
+          "example": "Piston"
+        },
+        "costCenter": {
+          "type": "string",
+          "example": "APC"
+        },
+        "title": {
+          "type": "string",
+          "example": "This is a title"
+        },
+        "description": {
+          "type": "string",
+          "example": "freowkfoerqkpofer"
+        },
+        "priority": {
+          "type": "string",
+          "example": "Low"
+        },
+        "partCount": {
+          "type": "integer",
+          "example": 32
+        },
+        "refNumber": {
+          "type": "string",
+          "example": "43049304"
+        }
+      }
+    },
+    "Create_Project_Output": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 12
+        },
+        "customerId": {
+          "type": "integer",
+          "example": 666
+        },
+        "created": {
+          "type": "string",
+          "format": "date"
+        },
+        "projectStatus": {
+          "type": "string",
+          "example": "Recieved"
+        },
+        "jobType": {
+          "type": "string",
+          "example": "Piston"
+        },
+        "costCenter": {
+          "type": "string",
+          "example": "CostCenter"
+        },
+        "title": {
+          "type": "string",
+          "example": "This is a title"
+        },
+        "description": {
+          "type": "string",
+          "example": "freowkfoerqkpofer"
+        },
+        "priority": {
+          "type": "string",
+          "example": "Low"
+        },
+        "partCount": {
+          "type": "integer",
+          "example": 32
+        },
+        "refNumber": {
+          "type": "string",
+          "example": "43049304"
         }
       }
     },
