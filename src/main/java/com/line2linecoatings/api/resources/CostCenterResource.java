@@ -14,6 +14,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Set;
 
 @Path("cost-center")
 public class CostCenterResource extends BasicResource{
@@ -27,7 +28,7 @@ public class CostCenterResource extends BasicResource{
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllCostCenters(@Context HttpHeaders headers) throws Exception {
-        List<CostCenter> costCenters;
+        List<String> costCenters;
 
         try {
             costCenters = costCenterService.getAllCostCenters();
@@ -38,26 +39,4 @@ public class CostCenterResource extends BasicResource{
 
         return getResponse(Response.Status.OK, costCenters);
     }
-
-    @GET
-    @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getCostCenterById(@PathParam("id") int id, @Context HttpHeaders headers) throws Exception{
-        CostCenter costCenter = null;
-
-        try {
-            costCenter = costCenterService.getCostCenter(id);
-        } catch (Exception ex) {
-            log.error(headers);
-            throw ex;
-        }
-
-        if (costCenter == null) {
-            return getResponse(Response.Status.NOT_FOUND);
-        }
-
-        return getResponse(Response.Status.OK, costCenter);
-    }
-
-
 }

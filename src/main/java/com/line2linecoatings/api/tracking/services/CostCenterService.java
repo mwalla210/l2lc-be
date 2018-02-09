@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
+import java.util.Set;
 
 public class CostCenterService {
     public static final Log log = LogFactory.getLog(CostCenterService.class);
@@ -15,19 +16,11 @@ public class CostCenterService {
         this.dao = new TrackingDAOImpl();
     }
 
-    public List<CostCenter> getAllCostCenters() throws Exception {
+    public List<String> getAllCostCenters() throws Exception {
         log.info("Start of getAllCostCenters in service");
-        List<CostCenter> costCenters = null;
-        costCenters = dao.getAllCostCenters();
+        List<String> costCenters = null;
+        costCenters = dao.getCostCentersEnum();
         log.info("End of getAllCostCenters in service");
         return costCenters;
-    }
-
-    public CostCenter getCostCenter(int id) throws Exception {
-        log.info("Start of getCostCenter in service with id " + id);
-        CostCenter costCenter = null;
-        costCenter = dao.getCostCenter(id);
-        log.info("End of getCostCenter in service with id " + id);
-        return costCenter;
     }
 }

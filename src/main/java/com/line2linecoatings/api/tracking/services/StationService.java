@@ -16,19 +16,12 @@ public class StationService {
         dao = new TrackingDAOImpl();
     }
 
-    public List<Station> getAllStations() throws Exception {
+    public List<String> getAllStations() throws Exception {
         log.info("Start of getAllStations in service");
-        List<Station> stations;
+        List<String> stations;
         stations = dao.getAllStations();
         log.info("End of getAllStations in service");
         return stations;
 
-    }
-
-    public Station getStation(int id) throws Exception {
-        log.info("Start of getStation in service with id " + id);
-        Station station = dao.getStation(id);
-        log.info("End of getStation in service with id " + id);
-        return station;
     }
 }

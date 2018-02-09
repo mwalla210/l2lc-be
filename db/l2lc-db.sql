@@ -34,20 +34,24 @@ CREATE TABLE CostCenter (
 
 CREATE TABLE JobType (
 	id INTEGER PRIMARY KEY,
-	title TEXT NOT NULL UNIQUE,
-	cost_center_id INTEGER,
-	FOREIGN KEY (cost_center_id) REFERENCES CostCenter (id)
+	title TEXT NOT NULL
 );
 
 CREATE TABLE Priority (
 	id INTEGER PRIMARY KEY,
 	name TEXT NOT NULL UNIQUE
 );
+CREATE TABLE ProjectStatus (
+  id INTEGER PRIMARY KEY,
+  title TEXT NOT NULL
+);
 
 CREATE TABLE Project (
 	id INTEGER PRIMARY KEY,
 	job_type_id INTEGER NOT NULL,
+	cost_center_id INTEGER NOT NULL,
 	customer_id INTEGER,
+	project_status_id INTEGER NOT NULL,
 	created DATE NOT NULL,
 	finished DATE,
 	title TEXT NOT NULL,
@@ -55,19 +59,16 @@ CREATE TABLE Project (
 	priority INTEGER,
 	part_count INTEGER,
 	ref_name TEXT,
+	FOREIGN KEY (project_status_id) REFERENCES ProjectStatus (id),
 	FOREIGN KEY (job_type_id) REFERENCES JobType (id),
 	FOREIGN KEY (customer_id) REFERENCES Customer (id),
-	FOREIGN KEY (priority) REFERENCES Priority (id)
+	FOREIGN KEY (priority) REFERENCES Priority (id),
+	FOREIGN KEY (cost_center_id) REFERENCES CostCenter(id)
 );
 
 CREATE TABLE Station (
 	id INTEGER PRIMARY KEY,
 	name TEXT NOT NULL UNIQUE
-);
-
-CREATE TABLE ProjectStatus (
-	id INTEGER PRIMARY KEY,
-	title TEXT NOT NULL
 );
 
 CREATE TABLE Task (
@@ -131,8 +132,8 @@ INSERT INTO Priority (id, name) VALUES (1, "Low");
 INSERT INTO Priority (id, name) VALUES (2, "High");
 
 /* Insert cost centers into CostCenter table */
-INSERT INTO CostCenter (id, name) VALUES (1, "APC Job");
-INSERT INTO CostCenter (id, name) VALUES (2, "Decorative Job");
+INSERT INTO CostCenter (id, name) VALUES (1, "APC");
+INSERT INTO CostCenter (id, name) VALUES (2, "Decorative");
 INSERT INTO CostCenter (id, name) VALUES (3, "Maintenance");
 INSERT INTO CostCenter (id, name) VALUES (4, "Administration");
 INSERT INTO CostCenter (id, name) VALUES (5, "Production");
@@ -140,11 +141,30 @@ INSERT INTO CostCenter (id, name) VALUES (6, "Research and Development");
 INSERT INTO CostCenter (id, name) VALUES (7, "Other");
 
 /* Insert job types into JobType table */
-INSERT INTO JobType (id, title, cost_center_id) VALUES (1, "Piston", 1);
-INSERT INTO JobType (id, title, cost_center_id) VALUES (2, "Turbo", 1);
-INSERT INTO JobType (id, title, cost_center_id) VALUES (3, "Rotor", 1);
-INSERT INTO JobType (id, title, cost_center_id) VALUES (4, "Pump", 1);
-INSERT INTO JobType (id, title, cost_center_id) VALUES (5, "Avaslick", 1);
-INSERT INTO JobType (id, title, cost_center_id) VALUES (6, "Specialty", 1);
+INSERT INTO JobType (id, title) VALUES (1, "Piston");
+INSERT INTO JobType (id, title) VALUES (2, "Turbo");
+INSERT INTO JobType (id, title) VALUES (3, "Rotor");
+INSERT INTO JobType (id, title) VALUES (4, "Pump");
+INSERT INTO JobType (id, title) VALUES (5, "Avaslick");
+INSERT INTO JobType (id, title) VALUES (6, "Specialty");
+INSERT INTO JobType (id, title) VALUES (7, "Decorative");
+INSERT INTO JobType (id, title) VALUES (8, "Maintenance");
+INSERT INTO JobType (id, title) VALUES (9, "ISO");
+INSERT INTO JobType (id, title) VALUES (10, "Other");
+INSERT INTO JobType (id, title) VALUES (11, "Production");
+INSERT INTO JobType (id, title) VALUES (12, "Research and Development");
+INSERT INTO JobType (id, title) VALUES (13, "Other");
+
+
+
+
+
+/* Insert project statuses into ProjectStatus table */
+INSERT INTO ProjectStatus (id, title) VALUES (1, "Recieved");
+INSERT INTO ProjectStatus (id, title) VALUES (2, "In Progress");
+INSERT INTO ProjectStatus (id, title) VALUES (3, "Completed");
+INSERT INTO ProjectStatus (id, title) VALUES (4, "Dropped");
+INSERT INTO ProjectStatus (id, title) VALUES (5, "On Hold");
+
 
 
