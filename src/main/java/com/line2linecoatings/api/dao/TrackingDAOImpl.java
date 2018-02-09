@@ -449,9 +449,9 @@ public class TrackingDAOImpl {
         return stations;
     }
 
-    public List<String> getCostCentersEnum() throws Exception {
+    public List<CostCenter> getCostCentersEnum() throws Exception {
         log.info("Start of getCostCentersEnum in DAO");
-        List<String> costCenters = new ArrayList<>();
+        List<CostCenter> costCenters = new ArrayList<>();
 
         Connection conn = createConnection();
 
@@ -461,7 +461,10 @@ public class TrackingDAOImpl {
 
         ResultSet rs = st.executeQuery(query);
         while (rs.next()) {
-            costCenters.add(rs.getString("name"));
+            CostCenter c = new CostCenter();
+            c.setId(rs.getInt("id"));
+            c.setName(rs.getString("name"));
+            costCenters.add(c);
         }
 
         rs.close();
