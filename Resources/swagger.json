@@ -10,7 +10,7 @@
   "tags": [
     {
       "name": "Employee",
-      "description": "Access to Employee Informatin"
+      "description": "Access to Employee Information"
     }
   ],
   "schemes": [
@@ -731,6 +731,39 @@
             "schema": {
               "$ref": "#/definitions/Error"
             }
+          }
+        }
+      }
+    },
+    "/project/status/{id}": {
+      "post": {
+        "tags": [
+          "Project"
+        ],
+        "summary": "Change status of project",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "404": {
+            "description": "Project Not Found"
+          },
+          "406": {
+            "description": "Not Acceptable"
           }
         }
       }

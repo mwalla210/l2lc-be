@@ -122,7 +122,7 @@ public class ProjectResource extends BasicResource {
         return getResponse(Response.Status.ACCEPTED, updatedProject);
     }
 
-    @GET
+    @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/status/{id}")
     public Response updateProjectStatus(@QueryParam("status") String status, @PathParam("id") int id,
