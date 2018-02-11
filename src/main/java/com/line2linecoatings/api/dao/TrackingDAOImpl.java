@@ -1,8 +1,8 @@
 package com.line2linecoatings.api.dao;
 
-import com.line2linecoatings.api.tracking.enums.CostCenterCache;
+import com.line2linecoatings.api.tracking.caches.Cache;
+import com.line2linecoatings.api.tracking.caches.CostCenterCache;
 import com.line2linecoatings.api.tracking.models.*;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -10,8 +10,6 @@ import org.apache.commons.logging.LogFactory;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
-import javax.swing.plaf.nimbus.State;
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
@@ -569,9 +567,9 @@ public class TrackingDAOImpl {
 
     // Station Methods
 
-    public List<String> getAllStations() throws Exception {
+    public List<DBEnumeration> getAllStations() throws Exception {
         log.info("Start of getAllStations in DAO");
-        List<String> stations = new ArrayList<>();
+        List<DBEnumeration> stations = new LinkedList<>();
 
         Connection conn = createConnection();
 
@@ -581,7 +579,10 @@ public class TrackingDAOImpl {
 
         ResultSet rs = st.executeQuery(query);
         while (rs.next()) {
-            stations.add(rs.getString("name"));
+            Station s = new Station();
+            s.setName(rs.getString("name"));
+            s.setId(rs.getInt("id"));
+            stations.add(s);
         }
 
         rs.close();
@@ -636,9 +637,9 @@ public class TrackingDAOImpl {
 
     // CostCenter methods
 
-    public List<CostCenter> getCostCentersEnum() throws Exception {
+    public List<DBEnumeration> getAllCostCenters() throws Exception {
         log.info("Start of getCostCentersEnum in DAO");
-        List<CostCenter> costCenters = new ArrayList<>();
+        List<DBEnumeration> costCenters = new LinkedList<>();
 
         Connection conn = createConnection();
 
@@ -663,8 +664,8 @@ public class TrackingDAOImpl {
 
     // ProjectStatus methods
 
-    public Set<String> getProjectStatusEnum() throws Exception {
-        Set<String> statuses = new HashSet<>();
+    public List<DBEnumeration> getAllProjectStatuses() throws Exception {
+        List<DBEnumeration> statuses = new LinkedList<>();
 
         Connection conn = createConnection();
 
@@ -673,7 +674,10 @@ public class TrackingDAOImpl {
         ResultSet rs = stm.executeQuery(query);
 
         while (rs.next()) {
-            statuses.add(rs.getString("title"));
+            ProjectStatus p = new ProjectStatus();
+            p.setId(rs.getInt("id"));
+            p.setName(rs.getString("title"));
+            statuses.add(p);
         }
         rs.close();
         stm.close();
@@ -681,50 +685,10 @@ public class TrackingDAOImpl {
         return statuses;
     }
 
-    private String getProjectStatusById(int id) throws Exception {
-        Connection conn = createConnection();
-        String query = "SELECT * FROM ProjectStatus WHERE id=?";
-        PreparedStatement preparedStatement = conn.prepareStatement(query);
-        preparedStatement.setInt(1, id);
-
-        ResultSet rs = preparedStatement.executeQuery();
-
-        String projectStatus;
-        if (rs.next()) {
-            projectStatus = rs.getString("title");
-        } else {
-            throw new SQLException("Invalid Project Status Id");
-        }
-        rs.close();
-        preparedStatement.close();
-        conn.close();
-        return projectStatus;
-    }
-
-    private int findProjectStatusId(String title) throws Exception {
-        Connection conn = createConnection();
-
-        String query = "SELECT * FROM ProjectStatus WHERE title=?";
-        PreparedStatement preparedStatement = conn.prepareStatement(query);
-        preparedStatement.setString(1, title);
-        ResultSet rs = preparedStatement.executeQuery();
-
-        int projectStatusId;
-        if (rs.next()) {
-            projectStatusId = rs.getInt("id");
-        } else {
-            throw new SQLException("Invalid Project Status Id");
-        }
-        rs.close();
-        preparedStatement.close();
-        conn.close();
-        return projectStatusId;
-    }
-
     // JobType methods
 
-    public List<String> getJobTypeEnum() throws Exception {
-        List<String> jobTypes = new ArrayList<>();
+    public List<DBEnumeration> getAllJobTypes() throws Exception {
+        List<DBEnumeration> jobTypes = new LinkedList<>();
 
         Connection conn = createConnection();
         Statement stm = conn.createStatement();
@@ -734,7 +698,10 @@ public class TrackingDAOImpl {
         ResultSet rs = stm.executeQuery(query);
 
         while (rs.next()) {
-            jobTypes.add(rs.getString("title"));
+            JobType j = new JobType();
+            j.setId(rs.getInt("id"));
+            j.setName(rs.getString("title"));
+            jobTypes.add(j);
         }
 
         rs.close();
@@ -743,52 +710,10 @@ public class TrackingDAOImpl {
         return jobTypes;
     }
 
-    private String getJobTypeById(int id) throws Exception {
-        Connection conn = createConnection();
-
-        String query = "SELECT * FROM JobType WHERE id=?";
-
-        PreparedStatement preparedStatement = conn.prepareStatement(query);
-        preparedStatement.setInt(1, id);
-        ResultSet rs = preparedStatement.executeQuery();
-
-        String jobType;
-        if (rs.next()) {
-            jobType = rs.getString("title");
-        } else {
-            throw new SQLException("Invalid JobType id");
-        }
-        rs.close();
-        preparedStatement.close();
-        conn.close();
-        return jobType;
-    }
-
-
-    private int findJobTypeId(String jobTypeTitle) throws Exception {
-        Connection conn = createConnection();
-
-        String query = "SELECT * FROM JobType WHERE title=?";
-        PreparedStatement preparedStatement = conn.prepareStatement(query);
-        preparedStatement.setString(1, jobTypeTitle);
-        ResultSet rs = preparedStatement.executeQuery();
-
-        int jobTypeId;
-        if (rs.next()) {
-            jobTypeId = rs.getInt("id");
-        } else {
-            throw new SQLException("Invalid Job Type Title");
-        }
-        rs.close();
-        preparedStatement.close();
-        conn.close();
-        return jobTypeId;
-    }
-
     // ProjectPriority methods
 
-    public Set<String> getPriorityEnum() throws Exception {
-        Set<String> priorities = new HashSet<>();
+    public List<DBEnumeration> getAllProjectPriorities() throws Exception {
+        List<DBEnumeration> priorities = new LinkedList<>();
         Connection conn = createConnection();
         Statement stm = conn.createStatement();
 
@@ -797,7 +722,10 @@ public class TrackingDAOImpl {
         ResultSet rs = stm.executeQuery(query);
 
         while (rs.next()) {
-            priorities.add(rs.getString("name"));
+            ProjectPriority p = new ProjectPriority();
+            p.setId(rs.getInt("id"));
+            p.setName(rs.getString("name"));
+            priorities.add(p);
         }
 
         rs.close();
@@ -806,57 +734,17 @@ public class TrackingDAOImpl {
         return priorities;
     }
 
-    private String getPriorityById(int id) throws Exception {
-        Connection conn = createConnection();
-        String query = "SELECT * FROM Priority WHERE id=?";
-        PreparedStatement preparedStatement = conn.prepareStatement(query);
-        preparedStatement.setInt(1, id);
-
-        ResultSet rs = preparedStatement.executeQuery();
-
-        String priority;
-        if (rs.next()) {
-            priority = rs.getString("name");
-        } else {
-            throw new SQLException("Invalid Priority Id");
-        }
-        rs.close();
-        preparedStatement.close();
-        conn.close();
-        return priority;
-    }
-
-    private int findPriorityId(String priority) throws Exception {
-        Connection conn = createConnection();
-
-        String query = "SELECT * FROM Priority WHERE name=?";
-        PreparedStatement preparedStatement = conn.prepareStatement(query);
-        preparedStatement.setString(1, priority);
-        ResultSet rs = preparedStatement.executeQuery();
-
-        int priorityId;
-        if (rs.next()) {
-            priorityId = rs.getInt("id");
-        } else {
-            throw new SQLException("Invalid Priority id");
-        }
-        rs.close();
-        preparedStatement.close();
-        conn.close();
-        return priorityId;
-    }
-
     // Project methods
 
     public Project createProject(Project project) throws Exception {
         log.info("Start of createProject in DAO");
-        int jobTypeId = findJobTypeId(project.getJobType());
-        int projectStatusId = findProjectStatusId(project.getProjectStatus());
-        int costCenterId = CostCenterCache.getCostCenterId(project.getCostCenter());
+        int jobTypeId = Cache.jobTypeCache.getIdForName(project.getJobType());
+        int projectStatusId = Cache.projectStatusCache.getIdForName(project.getProjectStatus());
+        int costCenterId = Cache.costCenterCache.getIdForName(project.getCostCenter());
         Integer priorityId = null;
 
         if (StringUtils.isNotEmpty(project.getPriority())) {
-            priorityId = findPriorityId(project.getPriority());
+            priorityId = Cache.projectPriorityCache.getIdForName(project.getPriority());
         }
 
         Connection conn = createConnection();
@@ -945,12 +833,12 @@ public class TrackingDAOImpl {
             preparedStatement.close();
             conn.close();
 
-            project.setJobType(getJobTypeById(jobTypeId));
-            project.setCostCenter(CostCenterCache.getCostCenterName(costCenterId));
-            project.setProjectStatus(getProjectStatusById(projectStatusId));
+            project.setJobType(Cache.jobTypeCache.getNameForId(jobTypeId));
+            project.setCostCenter(Cache.costCenterCache.getNameForId(costCenterId));
+            project.setProjectStatus(Cache.projectStatusCache.getNameForId(projectStatusId));
 
             if (priorityId != null) {
-                project.setPriority(getPriorityById(priorityId));
+                project.setPriority(Cache.projectPriorityCache.getNameForId(priorityId));
             }
         } else {
             rs.close();
@@ -1020,12 +908,12 @@ public class TrackingDAOImpl {
             int costCenterId = costCenterIds.get(x);
             Integer priorityId = priorityIds.get(x);
 
-            project.setJobType(getJobTypeById(jobTypeid));
-            project.setCostCenter(CostCenterCache.getCostCenterName(costCenterId));
-            project.setProjectStatus(getProjectStatusById(projectStatusId));
+            project.setJobType(Cache.jobTypeCache.getNameForId(jobTypeid));
+            project.setCostCenter(Cache.costCenterCache.getNameForId(costCenterId));
+            project.setProjectStatus(Cache.projectStatusCache.getNameForId(projectStatusId));
 
             if (priorityId != null) {
-                project.setPriority(getPriorityById(priorityId));
+                project.setPriority(Cache.projectPriorityCache.getNameForId(priorityId));
             }
         }
         page.setItems(projects);
@@ -1042,12 +930,12 @@ public class TrackingDAOImpl {
         List<String> updates = new ArrayList<>();
 
         if (StringUtils.isNotEmpty(project.getJobType())) {
-            int jobType = findJobTypeId(project.getJobType());
+            int jobType = Cache.jobTypeCache.getIdForName(project.getJobType());
             updates.add("job_type_id = " + jobType);
         }
 
         if (StringUtils.isNotEmpty(project.getCostCenter())) {
-            int costCenter = CostCenterCache.getCostCenterId(project.getCostCenter());
+            int costCenter = Cache.costCenterCache.getIdForName(project.getCostCenter());
             updates.add("cost_center_id = " + costCenter);
         }
 
@@ -1064,7 +952,7 @@ public class TrackingDAOImpl {
         }
 
         if (project.getPriority() != null) {
-            int priority = findPriorityId(project.getPriority());
+            int priority = Cache.projectPriorityCache.getIdForName(project.getPriority());
             updates.add("priority = " + priority);
         }
 
@@ -1088,7 +976,7 @@ public class TrackingDAOImpl {
 
     public void updateProjectStatus(int id, String status) throws Exception {
         Connection conn = createConnection();
-        int projectStatusId = findProjectStatusId(status);
+        int projectStatusId = Cache.projectStatusCache.getIdForName(status);
         String query = "UPDATE Project SET project_status_id = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(query);
         preparedStatement.setInt(1, projectStatusId);
@@ -1099,7 +987,7 @@ public class TrackingDAOImpl {
 
     public void updateProjectStatus(int id, String status, Date finishDate) throws Exception {
         Connection conn = createConnection();
-        int projectStatusId = findProjectStatusId(status);
+        int projectStatusId = Cache.projectStatusCache.getIdForName(status);
         String query = "UPDATE Project SET project_status_id = ?, finished = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(query);
         preparedStatement.setInt(1, projectStatusId);

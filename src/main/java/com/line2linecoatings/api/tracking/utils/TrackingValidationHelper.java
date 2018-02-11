@@ -1,18 +1,15 @@
 package com.line2linecoatings.api.tracking.utils;
 
 import com.line2linecoatings.api.dao.TrackingDAOImpl;
-import com.line2linecoatings.api.tracking.enums.CostCenterCache;
+import com.line2linecoatings.api.tracking.caches.Cache;
 import com.line2linecoatings.api.tracking.models.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.ws.rs.core.Response;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class TrackingValidationHelper {
     public static final Log log = LogFactory.getLog(TrackingValidationHelper.class);
@@ -102,7 +99,6 @@ public class TrackingValidationHelper {
 
         TrackingError error = null;
         List<String> errorMessages = new ArrayList<>();
-        List<String> stations = dao.getAllStations();
 
         if (StringUtils.isEmpty(user.getUsername())) {
             errorMessages.add("username can not be empty");
@@ -112,7 +108,7 @@ public class TrackingValidationHelper {
             errorMessages.add("password can not be empty");
         }
 
-        if (StringUtils.isNotEmpty(user.getStation()) && !stations.contains(user.getStation())) {
+        if (StringUtils.isNotEmpty(user.getStation()) && !isValidStation(user.getStation())) {
             errorMessages.add("Invalid station associated with user");
         }
 
@@ -208,10 +204,10 @@ public class TrackingValidationHelper {
         TrackingError error = null;
         List<String> errorMessages = new ArrayList<>();
 
-        Set<String> projectStatusEnum = dao.getProjectStatusEnum();
+        List<String> projectStatuses = Cache.projectStatusCache.getAllNames();
         Project project = dao.getProject(id);
 
-        if (!projectStatusEnum.contains(status)) {
+        if (!projectStatuses.contains(status)) {
             errorMessages.add(status + " is an invalid status");
         } else if (project != null) {
             if (project.getProjectStatus().equals(status)) {
@@ -242,7 +238,7 @@ public class TrackingValidationHelper {
 
     private List<String> validateProject(Project project) throws Exception {
         List<String> errorMessages = new ArrayList<>();
-        Set<String> priorities = dao.getPriorityEnum();
+        List<String> priorities = Cache.projectPriorityCache.getAllNames();
 
         // check for valid part count
         if (project.getPartCount() != null && project.getPartCount() < 1) {
@@ -277,10 +273,14 @@ public class TrackingValidationHelper {
     }
 
     private boolean isValidJobType(String jobType) throws Exception {
-        return dao.getJobTypeEnum().contains(jobType);
+        return Cache.jobTypeCache.validate(jobType);
+    }
+
+    private boolean isValidStation(String station) throws Exception {
+        return Cache.stationCache.validate(station);
     }
 
     private boolean isValidCostCenter(String costCenter) throws Exception {
-        return CostCenterCache.validateCostCenter(costCenter);
+        return Cache.costCenterCache.validate(costCenter);
     }
 }

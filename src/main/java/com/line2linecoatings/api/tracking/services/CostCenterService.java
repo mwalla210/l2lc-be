@@ -1,6 +1,7 @@
 package com.line2linecoatings.api.tracking.services;
 
 import com.line2linecoatings.api.dao.TrackingDAOImpl;
+import com.line2linecoatings.api.tracking.caches.Cache;
 import com.line2linecoatings.api.tracking.models.CostCenter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,7 +20,7 @@ public class CostCenterService {
     public List<String> getAllCostCenters() throws Exception {
         log.info("Start of getAllCostCenters in service");
         List<String> costCenters = null;
-        costCenters = dao.getCostCentersEnum();
+        costCenters = Cache.costCenterCache.getAllNames();
         log.info("End of getAllCostCenters in service");
         return costCenters;
     }
