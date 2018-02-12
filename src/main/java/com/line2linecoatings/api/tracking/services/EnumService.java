@@ -17,7 +17,7 @@ public class EnumService {
 
     public List<String> getAllCostCenters() throws Exception {
         log.info("Start of getAllCostCenters in service");
-        List<String> costCenters = null;
+        List<String> costCenters;
         costCenters = Cache.costCenterCache.getAllNames();
         log.info("End of getAllCostCenters in service");
         return costCenters;

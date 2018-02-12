@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/enum")
+@Path("/project/enum")
 public class EnumResource extends BasicResource {
     public static final Log log = LogFactory.getLog(EnumResource.class);
     public static EnumService enumService;
@@ -73,7 +73,7 @@ public class EnumResource extends BasicResource {
     }
 
     @GET
-    @Path("/project-status")
+    @Path("/status")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllProjectStatuses(@Context HttpHeaders headers) throws Exception {
         log.info("Start of getAllProjectStatuses in Resource");
@@ -90,7 +90,7 @@ public class EnumResource extends BasicResource {
     }
 
     @GET
-    @Path("/project-priority")
+    @Path("/priority")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllProjectPriorities(@Context HttpHeaders headers) throws Exception {
         log.info("Start of getAllProjectStatuses in Resource");

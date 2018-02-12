@@ -740,12 +740,13 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{host}}/{{basepath}}/enum/station",
+							"raw": "{{host}}/{{basepath}}/project/enum/station",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{basepath}}",
+								"project",
 								"enum",
 								"station"
 							]
@@ -766,14 +767,15 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{host}}/{{basepath}}/enum/project-status",
+							"raw": "{{host}}/{{basepath}}/project/enum/status",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{basepath}}",
+								"project",
 								"enum",
-								"project-status"
+								"status"
 							]
 						}
 					},
@@ -792,14 +794,15 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{host}}/{{basepath}}/enum/project-priority",
+							"raw": "{{host}}/{{basepath}}/project/enum/priority",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{basepath}}",
+								"project",
 								"enum",
-								"project-priority"
+								"priority"
 							]
 						}
 					},
@@ -818,12 +821,13 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{host}}/{{basepath}}/enum/cost-center",
+							"raw": "{{host}}/{{basepath}}/project/enum/cost-center",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{basepath}}",
+								"project",
 								"enum",
 								"cost-center"
 							]
@@ -844,12 +848,13 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{host}}/{{basepath}}/enum/jobtype",
+							"raw": "{{host}}/{{basepath}}/project/enum/jobtype",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{basepath}}",
+								"project",
 								"enum",
 								"jobtype"
 							]
