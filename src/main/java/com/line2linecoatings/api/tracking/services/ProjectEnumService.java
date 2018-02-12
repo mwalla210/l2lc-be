@@ -7,11 +7,11 @@ import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 
-public class EnumService {
-    public static final Log log = LogFactory.getLog(EnumService.class);
+public class ProjectEnumService {
+    public static final Log log = LogFactory.getLog(ProjectEnumService.class);
     public TrackingDAOImpl dao;
 
-    public EnumService() {
+    public ProjectEnumService() {
         this.dao = new TrackingDAOImpl();
     }
 
@@ -21,14 +21,6 @@ public class EnumService {
         costCenters = Cache.costCenterCache.getAllNames();
         log.info("End of getAllCostCenters in service");
         return costCenters;
-    }
-
-    public List<String> getAllStations() throws Exception {
-        log.info("Start of getAllStations in service");
-        List<String> stations;
-        stations = Cache.stationCache.getAllNames();
-        log.info("End of getAllStations in service");
-        return stations;
     }
 
     public List<String> getAllJobTypes() throws Exception {

@@ -1,6 +1,6 @@
 package com.line2linecoatings.api.resources;
 
-import com.line2linecoatings.api.tracking.services.EnumService;
+import com.line2linecoatings.api.tracking.services.ProjectEnumService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -14,12 +14,12 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/project/enum")
-public class EnumResource extends BasicResource {
-    public static final Log log = LogFactory.getLog(EnumResource.class);
-    public static EnumService enumService;
+public class ProjectEnumResource extends BasicResource {
+    public static final Log log = LogFactory.getLog(ProjectEnumResource.class);
+    public static ProjectEnumService projectEnumService;
 
-    public EnumResource() {
-        enumService = new EnumService();
+    public ProjectEnumResource() {
+        projectEnumService = new ProjectEnumService();
     }
 
     @GET
@@ -29,30 +29,13 @@ public class EnumResource extends BasicResource {
         List<String> costCenters;
 
         try {
-            costCenters = enumService.getAllCostCenters();
+            costCenters = projectEnumService.getAllCostCenters();
         } catch (Exception ex) {
             log.error(headers);
             throw ex;
         }
 
         return getResponse(Response.Status.OK, costCenters);
-    }
-
-    @GET
-    @Path("/station")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllStations(@Context HttpHeaders headers) throws Exception {
-        log.info("Start of getAllStations in Resource");
-        List<String> allStations = null;
-
-        try {
-            allStations = enumService.getAllStations();
-        } catch (Exception ex) {
-            log.error(headers);
-            throw ex;
-        }
-
-        return getResponse(Response.Status.OK, allStations);
     }
 
     @GET
@@ -63,7 +46,7 @@ public class EnumResource extends BasicResource {
         List<String> allJobTypes = null;
 
         try {
-            allJobTypes = enumService.getAllJobTypes();
+            allJobTypes = projectEnumService.getAllJobTypes();
         } catch (Exception ex) {
             log.error(headers);
             throw ex;
@@ -80,7 +63,7 @@ public class EnumResource extends BasicResource {
         List<String> allProjectStatuses = null;
 
         try {
-            allProjectStatuses = enumService.getAllProjectStatuses();
+            allProjectStatuses = projectEnumService.getAllProjectStatuses();
         } catch (Exception ex) {
             log.error(headers);
             throw ex;
@@ -97,7 +80,7 @@ public class EnumResource extends BasicResource {
         List<String> allPriorities = null;
 
         try {
-            allPriorities = enumService.getAllProjectPriorities();
+            allPriorities = projectEnumService.getAllProjectPriorities();
         } catch (Exception ex) {
             log.error(headers);
             throw ex;

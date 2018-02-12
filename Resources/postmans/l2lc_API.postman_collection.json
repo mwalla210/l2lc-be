@@ -740,13 +740,13 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{host}}/{{basepath}}/project/enum/station",
+							"raw": "{{host}}/{{basepath}}/user/enum/station",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{basepath}}",
-								"project",
+								"user",
 								"enum",
 								"station"
 							]
