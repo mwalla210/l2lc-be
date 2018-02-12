@@ -1,7 +1,8 @@
 {
 	"info": {
 		"name": "l2lc_API",
-		"_postman_id": "8394425c-7330-68f5-de99-fe2f17217b63",
+		"_postman_id": "68c40c7c-2d44-8f4d-ea08-bc68432e85a0",
+		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -167,62 +168,6 @@
 								"employee",
 								"update",
 								"{{empid}}"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Stations",
-			"item": [
-				{
-					"name": "Get_AllStations",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{host}}/{{basepath}}/station",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"{{basepath}}",
-								"station"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get_StationById",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{host}}/{{basepath}}/station/1",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"{{basepath}}",
-								"station",
-								"1"
 							]
 						}
 					},
@@ -564,62 +509,6 @@
 			]
 		},
 		{
-			"name": "Cost_Centers",
-			"item": [
-				{
-					"name": "Get_AllCostCenters",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{host}}/{{basepath}}/cost-center",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"{{basepath}}",
-								"cost-center"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get_CostCenterById",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{host}}/{{basepath}}/cost-center/1",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"{{basepath}}",
-								"cost-center",
-								"1"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "Projects",
 			"item": [
 				{
@@ -833,6 +722,164 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Enums",
+			"description": "",
+			"item": [
+				{
+					"name": "Get_AllStations",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/enum/station",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"enum",
+								"station"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_AllProjectStatuses",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/enum/project-status",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"enum",
+								"project-status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_AllProjectPriorities",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/enum/project-priority",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"enum",
+								"project-priority"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_AllCostCenters",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/enum/cost-center",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"enum",
+								"cost-center"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_AllJobTypes",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/enum/jobtype",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"enum",
+								"jobtype"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "f389e06d-9b6a-40cc-99f4-f632713096eb",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "20475d75-59e6-4d8a-926d-54843754acba",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
