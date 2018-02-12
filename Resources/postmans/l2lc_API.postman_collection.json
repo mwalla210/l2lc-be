@@ -1,8 +1,7 @@
 {
 	"info": {
 		"name": "l2lc_API",
-		"_postman_id": "5c3eba69-23fb-f66b-392b-397f22b23521",
-		"description": "",
+		"_postman_id": "8394425c-7330-68f5-de99-fe2f17217b63",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -566,7 +565,6 @@
 		},
 		{
 			"name": "Cost_Centers",
-			"description": "",
 			"item": [
 				{
 					"name": "Get_AllCostCenters",
@@ -623,7 +621,6 @@
 		},
 		{
 			"name": "Projects",
-			"description": "",
 			"item": [
 				{
 					"name": "Create_Project",
@@ -663,8 +660,7 @@
 								"project",
 								"create"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -705,8 +701,7 @@
 								"update",
 								"{{projid}}"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -748,8 +743,7 @@
 								"project",
 								"{{projid}}"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -797,8 +791,7 @@
 									"equals": true
 								}
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
