@@ -820,8 +820,8 @@ public class TrackingDAOImpl {
             if (rs.wasNull()) {
                 project.setCustomerId(null);
             }
-            project.setCreated(rs.getTime("created"));
-            project.setFinished(rs.getTime("finished"));
+            project.setCreated(rs.getDate("created"));
+            project.setFinished(rs.getDate("finished"));
             project.setTitle(rs.getString("title"));
             project.setDescription(rs.getString("description"));
             project.setPartCount(rs.getInt("part_count"));
@@ -881,8 +881,8 @@ public class TrackingDAOImpl {
             if (rs.wasNull()) {
                 project.setCustomerId(null);
             }
-            project.setCreated(rs.getTime("created"));
-            project.setFinished(rs.getTime("finished"));
+            project.setCreated(rs.getDate("created"));
+            project.setFinished(rs.getDate("finished"));
             project.setTitle(rs.getString("title"));
             project.setDescription(rs.getString("description"));
             project.setPartCount(rs.getInt("part_count"));
