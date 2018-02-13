@@ -24,8 +24,6 @@ public abstract class Cache {
     public abstract void initialize() throws Exception;
 
     public boolean validate(String name) throws Exception {
-        log.info("isInit: "+isInitialized);
-
         if (!isInitialized)
             initialize();
 
