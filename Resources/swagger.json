@@ -1050,8 +1050,8 @@
           "example": 666
         },
         "created": {
-          "type": "string",
-          "format": "date"
+          "type": "integer",
+          "example": 1518553113959
         },
         "projectStatus": {
           "type": "string",
