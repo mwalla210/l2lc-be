@@ -10,7 +10,23 @@
   "tags": [
     {
       "name": "Employee",
-      "description": "Access to Employee Informatin"
+      "description": "Access to Employee Information"
+    },
+    {
+      "name": "Customer",
+      "description": "Access to Customer Information"
+    },
+    {
+      "name": "User",
+      "description": "Access to User Information"
+    },
+    {
+      "name": "Project",
+      "description": "Access to Project Information"
+    },
+    {
+      "name": "Enum",
+      "description": "All enumerations used in the API"
     }
   ],
   "schemes": [
@@ -200,9 +216,22 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Create_Employee_Output"
+              "type": "object",
+              "properties": {
+                "limit": {
+                  "type": "integer",
+                  "example": 50
+                },
+                "offset": {
+                  "type": "integer",
+                  "example": 0
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Create_Employee_Output"
+                  }
+                }
               }
             }
           }
@@ -336,9 +365,22 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Create_Customer_Output"
+              "type": "object",
+              "properties": {
+                "limit": {
+                  "type": "integer",
+                  "example": 50
+                },
+                "offset": {
+                  "type": "integer",
+                  "example": 0
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Create_Customer_Output"
+                  }
+                }
               }
             }
           }
@@ -464,10 +506,10 @@
         }
       }
     },
-    "/station": {
+    "/user/enum/station": {
       "get": {
         "tags": [
-          "Station"
+          "Enum"
         ],
         "summary": "Get all registered stations",
         "produces": [
@@ -477,46 +519,20 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/AllStations"
+              "type": "array",
+              "items": {
+                "type": "string",
+                "example": "Receiving"
+              }
             }
           }
         }
       }
     },
-    "/station/{id}": {
+    "/project/enum/cost-center": {
       "get": {
         "tags": [
-          "Station"
-        ],
-        "summary": "Get a station by its id",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "type": "integer",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Station"
-            }
-          },
-          "404": {
-            "description": "Station not found"
-          }
-        }
-      }
-    },
-    "/cost-center": {
-      "get": {
-        "tags": [
-          "Cost Center"
+          "Enum"
         ],
         "summary": "Get all Cost Centers",
         "produces": [
@@ -526,18 +542,125 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/AllCostCenters"
+              "type": "array",
+              "items": {
+                "type": "string",
+                "example": "APC"
+              }
             }
           }
         }
       }
     },
-    "/cost-center/{id}": {
+    "/project/enum/status": {
       "get": {
         "tags": [
-          "Cost Center"
+          "Enum"
         ],
-        "summary": "Get a cost center by its id",
+        "summary": "Get project status enum",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "example": "Completed"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/enum/priority": {
+      "get": {
+        "tags": [
+          "Enum"
+        ],
+        "summary": "Get project priority enum",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "example": "Low"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/enum/jobtype": {
+      "get": {
+        "tags": [
+          "Enum"
+        ],
+        "summary": "Get all project jobtypes",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "example": "Piston"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/create": {
+      "post": {
+        "tags": [
+          "Project"
+        ],
+        "summary": "Create a new project",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "in_body",
+            "schema": {
+              "$ref": "#/definitions/Create_Project_Input"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Create_Project_Output"
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/project/{id}": {
+      "get": {
+        "tags": [
+          "Project"
+        ],
+        "summary": "Get project by id",
         "produces": [
           "application/json"
         ],
@@ -546,6 +669,7 @@
             "in": "path",
             "name": "id",
             "type": "integer",
+            "description": "The id of the project",
             "required": true
           }
         ],
@@ -553,11 +677,127 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/CostCenter"
+              "$ref": "#/definitions/Create_Project_Output"
             }
           },
           "404": {
-            "description": "Cost Center not found"
+            "description": "Project Not Found"
+          }
+        }
+      }
+    },
+    "/project": {
+      "get": {
+        "tags": [
+          "Project"
+        ],
+        "summary": "Get A page of projects",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "limit": {
+                  "type": "integer",
+                  "example": 50
+                },
+                "offset": {
+                  "type": "integer",
+                  "example": 0
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Create_Project_Output"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/update/{id}": {
+      "post": {
+        "summary": "Update project by id",
+        "tags": [
+          "Project"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "in_body",
+            "schema": {
+              "$ref": "#/definitions/Create_Project_Input"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "schema": {
+              "$ref": "#/definitions/Create_Project_Output"
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/project/status/{id}": {
+      "post": {
+        "tags": [
+          "Project"
+        ],
+        "summary": "Change status of project",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "type": "string",
+            "description": "Acceptable values include (Recieved, In Progress, Completed)",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "404": {
+            "description": "Project Not Found"
+          },
+          "406": {
+            "description": "Not Acceptable"
           }
         }
       }
@@ -718,64 +958,6 @@
         }
       }
     },
-    "AllStations": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "example": 2
-          },
-          "name": {
-            "type": "string",
-            "example": "Coating and Curing"
-          }
-        }
-      }
-    },
-    "Station": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "example": 2
-        },
-        "name": {
-          "type": "string",
-          "example": "Coating and Curing"
-        }
-      }
-    },
-    "AllCostCenters": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "example": 1
-          },
-          "name": {
-            "type": "string",
-            "example": "APC Job"
-          }
-        }
-      }
-    },
-    "CostCenter": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "example": 1
-        },
-        "name": {
-          "type": "string",
-          "example": "APC Job"
-        }
-      }
-    },
     "Create_User_Input": {
       "type": "object",
       "properties": {
@@ -815,6 +997,93 @@
         "stationId": {
           "type": "integer",
           "example": 4
+        }
+      }
+    },
+    "Create_Project_Input": {
+      "type": "object",
+      "properties": {
+        "customerId": {
+          "type": "integer",
+          "example": 666
+        },
+        "jobType": {
+          "type": "string",
+          "example": "Piston"
+        },
+        "costCenter": {
+          "type": "string",
+          "description": "Acceptable values include: (APC, Decorative, Maintenance, Administration, Production, Research and Development, Other)",
+          "example": "APC"
+        },
+        "title": {
+          "type": "string",
+          "example": "This is a title"
+        },
+        "description": {
+          "type": "string",
+          "example": "freowkfoerqkpofer"
+        },
+        "priority": {
+          "type": "string",
+          "example": "Low"
+        },
+        "partCount": {
+          "type": "integer",
+          "example": 32
+        },
+        "refNumber": {
+          "type": "string",
+          "example": "43049304"
+        }
+      }
+    },
+    "Create_Project_Output": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 12
+        },
+        "customerId": {
+          "type": "integer",
+          "example": 666
+        },
+        "created": {
+          "type": "integer",
+          "example": 1518553113959
+        },
+        "projectStatus": {
+          "type": "string",
+          "example": "Recieved"
+        },
+        "jobType": {
+          "type": "string",
+          "example": "Piston"
+        },
+        "costCenter": {
+          "type": "string",
+          "example": "CostCenter"
+        },
+        "title": {
+          "type": "string",
+          "example": "This is a title"
+        },
+        "description": {
+          "type": "string",
+          "example": "freowkfoerqkpofer"
+        },
+        "priority": {
+          "type": "string",
+          "example": "Low"
+        },
+        "partCount": {
+          "type": "integer",
+          "example": 32
+        },
+        "refNumber": {
+          "type": "string",
+          "example": "43049304"
         }
       }
     },

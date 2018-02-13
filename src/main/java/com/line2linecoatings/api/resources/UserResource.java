@@ -16,6 +16,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("/user")
 public class UserResource extends BasicResource {
@@ -89,5 +90,22 @@ public class UserResource extends BasicResource {
         }
 
         return getResponse(Response.Status.OK, user);
+    }
+
+    @GET
+    @Path("/enum/station")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllStations(@Context HttpHeaders headers) throws Exception {
+        log.info("Start of getAllStations in Resource");
+        List<String> allStations = null;
+
+        try {
+            allStations = userService.getAllStations();
+        } catch (Exception ex) {
+            log.error(headers);
+            throw ex;
+        }
+
+        return getResponse(Response.Status.OK, allStations);
     }
 }

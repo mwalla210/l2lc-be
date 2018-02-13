@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "l2lc_API",
-		"_postman_id": "5c3eba69-23fb-f66b-392b-397f22b23521",
+		"_postman_id": "68c40c7c-2d44-8f4d-ea08-bc68432e85a0",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -176,108 +176,10 @@
 			]
 		},
 		{
-			"name": "Stations",
-			"item": [
-				{
-					"name": "Get_AllStations",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{host}}/{{basepath}}/station",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"{{basepath}}",
-								"station"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get_StationById",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{host}}/{{basepath}}/station/1",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"{{basepath}}",
-								"station",
-								"1"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "Customers",
 			"item": [
 				{
 					"name": "Create_Customer",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "ce15efbb-4af1-4a56-9cb9-039135f51ec8",
-								"type": "text/javascript",
-								"exec": [
-									"var jsonData = JSON.parse(responseBody)",
-									"pm.environment.set(\"custid\", jsonData.id);",
-									""
-								]
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Jeff Salvage's Scooter Racing Company\",\n\t\"email\": \"salvage@drexel.edu\",\n\t\"website\": \"salvagescooters.com\",\n\t\"shippingAddr\": {\n\t\t\"street\": \"123 fake st\",\n\t\t\"city\": \"Philadelphia\",\n\t\t\"state\": \"PA\",\n\t\t\"country\": \"USA\",\n\t\t\"zip\": \"19104\"\n\t},\n\t\"billingAddr\": {\n\t\t\"street\": \"123 fake st\",\n\t\t\"city\": \"Philadelphia\",\n\t\t\"state\": \"PA\",\n\t\t\"country\": \"USA\",\n\t\t\"zip\": \"19104\"\n\t},\n\t\"isPastDue\": false,\n\t\"phoneNumber\": \"911\"\n}\n"
-						},
-						"url": {
-							"raw": "{{host}}/{{basepath}}/customer/create",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"{{basepath}}",
-								"customer",
-								"create"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update_Customer",
 					"event": [
 						{
 							"listen": "test",
@@ -345,7 +247,7 @@
 					"response": []
 				},
 				{
-					"name": "Remove_Customer",
+					"name": "Get_AllCustomers",
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -357,14 +259,25 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{host}}/{{basepath}}/customer/{{custid}}",
+							"raw": "{{host}}/{{basepath}}/customer?limit=50&offset=0",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{basepath}}",
-								"customer",
-								"{{custid}}"
+								"customer"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "50",
+									"equals": true
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"equals": true
+								}
 							]
 						}
 					},
@@ -411,13 +324,490 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Remove_Customer",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/customer/{{custid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"customer",
+								"{{custid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update_Customer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ce15efbb-4af1-4a56-9cb9-039135f51ec8",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)",
+									"pm.environment.set(\"custid\", jsonData.id);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Jeff Salvage's Scooter Racing Company\",\n\t\"email\": \"salvage@drexel.edu\",\n\t\"website\": \"salvagescooters.com\",\n\t\"shippingAddr\": {\n\t\t\"street\": \"123 fake st\",\n\t\t\"city\": \"Philadelphia\",\n\t\t\"state\": \"PA\",\n\t\t\"country\": \"USA\",\n\t\t\"zip\": \"19104\"\n\t},\n\t\"billingAddr\": {\n\t\t\"street\": \"123 fake st\",\n\t\t\"city\": \"Philadelphia\",\n\t\t\"state\": \"PA\",\n\t\t\"country\": \"USA\",\n\t\t\"zip\": \"19104\"\n\t},\n\t\"isPastDue\": false,\n\t\"phoneNumber\": \"911\"\n}\n"
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/customer/create",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"customer",
+								"create"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
 		{
-			"name": "Cost_Centers",
+			"name": "User",
+			"item": [
+				{
+					"name": "Create_User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f4457424-94bd-4cd4-9e93-ead01d36e4bf",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)",
+									"pm.environment.set(\"userid\", jsonData.id);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"Jlbornemann\",\n\t\"password\": \"dipshit\",\n\t\"admin\": false,\n\t\"station\": 1\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/user/create",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"user",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login_User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a2818c33-aefb-45e3-b1fe-a351fa4a3503",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n \"username\": \"Jlbornemann\",\n \"password\": \"dipshit\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/user/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/user/{{userid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"user",
+								"{{userid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Projects",
+			"item": [
+				{
+					"name": "Create_Project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e8588f95-aa49-4de8-a9cb-6783be3965a3",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)",
+									"pm.environment.set(\"projid\", jsonData.id);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"jobType\": \"Piston\",\n\t\"costCenter\": \"APC\",\n\t\"title\": \"This is a title\",\n\t\"description\": \"fijeorpwfjeropiwjfreopw\",\n\t\"priority\": \"Low\",\n\t\"refName\": \"What even is this\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/project/create",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"project",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update_Project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9c635f0a-f7fd-4fbe-b36b-335559770cac",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"Another change\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/project/update/{{projid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"project",
+								"update",
+								"{{projid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_ProjectById",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e8588f95-aa49-4de8-a9cb-6783be3965a3",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)",
+									"pm.environment.set(\"projid\", jsonData.id);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"jobType\": \"Piston\",\n\t\"costCenter\": \"APC\",\n\t\"title\": \"This is a title\",\n\t\"description\": \"fijeorpwfjeropiwjfreopw\",\n\t\"priority\": \"Low\",\n\t\"partCount\": 2,\n\t\"refName\": \"What even is this\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/project/{{projid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"project",
+								"{{projid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update_ProjectStatus",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "54c7abd2-d4f4-4ec7-ad18-ed0c89528071",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"jobType\": \"Piston\",\n\t\"costCenter\": \"APC\",\n\t\"title\": \"This is a title\",\n\t\"description\": \"fijeorpwfjeropiwjfreopw\",\n\t\"priority\": \"Low\",\n\t\"partCount\": 2,\n\t\"refName\": \"What even is this\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/project/status/{{projid}}?status=Completed",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"project",
+								"status",
+								"{{projid}}"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "Completed",
+									"equals": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_All_Projects",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/project?limit=50&offset=0",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"project"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "50",
+									"equals": true
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"equals": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Enums",
 			"description": "",
 			"item": [
+				{
+					"name": "Get_AllStations",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/user/enum/station",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"user",
+								"enum",
+								"station"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_AllProjectStatuses",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/project/enum/status",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"project",
+								"enum",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_AllProjectPriorities",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/project/enum/priority",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"project",
+								"enum",
+								"priority"
+							]
+						}
+					},
+					"response": []
+				},
 				{
 					"name": "Get_AllCostCenters",
 					"request": {
@@ -431,12 +821,14 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{host}}/{{basepath}}/cost-center",
+							"raw": "{{host}}/{{basepath}}/project/enum/cost-center",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{basepath}}",
+								"project",
+								"enum",
 								"cost-center"
 							]
 						}
@@ -444,7 +836,7 @@
 					"response": []
 				},
 				{
-					"name": "Get_CostCenterById",
+					"name": "Get_AllJobTypes",
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -456,20 +848,43 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{host}}/{{basepath}}/cost-center/1",
+							"raw": "{{host}}/{{basepath}}/project/enum/jobtype",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{basepath}}",
-								"cost-center",
-								"1"
+								"project",
+								"enum",
+								"jobtype"
 							]
 						}
 					},
 					"response": []
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "f389e06d-9b6a-40cc-99f4-f632713096eb",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "20475d75-59e6-4d8a-926d-54843754acba",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
