@@ -1,0 +1,1107 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "API Development Document with current endpoints hosted on l2lc-dev",
+    "version": "1.0.1",
+    "title": "l2lc API"
+  },
+  "host": "138.197.88.198:8080",
+  "basePath": "/l2lc/api",
+  "tags": [
+    {
+      "name": "Employee",
+      "description": "Access to Employee Information"
+    },
+    {
+      "name": "Customer",
+      "description": "Access to Customer Information"
+    },
+    {
+      "name": "User",
+      "description": "Access to User Information"
+    },
+    {
+      "name": "Project",
+      "description": "Access to Project Information"
+    },
+    {
+      "name": "Enum",
+      "description": "All enumerations used in the API"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/employee/create": {
+      "post": {
+        "tags": [
+          "Employee"
+        ],
+        "summary": "Add a new employee",
+        "description": "",
+        "operationId": "addEmployee",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Employee object to be added to database",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Create_Employee_Input"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Create_Employee_Output"
+            }
+          },
+          "406": {
+            "description": "Not Acceptable input",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/employee/update/{id}": {
+      "post": {
+        "tags": [
+          "Employee"
+        ],
+        "summary": "Add a new employee",
+        "description": "",
+        "operationId": "updateEmployeeById",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric Id of the employee"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Employee object to be added to database",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Create_Employee_Input"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK, update successful",
+            "schema": {
+              "$ref": "#/definitions/Create_Employee_Output"
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "406": {
+            "description": "Not Acceptable input",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/employee/{id}": {
+      "get": {
+        "tags": [
+          "Employee"
+        ],
+        "summary": "Get an employee's information from their id",
+        "operationId": "getEmployeeById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric Id of the employee"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Employee was successfully retrieved",
+            "schema": {
+              "$ref": "#/definitions/Create_Employee_Output"
+            }
+          },
+          "404": {
+            "description": "Employee Not found"
+          }
+        }
+      }
+    },
+    "/employee/remove/{id}": {
+      "delete": {
+        "tags": [
+          "Employee"
+        ],
+        "summary": "Remove an employee",
+        "operationId": "removeEmployeeById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric Id of the employee"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Employee Not Found"
+          }
+        }
+      }
+    },
+    "/employee": {
+      "get": {
+        "tags": [
+          "Employee"
+        ],
+        "summary": "Get All Employees",
+        "operationId": "getAllEmployees",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "type": "integer",
+            "required": false,
+            "description": "The amount of maximum amount of items to be returned"
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "type": "integer",
+            "required": false,
+            "description": "The offset to be used when obtaining items."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "limit": {
+                  "type": "integer",
+                  "example": 50
+                },
+                "offset": {
+                  "type": "integer",
+                  "example": 0
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Create_Employee_Output"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customer/create": {
+      "post": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Create a customer",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Create_Customer_Input"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Customer created",
+            "schema": {
+              "$ref": "#/definitions/Create_Customer_Output"
+            }
+          },
+          "406": {
+            "description": "Not Acceptable input",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/customer/{id}": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Get customer information",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK, customer was found",
+            "schema": {
+              "$ref": "#/definitions/Create_Customer_Output"
+            }
+          },
+          "404": {
+            "description": "Customer not found"
+          }
+        }
+      }
+    },
+    "/customer/update/{id}": {
+      "post": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Update a customer",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "in_body",
+            "schema": {
+              "$ref": "#/definitions/Create_Customer_Input"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Create_Customer_Output"
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "406": {
+            "description": "Not Acceptable"
+          }
+        }
+      }
+    },
+    "/customer": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Get all customers",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "type": "integer",
+            "required": false,
+            "description": "The amount of maximum amount of items to be returned"
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "type": "integer",
+            "required": false,
+            "description": "The offset to be used when obtaining items."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "limit": {
+                  "type": "integer",
+                  "example": 50
+                },
+                "offset": {
+                  "type": "integer",
+                  "example": 0
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Create_Customer_Output"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customer/remove/{id}": {
+      "delete": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Delete a customer",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/user/create": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Create a new User",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "in_body",
+            "schema": {
+              "$ref": "#/definitions/Create_User_Input"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Create_User_Output"
+            }
+          },
+          "406": {
+            "description": "Not_Acceptable",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "validate a username and password combination",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "in_body",
+            "schema": {
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "example": "jlbornemann"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "thisismytuxpassword"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Create_User_Output"
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED"
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get User by Id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Create_User_Output"
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND"
+          }
+        }
+      }
+    },
+    "/user/enum/station": {
+      "get": {
+        "tags": [
+          "Enum"
+        ],
+        "summary": "Get all registered stations",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "example": "Receiving"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/enum/cost-center": {
+      "get": {
+        "tags": [
+          "Enum"
+        ],
+        "summary": "Get all Cost Centers",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "example": "APC"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/enum/status": {
+      "get": {
+        "tags": [
+          "Enum"
+        ],
+        "summary": "Get project status enum",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "example": "Completed"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/enum/priority": {
+      "get": {
+        "tags": [
+          "Enum"
+        ],
+        "summary": "Get project priority enum",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "example": "Low"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/enum/jobtype": {
+      "get": {
+        "tags": [
+          "Enum"
+        ],
+        "summary": "Get all project jobtypes",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "example": "Piston"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/create": {
+      "post": {
+        "tags": [
+          "Project"
+        ],
+        "summary": "Create a new project",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "in_body",
+            "schema": {
+              "$ref": "#/definitions/Create_Project_Input"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Create_Project_Output"
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/project/{id}": {
+      "get": {
+        "tags": [
+          "Project"
+        ],
+        "summary": "Get project by id",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "description": "The id of the project",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Create_Project_Output"
+            }
+          },
+          "404": {
+            "description": "Project Not Found"
+          }
+        }
+      }
+    },
+    "/project": {
+      "get": {
+        "tags": [
+          "Project"
+        ],
+        "summary": "Get A page of projects",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "limit": {
+                  "type": "integer",
+                  "example": 50
+                },
+                "offset": {
+                  "type": "integer",
+                  "example": 0
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Create_Project_Output"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/update/{id}": {
+      "post": {
+        "summary": "Update project by id",
+        "tags": [
+          "Project"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "in_body",
+            "schema": {
+              "$ref": "#/definitions/Create_Project_Input"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "schema": {
+              "$ref": "#/definitions/Create_Project_Output"
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/project/status/{id}": {
+      "post": {
+        "tags": [
+          "Project"
+        ],
+        "summary": "Change status of project",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "type": "string",
+            "description": "Acceptable values include (Recieved, In Progress, Completed)",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "404": {
+            "description": "Project Not Found"
+          },
+          "406": {
+            "description": "Not Acceptable"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Create_Employee_Input": {
+      "type": "object",
+      "required": [
+        "firstName",
+        "lastName"
+      ],
+      "properties": {
+        "firstName": {
+          "type": "string",
+          "example": "Joel"
+        },
+        "lastName": {
+          "type": "string",
+          "example": "Bornemann"
+        }
+      }
+    },
+    "Create_Employee_Output": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 12
+        },
+        "firstName": {
+          "type": "string",
+          "example": "Joel"
+        },
+        "lastName": {
+          "type": "string",
+          "example": "Bornemann"
+        }
+      }
+    },
+    "Create_Customer_Input": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Jeff Salvage's Scooter Racing Company"
+        },
+        "email": {
+          "type": "string",
+          "example": "salvage@drexel.edu"
+        },
+        "website": {
+          "type": "string",
+          "example": "salvagescooters.com"
+        },
+        "shippingAddr": {
+          "$ref": "#/definitions/Address_Input"
+        },
+        "billingAddr": {
+          "$ref": "#/definitions/Address_Input"
+        },
+        "isPastDue": {
+          "type": "boolean",
+          "example": false
+        },
+        "phoneNumber": {
+          "type": "string",
+          "example": "911"
+        }
+      }
+    },
+    "Create_Customer_Output": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 12
+        },
+        "name": {
+          "type": "string",
+          "example": "Jeff Salvage's Scooter Racing Company"
+        },
+        "email": {
+          "type": "string",
+          "example": "salvage@drexel.edu"
+        },
+        "website": {
+          "type": "string",
+          "example": "salvagescooters.com"
+        },
+        "shippingAddr": {
+          "$ref": "#/definitions/Address_Output"
+        },
+        "billingAddr": {
+          "$ref": "#/definitions/Address_Output"
+        },
+        "isPastDue": {
+          "type": "boolean",
+          "example": false
+        },
+        "phoneNumber": {
+          "type": "string",
+          "example": "911"
+        }
+      }
+    },
+    "Address_Output": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 2
+        },
+        "street": {
+          "type": "string",
+          "example": "123 fake st"
+        },
+        "city": {
+          "type": "string",
+          "example": "Philadelphia"
+        },
+        "state": {
+          "type": "string",
+          "example": "PA"
+        },
+        "country": {
+          "type": "string",
+          "example": "USA"
+        },
+        "zip": {
+          "type": "string",
+          "example": "19104"
+        }
+      }
+    },
+    "Address_Input": {
+      "type": "object",
+      "properties": {
+        "street": {
+          "type": "string",
+          "example": "123 fake st"
+        },
+        "city": {
+          "type": "string",
+          "example": "Philadelphia"
+        },
+        "state": {
+          "type": "string",
+          "example": "PA"
+        },
+        "country": {
+          "type": "string",
+          "example": "USA"
+        },
+        "zip": {
+          "type": "string",
+          "example": "19104"
+        }
+      }
+    },
+    "Create_User_Input": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "example": "jlbornemann"
+        },
+        "password": {
+          "type": "string",
+          "example": "thismytuxpassword"
+        },
+        "admin": {
+          "type": "boolean",
+          "example": true
+        },
+        "stationId": {
+          "type": "integer",
+          "example": 4
+        }
+      }
+    },
+    "Create_User_Output": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 12
+        },
+        "username": {
+          "type": "string",
+          "example": "jlbornemann"
+        },
+        "admin": {
+          "type": "boolean",
+          "example": true
+        },
+        "stationId": {
+          "type": "integer",
+          "example": 4
+        }
+      }
+    },
+    "Create_Project_Input": {
+      "type": "object",
+      "properties": {
+        "customerId": {
+          "type": "integer",
+          "example": 666
+        },
+        "jobType": {
+          "type": "string",
+          "example": "Piston"
+        },
+        "costCenter": {
+          "type": "string",
+          "description": "Acceptable values include: (APC, Decorative, Maintenance, Administration, Production, Research and Development, Other)",
+          "example": "APC"
+        },
+        "title": {
+          "type": "string",
+          "example": "This is a title"
+        },
+        "description": {
+          "type": "string",
+          "example": "freowkfoerqkpofer"
+        },
+        "priority": {
+          "type": "string",
+          "example": "Low"
+        },
+        "partCount": {
+          "type": "integer",
+          "example": 32
+        },
+        "refNumber": {
+          "type": "string",
+          "example": "43049304"
+        }
+      }
+    },
+    "Create_Project_Output": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 12
+        },
+        "customerId": {
+          "type": "integer",
+          "example": 666
+        },
+        "created": {
+          "type": "integer",
+          "example": 1518553113959
+        },
+        "projectStatus": {
+          "type": "string",
+          "example": "Recieved"
+        },
+        "jobType": {
+          "type": "string",
+          "example": "Piston"
+        },
+        "costCenter": {
+          "type": "string",
+          "example": "CostCenter"
+        },
+        "title": {
+          "type": "string",
+          "example": "This is a title"
+        },
+        "description": {
+          "type": "string",
+          "example": "freowkfoerqkpofer"
+        },
+        "priority": {
+          "type": "string",
+          "example": "Low"
+        },
+        "partCount": {
+          "type": "integer",
+          "example": 32
+        },
+        "refNumber": {
+          "type": "string",
+          "example": "43049304"
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "NOT_ACCEPTABLE"
+        },
+        "errorMessages": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "Some Error Message"
+          }
+        }
+      }
+    }
+  }
+}
