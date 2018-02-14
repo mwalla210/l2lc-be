@@ -258,9 +258,8 @@ public class TrackingValidationHelper {
             error.setStatus(Response.Status.NOT_ACCEPTABLE);
         }
         return error;
-
-
     }
+    
     private boolean isProjectEmpty(Project project) {
         return project.getTitle() == null && project.getJobType() == null && project.getCostCenter() == null &&
                 project.getCustomerId() == null && project.getTitle() == null && project.getDescription() == null &&
