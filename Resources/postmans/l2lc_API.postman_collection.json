@@ -537,7 +537,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"jobType\": \"Piston\",\n\t\"costCenter\": \"APC\",\n\t\"title\": \"This is a title\",\n\t\"description\": \"fijeorpwfjeropiwjfreopw\",\n\t\"priority\": \"Low\",\n\t\"refName\": \"What even is this\"\n}"
+							"raw": "{\n\t\"jobType\": \"Piston\",\n\t\"costCenter\": \"APC\",\n\t\"title\": \"This is a title\",\n\t\"description\": \"fijeorpwfjeropiwjfreopw\",\n\t\"priority\": \"Low\",\n\t\"refNumber\": \"What even is this\"\n}"
 						},
 						"url": {
 							"raw": "{{host}}/{{basepath}}/project/create",
@@ -857,6 +857,93 @@
 								"project",
 								"enum",
 								"jobtype"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TimeEntry",
+			"description": "",
+			"item": [
+				{
+					"name": "Create_TimeEntry",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "db6e2d0a-9e42-4b9d-93fd-c6f4a3825f41",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/project/time-entry/create/{{projid}}?employeeId={{empid}}&station=Receiving",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"project",
+								"time-entry",
+								"create",
+								"{{projid}}"
+							],
+							"query": [
+								{
+									"key": "employeeId",
+									"value": "{{empid}}",
+									"equals": true
+								},
+								{
+									"key": "station",
+									"value": "Receiving",
+									"equals": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_TimeEntries",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{basepath}}/project/time-entry/{{projid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{basepath}}",
+								"project",
+								"time-entry",
+								"{{projid}}"
 							]
 						}
 					},
