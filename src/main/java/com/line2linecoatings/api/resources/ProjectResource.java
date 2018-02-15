@@ -152,7 +152,7 @@ public class ProjectResource extends BasicResource {
     }
 
     @POST
-    @Path("{id}/time-entry/create")
+    @Path("/{id}/time-entry/create")
     @Produces(MediaType.APPLICATION_JSON)
     public Response createTimeEntry(@PathParam("id") int projectId, @QueryParam("employeeId") Integer employeeId,
                                     @QueryParam("station") String station,
