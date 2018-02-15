@@ -1,8 +1,7 @@
 {
 	"info": {
 		"name": "l2lc_API",
-		"_postman_id": "68c40c7c-2d44-8f4d-ea08-bc68432e85a0",
-		"description": "",
+		"_postman_id": "ee1e9f71-8e2b-8bf2-9c83-441411c787a3",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -120,22 +119,22 @@
 						"auth": {
 							"type": "noauth"
 						},
-						"method": "GET",
+						"method": "DELETE",
 						"header": [],
 						"body": {
 							"mode": "raw",
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{host}}/{{basepath}}/employee/remove/{{empid}}",
+							"raw": "{{host}}/{{basepath}}/employee/{{empid}}/remove",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{basepath}}",
 								"employee",
-								"remove",
-								"{{empid}}"
+								"{{empid}}",
+								"remove"
 							]
 						}
 					},
@@ -159,15 +158,15 @@
 							"raw": "{\n\t\"firstName\": \"Jlbo\",\n\t\"lastName\": \"Bornemann\"\n}"
 						},
 						"url": {
-							"raw": "{{host}}/{{basepath}}/employee/update/{{empid}}",
+							"raw": "{{host}}/{{basepath}}/employee/{{empid}}/update",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{basepath}}",
 								"employee",
-								"update",
-								"{{empid}}"
+								"{{empid}}",
+								"update"
 							]
 						}
 					},
@@ -331,21 +330,22 @@
 						"auth": {
 							"type": "noauth"
 						},
-						"method": "GET",
+						"method": "DELETE",
 						"header": [],
 						"body": {
 							"mode": "raw",
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{host}}/{{basepath}}/customer/{{custid}}",
+							"raw": "{{host}}/{{basepath}}/customer/{{custid}}/remove",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{basepath}}",
 								"customer",
-								"{{custid}}"
+								"{{custid}}",
+								"remove"
 							]
 						}
 					},
@@ -380,14 +380,15 @@
 							"raw": "{\n\t\"name\": \"Jeff Salvage's Scooter Racing Company\",\n\t\"email\": \"salvage@drexel.edu\",\n\t\"website\": \"salvagescooters.com\",\n\t\"shippingAddr\": {\n\t\t\"street\": \"123 fake st\",\n\t\t\"city\": \"Philadelphia\",\n\t\t\"state\": \"PA\",\n\t\t\"country\": \"USA\",\n\t\t\"zip\": \"19104\"\n\t},\n\t\"billingAddr\": {\n\t\t\"street\": \"123 fake st\",\n\t\t\"city\": \"Philadelphia\",\n\t\t\"state\": \"PA\",\n\t\t\"country\": \"USA\",\n\t\t\"zip\": \"19104\"\n\t},\n\t\"isPastDue\": false,\n\t\"phoneNumber\": \"911\"\n}\n"
 						},
 						"url": {
-							"raw": "{{host}}/{{basepath}}/customer/create",
+							"raw": "{{host}}/{{basepath}}/customer/{{custid}}/update",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{basepath}}",
 								"customer",
-								"create"
+								"{{custid}}",
+								"update"
 							]
 						}
 					},
@@ -537,7 +538,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"jobType\": \"Piston\",\n\t\"costCenter\": \"APC\",\n\t\"title\": \"This is a title\",\n\t\"description\": \"fijeorpwfjeropiwjfreopw\",\n\t\"priority\": \"Low\",\n\t\"refName\": \"What even is this\"\n}"
+							"raw": "{\n\t\"jobType\": \"Piston\",\n\t\"costCenter\": \"APC\",\n\t\"title\": \"This is a title\",\n\t\"description\": \"fijeorpwfjeropiwjfreopw\",\n\t\"priority\": \"Low\",\n\t\"refNumber\": \"What even is this\"\n}"
 						},
 						"url": {
 							"raw": "{{host}}/{{basepath}}/project/create",
@@ -580,15 +581,15 @@
 							"raw": "{\n\t\"title\": \"Another change\"\n}"
 						},
 						"url": {
-							"raw": "{{host}}/{{basepath}}/project/update/{{projid}}",
+							"raw": "{{host}}/{{basepath}}/project/{{projid}}/update",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{basepath}}",
 								"project",
-								"update",
-								"{{projid}}"
+								"{{projid}}",
+								"update"
 							]
 						}
 					},
@@ -663,15 +664,15 @@
 							"raw": "{\n\t\"jobType\": \"Piston\",\n\t\"costCenter\": \"APC\",\n\t\"title\": \"This is a title\",\n\t\"description\": \"fijeorpwfjeropiwjfreopw\",\n\t\"priority\": \"Low\",\n\t\"partCount\": 2,\n\t\"refName\": \"What even is this\"\n}"
 						},
 						"url": {
-							"raw": "{{host}}/{{basepath}}/project/status/{{projid}}?status=Completed",
+							"raw": "{{host}}/{{basepath}}/project/{{projid}}/status?status=Completed",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{basepath}}",
 								"project",
-								"status",
-								"{{projid}}"
+								"{{projid}}",
+								"status"
 							],
 							"query": [
 								{
@@ -725,7 +726,6 @@
 		},
 		{
 			"name": "Enums",
-			"description": "",
 			"item": [
 				{
 					"name": "Get_AllStations",
