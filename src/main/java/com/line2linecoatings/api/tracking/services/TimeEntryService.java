@@ -1,7 +1,7 @@
 package com.line2linecoatings.api.tracking.services;
 
 import com.line2linecoatings.api.dao.TrackingDAOImpl;
-import com.line2linecoatings.api.tracking.models.TimeEntry;
+import com.line2linecoatings.api.tracking.models.ProjectTimeEntry;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -16,21 +16,21 @@ public class TimeEntryService {
         dao = new TrackingDAOImpl();
     }
 
-    public TimeEntry createTimeEntry(int projectId, int employeeId, String station) throws Exception {
+    public ProjectTimeEntry createTimeEntry(int projectId, int employeeId, String station) throws Exception {
         log.info("Start of createTimeEntry with id " + projectId);
-        TimeEntry timeEntry = new TimeEntry();
-        timeEntry.setProjectId(projectId);
-        timeEntry.setEmployeeId(employeeId);
-        timeEntry.setStation(station);
-        timeEntry.setCreated(new Date());
-        timeEntry = dao.createTimeEntry(timeEntry);
+        ProjectTimeEntry projectTimeEntry = new ProjectTimeEntry();
+        projectTimeEntry.setProjectId(projectId);
+        projectTimeEntry.setEmployeeId(employeeId);
+        projectTimeEntry.setStation(station);
+        projectTimeEntry.setCreated(new Date());
+        projectTimeEntry = dao.createTimeEntry(projectTimeEntry);
         log.info("End of createTimeEntry with id " + projectId);
-        return timeEntry;
+        return projectTimeEntry;
     }
 
-    public List<TimeEntry> getTimeEntries(int projectId) throws Exception{
+    public List<ProjectTimeEntry> getTimeEntries(int projectId) throws Exception{
         log.info("Start of getTimeEntries with id " + projectId);
-        List<TimeEntry> timeEntries = null;
+        List<ProjectTimeEntry> timeEntries = null;
         if (dao.getProject(projectId) != null) {
             timeEntries = dao.getTimeEntries(projectId);
         }

@@ -1,7 +1,6 @@
 package com.line2linecoatings.api.dao;
 
 import com.line2linecoatings.api.tracking.caches.Cache;
-import com.line2linecoatings.api.tracking.caches.CostCenterCache;
 import com.line2linecoatings.api.tracking.models.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -1000,17 +999,17 @@ public class TrackingDAOImpl {
 
     }
 
-    public TimeEntry createTimeEntry(TimeEntry timeEntry) throws Exception {
-        log.info("Start of createTimeEntry in DAO with id " + timeEntry.getProjectId());
+    public ProjectTimeEntry createTimeEntry(ProjectTimeEntry projectTimeEntry) throws Exception {
+        log.info("Start of createTimeEntry in DAO with id " + projectTimeEntry.getProjectId());
 
-        int stationId = Cache.stationCache.getIdForName(timeEntry.getStation());
+        int stationId = Cache.stationCache.getIdForName(projectTimeEntry.getStation());
         Connection conn = createConnection();
         String query = "INSERT INTO ProjectTimeEntry (project_id, employee_id, station_id, created) VALUES (?, ?, ?, ?)";
         PreparedStatement preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-        preparedStatement.setInt(1, timeEntry.getProjectId());
-        preparedStatement.setInt(2, timeEntry.getEmployeeId());
+        preparedStatement.setInt(1, projectTimeEntry.getProjectId());
+        preparedStatement.setInt(2, projectTimeEntry.getEmployeeId());
         preparedStatement.setInt(3, stationId);
-        preparedStatement.setDate(4, new java.sql.Date(timeEntry.getCreated().getTime()));
+        preparedStatement.setDate(4, new java.sql.Date(projectTimeEntry.getCreated().getTime()));
 
         int affectedRows = preparedStatement.executeUpdate();
 
@@ -1020,8 +1019,8 @@ public class TrackingDAOImpl {
 
         try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
             if (generatedKeys.next()) {
-                timeEntry.setId(generatedKeys.getInt(1));
-                log.info("Time Entry Created with id " + timeEntry.getId());
+                projectTimeEntry.setId(generatedKeys.getInt(1));
+                log.info("Time Entry Created with id " + projectTimeEntry.getId());
                 generatedKeys.close();
             } else {
                 throw new SQLException("Creating Project failed, no ID obtained");
@@ -1030,13 +1029,13 @@ public class TrackingDAOImpl {
 
         preparedStatement.close();
         conn.close();
-        log.info("End of createTimeEntry in DAO with id " + timeEntry.getProjectId());
-        return timeEntry;
+        log.info("End of createTimeEntry in DAO with id " + projectTimeEntry.getProjectId());
+        return projectTimeEntry;
     }
 
-    public List<TimeEntry> getTimeEntries(int projectId) throws Exception {
+    public List<ProjectTimeEntry> getTimeEntries(int projectId) throws Exception {
         log.info("Start of getTimeEntries in DAO with id " + projectId);
-        List<TimeEntry> timeEntries = new ArrayList<>();
+        List<ProjectTimeEntry> timeEntries = new ArrayList<>();
         List<Integer> stationIds = new ArrayList<>();
 
         Connection conn = createConnection();
@@ -1045,13 +1044,13 @@ public class TrackingDAOImpl {
         preparedStatement.setInt(1, projectId);
         ResultSet rs = preparedStatement.executeQuery();
         while (rs.next()) {
-            TimeEntry timeEntry = new TimeEntry();
-            timeEntry.setId(rs.getInt("id"));
-            timeEntry.setProjectId(rs.getInt("project_id"));
-            timeEntry.setEmployeeId(rs.getInt("employee_id"));
-            timeEntry.setCreated(rs.getDate("created"));
+            ProjectTimeEntry projectTimeEntry = new ProjectTimeEntry();
+            projectTimeEntry.setId(rs.getInt("id"));
+            projectTimeEntry.setProjectId(rs.getInt("project_id"));
+            projectTimeEntry.setEmployeeId(rs.getInt("employee_id"));
+            projectTimeEntry.setCreated(rs.getDate("created"));
             stationIds.add(rs.getInt("station_id"));
-            timeEntries.add(timeEntry);
+            timeEntries.add(projectTimeEntry);
         }
 
         rs.close();

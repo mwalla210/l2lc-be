@@ -2,7 +2,7 @@ package com.line2linecoatings.api.tracking.models;
 
 import java.util.Date;
 
-public class TimeEntry {
+public class ProjectTimeEntry {
     private int id;
     private int projectId;
     private int employeeId;

@@ -1,6 +1,6 @@
 package com.line2linecoatings.api.resources;
 
-import com.line2linecoatings.api.tracking.models.TimeEntry;
+import com.line2linecoatings.api.tracking.models.ProjectTimeEntry;
 import com.line2linecoatings.api.tracking.services.TimeEntryService;
 import com.line2linecoatings.api.tracking.utils.TrackingError;
 import com.line2linecoatings.api.tracking.utils.TrackingValidationHelper;
@@ -30,7 +30,7 @@ public class TimeEntryResource extends BasicResource {
     public Response createTimeEntry(@PathParam("id") int projectId, @QueryParam("employeeId") Integer employeeId,
                                     @QueryParam("station") String station,
                                     @Context HttpHeaders headers) throws Exception {
-        TimeEntry timeEntry;
+        ProjectTimeEntry projectTimeEntry;
         TrackingError error = validationHelper.validateTimeEntry(projectId, employeeId, station);
         if (error != null) {
             log.error(headers);
@@ -38,13 +38,13 @@ public class TimeEntryResource extends BasicResource {
         }
 
         try {
-            timeEntry = timeEntryService.createTimeEntry(projectId, employeeId, station);
+            projectTimeEntry = timeEntryService.createTimeEntry(projectId, employeeId, station);
         } catch (Exception ex) {
             log.error(headers);
             throw ex;
         }
 
-        return getResponse(Response.Status.CREATED, timeEntry);
+        return getResponse(Response.Status.CREATED, projectTimeEntry);
     }
 
     @GET
@@ -52,7 +52,7 @@ public class TimeEntryResource extends BasicResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTimeEntiesByProjectId(@PathParam("id") int projectId,
                                              @Context HttpHeaders headers) throws Exception {
-        List<TimeEntry> timeEntries;
+        List<ProjectTimeEntry> timeEntries;
 
         try {
             timeEntries = timeEntryService.getTimeEntries(projectId);
