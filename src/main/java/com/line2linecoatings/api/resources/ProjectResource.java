@@ -2,6 +2,7 @@ package com.line2linecoatings.api.resources;
 
 import com.line2linecoatings.api.tracking.models.Page;
 import com.line2linecoatings.api.tracking.models.Project;
+import com.line2linecoatings.api.tracking.models.ProjectTimeEntry;
 import com.line2linecoatings.api.tracking.services.ProjectService;
 import com.line2linecoatings.api.tracking.utils.TrackingError;
 import com.line2linecoatings.api.tracking.utils.TrackingValidationHelper;
@@ -14,6 +15,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("/project")
 public class ProjectResource extends BasicResource {
@@ -147,5 +149,49 @@ public class ProjectResource extends BasicResource {
         }
 
         return getResponse(Response.Status.ACCEPTED);
+    }
+
+    @POST
+    @Path("{id}/time-entry/create")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createTimeEntry(@PathParam("id") int projectId, @QueryParam("employeeId") Integer employeeId,
+                                    @QueryParam("station") String station,
+                                    @Context HttpHeaders headers) throws Exception {
+        ProjectTimeEntry projectTimeEntry;
+        TrackingError error = validationHelper.validateTimeEntry(projectId, employeeId, station);
+        if (error != null) {
+            log.error(headers);
+            return getResponse(Response.Status.NOT_ACCEPTABLE, error);
+        }
+
+        try {
+            projectTimeEntry = projectService.createTimeEntry(projectId, employeeId, station);
+        } catch (Exception ex) {
+            log.error(headers);
+            throw ex;
+        }
+
+        return getResponse(Response.Status.CREATED, projectTimeEntry);
+    }
+
+    @GET
+    @Path("/{id}/time-entry")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTimeEntiesByProjectId(@PathParam("id") int projectId,
+                                             @Context HttpHeaders headers) throws Exception {
+        List<ProjectTimeEntry> timeEntries;
+
+        try {
+            timeEntries = projectService.getTimeEntries(projectId);
+        } catch (Exception ex) {
+            log.error(headers);
+            throw ex;
+        }
+
+        if (timeEntries == null) {
+            return getResponse(Response.Status.NOT_FOUND);
+        }
+
+        return getResponse(Response.Status.OK, timeEntries);
     }
 }

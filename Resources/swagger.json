@@ -805,7 +805,7 @@
         }
       }
     },
-    "/project/time-entry/create/{id}": {
+    "/project/{id}/time-entry/create": {
       "post": {
         "tags": [
           "Time Entry"
@@ -848,7 +848,7 @@
         }
       }
     },
-    "/project/time-entry/{id}": {
+    "/project/{id}/time-entry": {
       "get": {
         "tags": [
           "Time Entry"

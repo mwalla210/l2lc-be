@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "l2lc_API",
-		"_postman_id": "68c40c7c-2d44-8f4d-ea08-bc68432e85a0",
+		"_postman_id": "4a01e81e-b270-d584-26d1-01dfee016a08",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -725,7 +725,6 @@
 		},
 		{
 			"name": "Enums",
-			"description": "",
 			"item": [
 				{
 					"name": "Get_AllStations",
@@ -866,7 +865,6 @@
 		},
 		{
 			"name": "TimeEntry",
-			"description": "",
 			"item": [
 				{
 					"name": "Create_TimeEntry",
@@ -895,16 +893,16 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{host}}/{{basepath}}/project/time-entry/create/{{projid}}?employeeId={{empid}}&station=Receiving",
+							"raw": "{{host}}/{{basepath}}/project/{{projid}}/time-entry/create?employeeId={{empid}}&station=Receiving",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{basepath}}",
 								"project",
+								"{{projid}}",
 								"time-entry",
-								"create",
-								"{{projid}}"
+								"create"
 							],
 							"query": [
 								{
@@ -935,15 +933,15 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{host}}/{{basepath}}/project/time-entry/{{projid}}",
+							"raw": "{{host}}/{{basepath}}/project/{{projid}}/time-entry",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{basepath}}",
 								"project",
-								"time-entry",
-								"{{projid}}"
+								"{{projid}}",
+								"time-entry"
 							]
 						}
 					},
