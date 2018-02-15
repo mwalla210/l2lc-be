@@ -964,7 +964,7 @@ public class TrackingDAOImpl {
             updates.add("ref_name = " + '"' + project.getRefNumber() + '"');
         }
 
-        query += String.join(",", updates);
+        query += String.join(",", updates) + " WHERE id = " + id;
         log.info(query);
         Connection conn = createConnection();
         Statement stm = conn.createStatement();
@@ -977,9 +977,10 @@ public class TrackingDAOImpl {
     public void updateProjectStatus(int id, String status) throws Exception {
         Connection conn = createConnection();
         int projectStatusId = Cache.projectStatusCache.getIdForName(status);
-        String query = "UPDATE Project SET project_status_id = ?";
+        String query = "UPDATE Project SET project_status_id = ? WHERE id = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(query);
         preparedStatement.setInt(1, projectStatusId);
+        preparedStatement.setInt(2, id);
         preparedStatement.executeUpdate();
         preparedStatement.close();
         conn.close();
@@ -988,10 +989,11 @@ public class TrackingDAOImpl {
     public void updateProjectStatus(int id, String status, Date finishDate) throws Exception {
         Connection conn = createConnection();
         int projectStatusId = Cache.projectStatusCache.getIdForName(status);
-        String query = "UPDATE Project SET project_status_id = ?, finished = ?";
+        String query = "UPDATE Project SET project_status_id = ?, finished = ? WHERE id = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(query);
         preparedStatement.setInt(1, projectStatusId);
         preparedStatement.setDate(2, new java.sql.Date(finishDate.getTime()));
+        preparedStatement.setInt(3, id);
         preparedStatement.executeUpdate();
         preparedStatement.close();
         conn.close();
