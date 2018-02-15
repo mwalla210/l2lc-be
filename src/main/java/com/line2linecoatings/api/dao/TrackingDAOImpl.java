@@ -1010,7 +1010,6 @@ public class TrackingDAOImpl {
         preparedStatement.setInt(3, stationId);
         preparedStatement.setDate(4, new java.sql.Date(timeEntry.getCreated().getTime()));
 
-
         int affectedRows = preparedStatement.executeUpdate();
 
         if (affectedRows == 0) {
