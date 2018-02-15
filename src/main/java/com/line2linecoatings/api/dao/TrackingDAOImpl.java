@@ -1,7 +1,6 @@
 package com.line2linecoatings.api.dao;
 
 import com.line2linecoatings.api.tracking.caches.Cache;
-import com.line2linecoatings.api.tracking.caches.CostCenterCache;
 import com.line2linecoatings.api.tracking.models.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -998,6 +997,72 @@ public class TrackingDAOImpl {
         preparedStatement.close();
         conn.close();
 
+    }
+
+    public ProjectTimeEntry createTimeEntry(ProjectTimeEntry projectTimeEntry) throws Exception {
+        log.info("Start of createTimeEntry in DAO with id " + projectTimeEntry.getProjectId());
+
+        int stationId = Cache.stationCache.getIdForName(projectTimeEntry.getStation());
+        Connection conn = createConnection();
+        String query = "INSERT INTO ProjectTimeEntry (project_id, employee_id, station_id, created) VALUES (?, ?, ?, ?)";
+        PreparedStatement preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        preparedStatement.setInt(1, projectTimeEntry.getProjectId());
+        preparedStatement.setInt(2, projectTimeEntry.getEmployeeId());
+        preparedStatement.setInt(3, stationId);
+        preparedStatement.setDate(4, new java.sql.Date(projectTimeEntry.getCreated().getTime()));
+
+        int affectedRows = preparedStatement.executeUpdate();
+
+        if (affectedRows == 0) {
+            throw new SQLException("Creating time entry failed, no rows affected");
+        }
+
+        try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                projectTimeEntry.setId(generatedKeys.getInt(1));
+                log.info("Time Entry Created with id " + projectTimeEntry.getId());
+                generatedKeys.close();
+            } else {
+                throw new SQLException("Creating Project failed, no ID obtained");
+            }
+        }
+
+        preparedStatement.close();
+        conn.close();
+        log.info("End of createTimeEntry in DAO with id " + projectTimeEntry.getProjectId());
+        return projectTimeEntry;
+    }
+
+    public List<ProjectTimeEntry> getTimeEntries(int projectId) throws Exception {
+        log.info("Start of getTimeEntries in DAO with id " + projectId);
+        List<ProjectTimeEntry> timeEntries = new ArrayList<>();
+        List<Integer> stationIds = new ArrayList<>();
+
+        Connection conn = createConnection();
+        String query = "SELECT * FROM ProjectTimeEntry WHERE project_id=?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, projectId);
+        ResultSet rs = preparedStatement.executeQuery();
+        while (rs.next()) {
+            ProjectTimeEntry projectTimeEntry = new ProjectTimeEntry();
+            projectTimeEntry.setId(rs.getInt("id"));
+            projectTimeEntry.setProjectId(rs.getInt("project_id"));
+            projectTimeEntry.setEmployeeId(rs.getInt("employee_id"));
+            projectTimeEntry.setCreated(rs.getDate("created"));
+            stationIds.add(rs.getInt("station_id"));
+            timeEntries.add(projectTimeEntry);
+        }
+
+        rs.close();
+        preparedStatement.close();
+        conn.close();
+
+        // getting station names
+        for (int x = 0; x < timeEntries.size(); x++) {
+            timeEntries.get(x).setStation(Cache.stationCache.getNameForId(stationIds.get(x)));
+        }
+        log.info("End of getTimeEntries in DAO with id " + projectId);
+        return timeEntries;
     }
 
     private boolean removeFromTableById(String table, int id) throws Exception {
