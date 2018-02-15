@@ -177,8 +177,8 @@ public class ProjectResource extends BasicResource {
     @GET
     @Path("/{id}/time-entry")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTimeEntiesByProjectId(@PathParam("id") int projectId,
-                                             @Context HttpHeaders headers) throws Exception {
+    public Response getTimeEntriesByProjectId(@PathParam("id") int projectId,
+                                              @Context HttpHeaders headers) throws Exception {
         List<ProjectTimeEntry> timeEntries;
 
         try {
