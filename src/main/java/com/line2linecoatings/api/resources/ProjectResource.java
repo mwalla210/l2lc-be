@@ -100,7 +100,7 @@ public class ProjectResource extends BasicResource {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/update/{id}")
+    @Path("/{id}/update")
     public Response updateProjectById(Project project, @PathParam("id") int id, @Context HttpHeaders headers) throws Exception{
         Project updatedProject = null;
 
@@ -126,7 +126,7 @@ public class ProjectResource extends BasicResource {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/status/{id}")
+    @Path("/{id}/status")
     public Response updateProjectStatus(@QueryParam("status") String status, @PathParam("id") int id,
                                         @Context HttpHeaders headers) throws Exception {
 
