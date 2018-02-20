@@ -22,7 +22,7 @@ public class ProjectService {
     public Project createProject(Project project) throws Exception {
         log.info("Start of CreateProject in Service");
         project.setCreated(new Date());
-        project.setProjectStatus("Recieved"); // might want to create java enum for this
+        project.setProjectStatus("Received"); // might want to create java enum for this
         Project createdProject = dao.createProject(project);
         log.info("End of CreateProject in Service");
         return createdProject;
