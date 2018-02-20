@@ -68,7 +68,7 @@ public class CustomerResource extends BasicResource {
     }
 
     @POST
-    @Path("/update/{id}")
+    @Path("/{id}/update")
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateCustomer(@PathParam("id") int id, Customer customer, @Context HttpHeaders headers) throws Exception {
         Customer updatedCustomer;
@@ -109,7 +109,7 @@ public class CustomerResource extends BasicResource {
     }
 
     @DELETE
-    @Path("/remove/{id}")
+    @Path("/{id}/remove")
     @Produces(MediaType.APPLICATION_JSON)
     public Response removeCustomer(@PathParam("id") int id, @Context HttpHeaders headers) throws Exception {
         try {

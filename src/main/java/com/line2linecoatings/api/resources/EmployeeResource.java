@@ -60,7 +60,7 @@ public class EmployeeResource extends BasicResource
     }
 
     @POST
-    @Path("/update/{id}")
+    @Path("/{id}/update")
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateEmployee(@PathParam("id") int id, Employee employee, @Context HttpHeaders headers) throws Exception {
         Employee updatedEmployee = null;
@@ -86,7 +86,7 @@ public class EmployeeResource extends BasicResource
     }
 
     @DELETE
-    @Path("/remove/{id}")
+    @Path("/{id}/remove")
     @Produces(MediaType.APPLICATION_JSON)
     public Response removeEmployee(@PathParam("id") int id, @Context HttpHeaders headers) throws Exception {
         boolean removed;

@@ -230,9 +230,39 @@ public class TrackingValidationHelper {
         return error;
     }
 
+    public TrackingError validateTimeEntry(int projectId, Integer employeeId, String station) throws Exception {
+        TrackingError error = null;
+        List<String> errorMessages = new ArrayList<>();
+
+        if (employeeId == null) {
+            errorMessages.add("employeeId can not be null.");
+        }
+
+        if (StringUtils.isEmpty(station)) {
+            errorMessages.add("Station can not be empty or null.");
+        } else if (!Cache.stationCache.validate(station)) {
+            errorMessages.add(station + " is not a valid station.");
+        }
+
+        if (dao.getProject(projectId) == null) {
+            errorMessages.add(projectId + " is not associated to a known project.");
+        }
+
+        if (dao.getEmployeeById(employeeId) == null) {
+            errorMessages.add(employeeId + " is not associated to a known employee.");
+        }
+
+        if (!errorMessages.isEmpty()) {
+            error = new TrackingError();
+            error.setErrorMessages(errorMessages);
+            error.setStatus(Response.Status.NOT_ACCEPTABLE);
+        }
+        return error;
+    }
+
     private boolean isProjectEmpty(Project project) {
         return project.getTitle() == null && project.getJobType() == null && project.getCostCenter() == null &&
-                project.getCustomerId() == null && project.getTitle() == null && project.getDescription() == null &&
+                project.getCustomer() == null && project.getTitle() == null && project.getDescription() == null &&
                 project.getPriority() == null && project.getPartCount() == null && project.getRefNumber() == null;
     }
 
@@ -261,8 +291,8 @@ public class TrackingValidationHelper {
         }
 
         // checking for valid Customer
-        if (project.getCustomerId() != null && !doesCustomerExist(project.getCustomerId())) {
-            errorMessages.add(project.getCustomerId() + " is not a valid customer id");
+        if (project.getCustomer() != null && !doesCustomerExist(project.getCustomer().getId())) {
+            errorMessages.add(project.getCustomer().getId() + " is not a valid customer id");
         }
 
         return errorMessages;

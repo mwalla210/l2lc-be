@@ -74,7 +74,7 @@
         }
       }
     },
-    "/employee/update/{id}": {
+    "/employee/{id}/update": {
       "post": {
         "tags": [
           "Employee"
@@ -157,7 +157,7 @@
         }
       }
     },
-    "/employee/remove/{id}": {
+    "/employee/{id}/remove": {
       "delete": {
         "tags": [
           "Employee"
@@ -302,7 +302,7 @@
         }
       }
     },
-    "/customer/update/{id}": {
+    "/customer/{id}/update": {
       "post": {
         "tags": [
           "Customer"
@@ -387,7 +387,7 @@
         }
       }
     },
-    "/customer/remove/{id}": {
+    "/customer/{id}/remove": {
       "delete": {
         "tags": [
           "Customer"
@@ -731,7 +731,7 @@
         }
       }
     },
-    "/project/update/{id}": {
+    "/project/{id}/update": {
       "post": {
         "summary": "Update project by id",
         "tags": [
@@ -768,7 +768,7 @@
         }
       }
     },
-    "/project/status/{id}": {
+    "/project/{id}/status": {
       "post": {
         "tags": [
           "Project"
@@ -797,7 +797,84 @@
             "description": "Project Not Found"
           },
           "406": {
-            "description": "Not Acceptable"
+            "description": "Not Acceptable",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/project/{id}/time-entry/create": {
+      "post": {
+        "tags": [
+          "Time Entry"
+        ],
+        "summary": "Add a time entry to a project",
+        "parameters": [
+          {
+            "in": "path",
+            "description": "the project id",
+            "name": "id",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "employeeId",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "station",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Time_Entry"
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/project/{id}/time-entry": {
+      "get": {
+        "tags": [
+          "Time Entry"
+        ],
+        "summary": "Get all time entries for a project",
+        "parameters": [
+          {
+            "in": "path",
+            "description": "the project Id",
+            "name": "id",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Time_Entry"
+              }
+            }
+          },
+          "404": {
+            "description": "Project Not Found"
           }
         }
       }
@@ -1084,6 +1161,31 @@
         "refNumber": {
           "type": "string",
           "example": "43049304"
+        }
+      }
+    },
+    "Time_Entry": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 3
+        },
+        "projectId": {
+          "type": "integer",
+          "example": 5
+        },
+        "employeeId": {
+          "type": "integer",
+          "example": 2
+        },
+        "station": {
+          "type": "string",
+          "example": "Receiving"
+        },
+        "created": {
+          "type": "integer",
+          "example": 1518645459489
         }
       }
     },

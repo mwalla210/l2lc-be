@@ -1,7 +1,6 @@
 package com.line2linecoatings.api.dao;
 
 import com.line2linecoatings.api.tracking.caches.Cache;
-import com.line2linecoatings.api.tracking.caches.CostCenterCache;
 import com.line2linecoatings.api.tracking.models.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -754,8 +753,8 @@ public class TrackingDAOImpl {
                 " VALUES (?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         preparedStatement.setInt(1, jobTypeId);
-        if (project.getCustomerId() != null) {
-            preparedStatement.setInt(2, project.getCustomerId());
+        if (project.getCustomer() != null) {
+            preparedStatement.setInt(2, project.getCustomer().getId());
         }
         preparedStatement.setInt(3, projectStatusId);
         preparedStatement.setDate(4, new java.sql.Date(project.getCreated().getTime()));
@@ -794,7 +793,11 @@ public class TrackingDAOImpl {
     public Project getProject(int id) throws Exception {
         log.info("Start of getProject in DAO with id " + id);
         Connection conn = createConnection();
-        String query = "SELECT * FROM Project WHERE id=?";
+        String query = "SELECT P.id as id, P.job_type_id as j_id, P.cost_center_id as c_id, P.project_status_id as s_id, P.priority as pri, P.ref_name as r_name, " +
+                "P.customer_id as cust_id, P.created as created, P.finished as finish, P.title as title, P.description as descr, P.part_count as pc, C.name as name " +
+                "FROM Project P " +
+                "LEFT JOIN Customer C " +
+                "WHERE cust_id = C.id AND P.id = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(query);
         preparedStatement.setInt(1, id);
         ResultSet rs = preparedStatement.executeQuery();
@@ -807,28 +810,33 @@ public class TrackingDAOImpl {
 
         if (rs.next()) {
             project = new Project();
-            jobTypeId = rs.getInt("job_type_id");
-            costCenterId = rs.getInt("cost_center_id");
-            projectStatusId = rs.getInt("project_status_id");
-            priorityId = rs.getInt("priority");
+            jobTypeId = rs.getInt("j_id");
+            costCenterId = rs.getInt("c_id");
+            projectStatusId = rs.getInt("s_id");
+            priorityId = rs.getInt("pri");
             if (rs.wasNull()) {
                 priorityId = null;
             }
 
             project.setId(rs.getInt("id"));
-            project.setCustomerId(rs.getInt("customer_id"));
+            int custId = rs.getInt("cust_id");
             if (rs.wasNull()) {
-                project.setCustomerId(null);
+                project.setCustomer(null);
+            } else {
+                Customer c = new Customer();
+                c.setId(custId);
+                c.setName(rs.getString("name"));
+                project.setCustomer(c);
             }
             project.setCreated(rs.getDate("created"));
-            project.setFinished(rs.getDate("finished"));
+            project.setFinished(rs.getDate("finish"));
             project.setTitle(rs.getString("title"));
-            project.setDescription(rs.getString("description"));
-            project.setPartCount(rs.getInt("part_count"));
+            project.setDescription(rs.getString("descr"));
+            project.setPartCount(rs.getInt("pc"));
             if (rs.wasNull()) {
                 project.setPartCount(null);
             }
-            project.setRefNumber(rs.getString("ref_name"));
+            project.setRefNumber(rs.getString("r_name"));
             rs.close();
             preparedStatement.close();
             conn.close();
@@ -855,7 +863,11 @@ public class TrackingDAOImpl {
 
         Page page = new Page();
 
-        String query = "SELECT * FROM Project";
+        String query = "SELECT P.id as id, P.job_type_id as j_id, P.cost_center_id as c_id, P.project_status_id as s_id, P.priority as pri, P.ref_name as r_name, " +
+                "P.customer_id as cust_id, P.created as created, P.finished as finish, P.title as title, P.description as descr, P.part_count as pc, C.name as name " +
+                "FROM Project P " +
+                "LEFT JOIN Customer C " +
+                "WHERE cust_id = C.id";
 
         Statement stm = conn.createStatement();
         ResultSet rs = stm.executeQuery(query);
@@ -867,29 +879,32 @@ public class TrackingDAOImpl {
         List<Project> projects = new ArrayList<>();
         while(rs.next()) {
             Project project = new Project();
-            int jobTypeid = rs.getInt("job_type_id");
-            int projectStatusId = rs.getInt("project_status_id");
-            Integer priorityId = rs.getInt("priority");
-            int costCenterId = rs.getInt("cost_center_id");
-
+            int jobTypeid = rs.getInt("j_id");
+            int projectStatusId = rs.getInt("s_id");
+            Integer priorityId = rs.getInt("pri");
+            int costCenterId = rs.getInt("c_id");
             if (rs.wasNull()) {
                 priorityId = null;
             }
-
             project.setId(rs.getInt("id"));
-            project.setCustomerId(rs.getInt("customer_id"));
+            int custId = rs.getInt("cust_id");
             if (rs.wasNull()) {
-                project.setCustomerId(null);
+                project.setCustomer(null);
+            } else {
+                Customer c = new Customer();
+                c.setId(custId);
+                c.setName(rs.getString("name"));
+                project.setCustomer(c);
             }
             project.setCreated(rs.getDate("created"));
-            project.setFinished(rs.getDate("finished"));
+            project.setFinished(rs.getDate("finish"));
             project.setTitle(rs.getString("title"));
-            project.setDescription(rs.getString("description"));
-            project.setPartCount(rs.getInt("part_count"));
+            project.setDescription(rs.getString("descr"));
+            project.setPartCount(rs.getInt("pc"));
             if (rs.wasNull()) {
                 project.setPartCount(null);
             }
-            project.setRefNumber(rs.getString("ref_name"));
+            project.setRefNumber(rs.getString("r_name"));
 
             jobTypeIds.add(jobTypeid);
             projectStatusIds.add(projectStatusId);
@@ -939,8 +954,8 @@ public class TrackingDAOImpl {
             updates.add("cost_center_id = " + costCenter);
         }
 
-        if (project.getCustomerId() != null) {
-            updates.add("customer_id = " + project.getCustomerId());
+        if (project.getCustomer().getId() != null) {
+            updates.add("customer_id = " + project.getCustomer().getId());
         }
 
         if (project.getTitle() != null) {
@@ -964,7 +979,7 @@ public class TrackingDAOImpl {
             updates.add("ref_name = " + '"' + project.getRefNumber() + '"');
         }
 
-        query += String.join(",", updates);
+        query += String.join(",", updates) + " WHERE id = " + id;
         log.info(query);
         Connection conn = createConnection();
         Statement stm = conn.createStatement();
@@ -977,9 +992,10 @@ public class TrackingDAOImpl {
     public void updateProjectStatus(int id, String status) throws Exception {
         Connection conn = createConnection();
         int projectStatusId = Cache.projectStatusCache.getIdForName(status);
-        String query = "UPDATE Project SET project_status_id = ?";
+        String query = "UPDATE Project SET project_status_id = ? WHERE id = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(query);
         preparedStatement.setInt(1, projectStatusId);
+        preparedStatement.setInt(2, id);
         preparedStatement.executeUpdate();
         preparedStatement.close();
         conn.close();
@@ -988,14 +1004,81 @@ public class TrackingDAOImpl {
     public void updateProjectStatus(int id, String status, Date finishDate) throws Exception {
         Connection conn = createConnection();
         int projectStatusId = Cache.projectStatusCache.getIdForName(status);
-        String query = "UPDATE Project SET project_status_id = ?, finished = ?";
+        String query = "UPDATE Project SET project_status_id = ?, finished = ? WHERE id = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(query);
         preparedStatement.setInt(1, projectStatusId);
         preparedStatement.setDate(2, new java.sql.Date(finishDate.getTime()));
+        preparedStatement.setInt(3, id);
         preparedStatement.executeUpdate();
         preparedStatement.close();
         conn.close();
 
+    }
+
+    public ProjectTimeEntry createTimeEntry(ProjectTimeEntry projectTimeEntry) throws Exception {
+        log.info("Start of createTimeEntry in DAO with id " + projectTimeEntry.getProjectId());
+
+        int stationId = Cache.stationCache.getIdForName(projectTimeEntry.getStation());
+        Connection conn = createConnection();
+        String query = "INSERT INTO ProjectTimeEntry (project_id, employee_id, station_id, created) VALUES (?, ?, ?, ?)";
+        PreparedStatement preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        preparedStatement.setInt(1, projectTimeEntry.getProjectId());
+        preparedStatement.setInt(2, projectTimeEntry.getEmployeeId());
+        preparedStatement.setInt(3, stationId);
+        preparedStatement.setDate(4, new java.sql.Date(projectTimeEntry.getCreated().getTime()));
+
+        int affectedRows = preparedStatement.executeUpdate();
+
+        if (affectedRows == 0) {
+            throw new SQLException("Creating time entry failed, no rows affected");
+        }
+
+        try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                projectTimeEntry.setId(generatedKeys.getInt(1));
+                log.info("Time Entry Created with id " + projectTimeEntry.getId());
+                generatedKeys.close();
+            } else {
+                throw new SQLException("Creating Project failed, no ID obtained");
+            }
+        }
+
+        preparedStatement.close();
+        conn.close();
+        log.info("End of createTimeEntry in DAO with id " + projectTimeEntry.getProjectId());
+        return projectTimeEntry;
+    }
+
+    public List<ProjectTimeEntry> getTimeEntries(int projectId) throws Exception {
+        log.info("Start of getTimeEntries in DAO with id " + projectId);
+        List<ProjectTimeEntry> timeEntries = new ArrayList<>();
+        List<Integer> stationIds = new ArrayList<>();
+
+        Connection conn = createConnection();
+        String query = "SELECT * FROM ProjectTimeEntry WHERE project_id=?";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, projectId);
+        ResultSet rs = preparedStatement.executeQuery();
+        while (rs.next()) {
+            ProjectTimeEntry projectTimeEntry = new ProjectTimeEntry();
+            projectTimeEntry.setId(rs.getInt("id"));
+            projectTimeEntry.setProjectId(rs.getInt("project_id"));
+            projectTimeEntry.setEmployeeId(rs.getInt("employee_id"));
+            projectTimeEntry.setCreated(rs.getDate("created"));
+            stationIds.add(rs.getInt("station_id"));
+            timeEntries.add(projectTimeEntry);
+        }
+
+        rs.close();
+        preparedStatement.close();
+        conn.close();
+
+        // getting station names
+        for (int x = 0; x < timeEntries.size(); x++) {
+            timeEntries.get(x).setStation(Cache.stationCache.getNameForId(stationIds.get(x)));
+        }
+        log.info("End of getTimeEntries in DAO with id " + projectId);
+        return timeEntries;
     }
 
     private boolean removeFromTableById(String table, int id) throws Exception {
