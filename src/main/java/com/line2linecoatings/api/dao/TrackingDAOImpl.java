@@ -797,7 +797,7 @@ public class TrackingDAOImpl {
                 "P.customer_id as cust_id, P.created as created, P.finished as finish, P.title as title, P.description as descr, P.part_count as pc, C.name as name " +
                 "FROM Project P " +
                 "LEFT JOIN Customer C " +
-                "WHERE cust_id = C.id AND P.id = ?";
+                "ON cust_id = C.id WHERE P.id = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(query);
         preparedStatement.setInt(1, id);
         ResultSet rs = preparedStatement.executeQuery();
@@ -867,7 +867,7 @@ public class TrackingDAOImpl {
                 "P.customer_id as cust_id, P.created as created, P.finished as finish, P.title as title, P.description as descr, P.part_count as pc, C.name as name " +
                 "FROM Project P " +
                 "LEFT JOIN Customer C " +
-                "WHERE cust_id = C.id";
+                "ON cust_id = C.id";
 
         Statement stm = conn.createStatement();
         ResultSet rs = stm.executeQuery(query);
