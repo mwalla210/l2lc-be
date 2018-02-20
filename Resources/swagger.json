@@ -1080,9 +1080,14 @@
     "Create_Project_Input": {
       "type": "object",
       "properties": {
-        "customerId": {
-          "type": "integer",
-          "example": 666
+        "customer": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 666
+            }
+          }
         },
         "jobType": {
           "type": "string",
@@ -1122,9 +1127,18 @@
           "type": "integer",
           "example": 12
         },
-        "customerId": {
-          "type": "integer",
-          "example": 666
+        "customer": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 666
+            },
+            "name": {
+              "type": "string",
+              "example": "Jeff Salvage's Scooter Racing Company"
+            }
+          }
         },
         "created": {
           "type": "integer",
