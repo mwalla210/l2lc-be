@@ -4,8 +4,8 @@ import java.util.Date;
 
 public class ProjectTimeEntry {
     private int id;
-    private int projectId;
-    private int employeeId;
+    private Integer projectId;
+    private Integer employeeId;
     private String station;
     private Date created;
 
@@ -25,19 +25,19 @@ public class ProjectTimeEntry {
         this.id = id;
     }
 
-    public int getProjectId() {
+    public Integer getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(int projectId) {
+    public void setProjectId(Integer projectId) {
         this.projectId = projectId;
     }
 
-    public int getEmployeeId() {
+    public Integer getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(int employeeId) {
+    public void setEmployeeId(Integer employeeId) {
         this.employeeId = employeeId;
     }
 

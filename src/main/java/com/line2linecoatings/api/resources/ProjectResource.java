@@ -154,18 +154,17 @@ public class ProjectResource extends BasicResource {
     @POST
     @Path("/{id}/time-entry/create")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createTimeEntry(@PathParam("id") int projectId, @QueryParam("employeeId") Integer employeeId,
-                                    @QueryParam("station") String station,
+    public Response createTimeEntry(@PathParam("id") int projectId, ProjectTimeEntry timeEntry,
                                     @Context HttpHeaders headers) throws Exception {
         ProjectTimeEntry projectTimeEntry;
-        TrackingError error = validationHelper.validateTimeEntry(projectId, employeeId, station);
+        TrackingError error = validationHelper.validateTimeEntry(projectId, timeEntry);
         if (error != null) {
             log.error(headers);
             return getResponse(Response.Status.NOT_ACCEPTABLE, error);
         }
 
         try {
-            projectTimeEntry = projectService.createTimeEntry(projectId, employeeId, station);
+            projectTimeEntry = projectService.createTimeEntry(projectId, timeEntry);
         } catch (Exception ex) {
             log.error(headers);
             throw ex;

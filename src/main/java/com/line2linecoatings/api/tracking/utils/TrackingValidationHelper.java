@@ -230,26 +230,26 @@ public class TrackingValidationHelper {
         return error;
     }
 
-    public TrackingError validateTimeEntry(int projectId, Integer employeeId, String station) throws Exception {
+    public TrackingError validateTimeEntry(int projectId, ProjectTimeEntry timeEntry) throws Exception {
         TrackingError error = null;
         List<String> errorMessages = new ArrayList<>();
 
-        if (employeeId == null) {
+        if (timeEntry.getEmployeeId() == null) {
             errorMessages.add("employeeId can not be null.");
         }
 
-        if (StringUtils.isEmpty(station)) {
+        if (StringUtils.isEmpty(timeEntry.getStation())) {
             errorMessages.add("Station can not be empty or null.");
-        } else if (!Cache.stationCache.validate(station)) {
-            errorMessages.add(station + " is not a valid station.");
+        } else if (!Cache.stationCache.validate(timeEntry.getStation())) {
+            errorMessages.add(timeEntry.getStation() + " is not a valid station.");
         }
 
         if (dao.getProject(projectId) == null) {
             errorMessages.add(projectId + " is not associated to a known project.");
         }
 
-        if (dao.getEmployeeById(employeeId) == null) {
-            errorMessages.add(employeeId + " is not associated to a known employee.");
+        if (dao.getEmployeeById(timeEntry.getEmployeeId()) == null) {
+            errorMessages.add(timeEntry.getEmployeeId() + " is not associated to a known employee.");
         }
 
         if (!errorMessages.isEmpty()) {

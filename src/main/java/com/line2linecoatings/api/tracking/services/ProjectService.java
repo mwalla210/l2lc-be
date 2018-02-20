@@ -67,16 +67,13 @@ public class ProjectService {
         return true;
     }
 
-    public ProjectTimeEntry createTimeEntry(int projectId, int employeeId, String station) throws Exception {
+    public ProjectTimeEntry createTimeEntry(int projectId, ProjectTimeEntry timeEntry) throws Exception {
         log.info("Start of createTimeEntry with id " + projectId);
-        ProjectTimeEntry projectTimeEntry = new ProjectTimeEntry();
-        projectTimeEntry.setProjectId(projectId);
-        projectTimeEntry.setEmployeeId(employeeId);
-        projectTimeEntry.setStation(station);
-        projectTimeEntry.setCreated(new Date());
-        projectTimeEntry = dao.createTimeEntry(projectTimeEntry);
+        timeEntry.setProjectId(projectId);
+        timeEntry.setCreated(new Date());
+        timeEntry = dao.createTimeEntry(timeEntry);
         log.info("End of createTimeEntry with id " + projectId);
-        return projectTimeEntry;
+        return timeEntry;
     }
 
     public List<ProjectTimeEntry> getTimeEntries(int projectId) throws Exception{

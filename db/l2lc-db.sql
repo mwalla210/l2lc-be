@@ -155,10 +155,6 @@ INSERT INTO JobType (id, title) VALUES (11, "Production");
 INSERT INTO JobType (id, title) VALUES (12, "Research and Development");
 INSERT INTO JobType (id, title) VALUES (13, "Other");
 
-
-
-
-
 /* Insert project statuses into ProjectStatus table */
 INSERT INTO ProjectStatus (id, title) VALUES (1, "Received");
 INSERT INTO ProjectStatus (id, title) VALUES (2, "In Progress");
