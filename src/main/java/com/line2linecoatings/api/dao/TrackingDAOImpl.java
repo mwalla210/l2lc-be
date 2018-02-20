@@ -753,8 +753,8 @@ public class TrackingDAOImpl {
                 " VALUES (?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         preparedStatement.setInt(1, jobTypeId);
-        if (project.getCustomerId() != null) {
-            preparedStatement.setInt(2, project.getCustomerId());
+        if (project.getCustomer() != null) {
+            preparedStatement.setInt(2, project.getCustomer().getId());
         }
         preparedStatement.setInt(3, projectStatusId);
         preparedStatement.setDate(4, new java.sql.Date(project.getCreated().getTime()));
@@ -793,7 +793,11 @@ public class TrackingDAOImpl {
     public Project getProject(int id) throws Exception {
         log.info("Start of getProject in DAO with id " + id);
         Connection conn = createConnection();
-        String query = "SELECT * FROM Project WHERE id=?";
+        String query = "SELECT P.id as id, P.job_type_id as j_id, P.cost_center_id as c_id, P.project_status_id as s_id, P.priority as pri, P.ref_name as r_name, " +
+                "P.customer_id as cust_id, P.created as created, P.finished as finish, P.title as title, P.description as descr, P.part_count as pc, C.name as name " +
+                "FROM Project P " +
+                "LEFT JOIN Customer C " +
+                "WHERE cust_id = C.id AND P.id = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(query);
         preparedStatement.setInt(1, id);
         ResultSet rs = preparedStatement.executeQuery();
@@ -806,28 +810,33 @@ public class TrackingDAOImpl {
 
         if (rs.next()) {
             project = new Project();
-            jobTypeId = rs.getInt("job_type_id");
-            costCenterId = rs.getInt("cost_center_id");
-            projectStatusId = rs.getInt("project_status_id");
-            priorityId = rs.getInt("priority");
+            jobTypeId = rs.getInt("j_id");
+            costCenterId = rs.getInt("c_id");
+            projectStatusId = rs.getInt("s_id");
+            priorityId = rs.getInt("pri");
             if (rs.wasNull()) {
                 priorityId = null;
             }
 
             project.setId(rs.getInt("id"));
-            project.setCustomerId(rs.getInt("customer_id"));
+            int custId = rs.getInt("cust_id");
             if (rs.wasNull()) {
-                project.setCustomerId(null);
+                project.setCustomer(null);
+            } else {
+                Customer c = new Customer();
+                c.setId(custId);
+                c.setName(rs.getString("name"));
+                project.setCustomer(c);
             }
             project.setCreated(rs.getDate("created"));
-            project.setFinished(rs.getDate("finished"));
+            project.setFinished(rs.getDate("finish"));
             project.setTitle(rs.getString("title"));
-            project.setDescription(rs.getString("description"));
-            project.setPartCount(rs.getInt("part_count"));
+            project.setDescription(rs.getString("descr"));
+            project.setPartCount(rs.getInt("pc"));
             if (rs.wasNull()) {
                 project.setPartCount(null);
             }
-            project.setRefNumber(rs.getString("ref_name"));
+            project.setRefNumber(rs.getString("r_name"));
             rs.close();
             preparedStatement.close();
             conn.close();
@@ -854,7 +863,11 @@ public class TrackingDAOImpl {
 
         Page page = new Page();
 
-        String query = "SELECT * FROM Project";
+        String query = "SELECT P.id as id, P.job_type_id as j_id, P.cost_center_id as c_id, P.project_status_id as s_id, P.priority as pri, P.ref_name as r_name, " +
+                "P.customer_id as cust_id, P.created as created, P.finished as finish, P.title as title, P.description as descr, P.part_count as pc, C.name as name " +
+                "FROM Project P " +
+                "LEFT JOIN Customer C " +
+                "WHERE cust_id = C.id";
 
         Statement stm = conn.createStatement();
         ResultSet rs = stm.executeQuery(query);
@@ -866,29 +879,32 @@ public class TrackingDAOImpl {
         List<Project> projects = new ArrayList<>();
         while(rs.next()) {
             Project project = new Project();
-            int jobTypeid = rs.getInt("job_type_id");
-            int projectStatusId = rs.getInt("project_status_id");
-            Integer priorityId = rs.getInt("priority");
-            int costCenterId = rs.getInt("cost_center_id");
-
+            int jobTypeid = rs.getInt("j_id");
+            int projectStatusId = rs.getInt("s_id");
+            Integer priorityId = rs.getInt("pri");
+            int costCenterId = rs.getInt("c_id");
             if (rs.wasNull()) {
                 priorityId = null;
             }
-
             project.setId(rs.getInt("id"));
-            project.setCustomerId(rs.getInt("customer_id"));
+            int custId = rs.getInt("cust_id");
             if (rs.wasNull()) {
-                project.setCustomerId(null);
+                project.setCustomer(null);
+            } else {
+                Customer c = new Customer();
+                c.setId(custId);
+                c.setName(rs.getString("name"));
+                project.setCustomer(c);
             }
             project.setCreated(rs.getDate("created"));
-            project.setFinished(rs.getDate("finished"));
+            project.setFinished(rs.getDate("finish"));
             project.setTitle(rs.getString("title"));
-            project.setDescription(rs.getString("description"));
-            project.setPartCount(rs.getInt("part_count"));
+            project.setDescription(rs.getString("descr"));
+            project.setPartCount(rs.getInt("pc"));
             if (rs.wasNull()) {
                 project.setPartCount(null);
             }
-            project.setRefNumber(rs.getString("ref_name"));
+            project.setRefNumber(rs.getString("r_name"));
 
             jobTypeIds.add(jobTypeid);
             projectStatusIds.add(projectStatusId);
@@ -938,8 +954,8 @@ public class TrackingDAOImpl {
             updates.add("cost_center_id = " + costCenter);
         }
 
-        if (project.getCustomerId() != null) {
-            updates.add("customer_id = " + project.getCustomerId());
+        if (project.getCustomer().getId() != null) {
+            updates.add("customer_id = " + project.getCustomer().getId());
         }
 
         if (project.getTitle() != null) {
