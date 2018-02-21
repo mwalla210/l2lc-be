@@ -73,12 +73,6 @@ public class CustomerResource extends BasicResource {
     public Response updateCustomer(@PathParam("id") int id, Customer customer, @Context HttpHeaders headers) throws Exception {
         Customer updatedCustomer;
 
-        TrackingError err = trackingValidationHelper.validateCustomer(customer);
-        if (err != null) {
-            log.error(headers);
-            return getResponse(Response.Status.NOT_ACCEPTABLE, err);
-        }
-
         try {
             updatedCustomer = customerService.updateCustomer(id, customer);
         } catch (Exception e) {

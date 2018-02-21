@@ -217,7 +217,7 @@ public class TrackingDAOImpl {
             if (billingAddrId == customer.getShippingAddr().getId()) {
                 customer.setBillingAddr(customer.getShippingAddr());
             } else {
-                customer.setShippingAddr(getAddressById(billingAddrId));
+                customer.setBillingAddr(getAddressById(billingAddrId));
             }
 
             log.info("customer found with id " + customer.getId());
@@ -232,35 +232,38 @@ public class TrackingDAOImpl {
     public Customer updateCustomer(int id, Customer customer) throws Exception {
         log.info("Start of updateCustomer in DAO");
 
-        customer.setShippingAddr(updateAddress(customer.getShippingAddr()));
-        customer.setBillingAddr(updateAddress(customer.getBillingAddr()));
-
         Connection conn = createConnection();
 
-        String query = "UPDATE Customer " +
-                        "SET name = ?, email = ?, website = ?, shipping_addr_id = ?, " +
-                        "billing_addr_id = ?, is_past_due = ?, phone = ?" +
-                        "WHERE id = ?";
+        String query = "UPDATE CUSTOMER SET";
+        if (customer.getName() != null)
+            query += " name = \"" + customer.getName() + "\",";
+        if (customer.getEmail() != null)
+            query += " email = \"" +  customer.getEmail() + "\",";
+        if (customer.getWebsite() != null)
+            query += " website = \"" + customer.getWebsite() + "\",";
+        if (customer.getPastDue() != null)
+            query += " is_past_due = " + getSqlBoolean(customer.getPastDue()) + ",";
+        if (customer.getPhoneNumber() != null)
+            query += "phone = \"" + customer.getPhoneNumber() + "\",";
+        if (customer.getShippingAddr() != null) {
+            customer.setShippingAddr(updateAddress(customer.getShippingAddr()));
+            query += " shipping_addr_id = " + customer.getShippingAddr().getId() + ",";
+        }
+        if (customer.getBillingAddr() != null) {
+            customer.setBillingAddr(updateAddress(customer.getBillingAddr()));
+            query += " billing_addr_id = " + customer.getBillingAddr().getId() + ",";
+        }
+
+        // lop off last comma and add where clause
+        query = query.substring(0, query.length() - 1) + " WHERE id = " + id;
 
         PreparedStatement preparedStatement = conn.prepareStatement(query);
-        preparedStatement.setString(1, customer.getName());
-        preparedStatement.setString(2, customer.getEmail());
-        preparedStatement.setString(3, customer.getWebsite());
-        preparedStatement.setInt(4, customer.getShippingAddr().getId());
-        preparedStatement.setInt(5, customer.getBillingAddr().getId());
-        preparedStatement.setBoolean(6, customer.getPastDue());
-        preparedStatement.setString(7, customer.getPhoneNumber());
-        preparedStatement.setInt(8, id);
-
         preparedStatement.executeUpdate();
-
-        customer.setId(id);
-
         preparedStatement.close();
         conn.close();
 
         log.info("End of updateCustomer in DAO");
-        return customer;
+        return getCustomerById(id);
     }
 
     public Page getCustomerPage(int limit, int offset) throws Exception {
@@ -1093,5 +1096,12 @@ public class TrackingDAOImpl {
         conn = ds.getConnection();
         log.info("End of createConnection");
         return conn;
+    }
+
+    private int getSqlBoolean(Boolean b) {
+        if (b) {
+            return 1;
+        }
+        return 0;
     }
 }
