@@ -22,7 +22,7 @@ public class ProjectService {
     public Project createProject(Project project) throws Exception {
         log.info("Start of CreateProject in Service");
         project.setCreated(new Date());
-        project.setProjectStatus("Recieved"); // might want to create java enum for this
+        project.setProjectStatus("Received"); // might want to create java enum for this
         Project createdProject = dao.createProject(project);
         log.info("End of CreateProject in Service");
         return createdProject;
@@ -67,16 +67,13 @@ public class ProjectService {
         return true;
     }
 
-    public ProjectTimeEntry createTimeEntry(int projectId, int employeeId, String station) throws Exception {
+    public ProjectTimeEntry createTimeEntry(int projectId, ProjectTimeEntry timeEntry) throws Exception {
         log.info("Start of createTimeEntry with id " + projectId);
-        ProjectTimeEntry projectTimeEntry = new ProjectTimeEntry();
-        projectTimeEntry.setProjectId(projectId);
-        projectTimeEntry.setEmployeeId(employeeId);
-        projectTimeEntry.setStation(station);
-        projectTimeEntry.setCreated(new Date());
-        projectTimeEntry = dao.createTimeEntry(projectTimeEntry);
+        timeEntry.setProjectId(projectId);
+        timeEntry.setCreated(new Date());
+        timeEntry = dao.createTimeEntry(timeEntry);
         log.info("End of createTimeEntry with id " + projectId);
-        return projectTimeEntry;
+        return timeEntry;
     }
 
     public List<ProjectTimeEntry> getTimeEntries(int projectId) throws Exception{

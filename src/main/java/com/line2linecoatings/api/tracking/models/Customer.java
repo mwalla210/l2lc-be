@@ -1,23 +1,33 @@
 package com.line2linecoatings.api.tracking.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * Created by eriksuman on 1/25/18.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Customer {
-    public int id;
+    public Integer id;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public String name;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public String email;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public String website;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public Address shippingAddr;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public Address billingAddr;
-    public Boolean isPastDue;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public String phoneNumber;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public Boolean isPastDue;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
