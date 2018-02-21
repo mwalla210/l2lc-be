@@ -248,7 +248,7 @@ public class TrackingValidationHelper {
             errorMessages.add(projectId + " is not associated to a known project.");
         }
 
-        if (dao.getEmployeeById(timeEntry.getEmployeeId()) == null) {
+        if (timeEntry.getEmployeeId() != null && dao.getEmployeeById(timeEntry.getEmployeeId()) == null) {
             errorMessages.add(timeEntry.getEmployeeId() + " is not associated to a known employee.");
         }
 
