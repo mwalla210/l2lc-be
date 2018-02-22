@@ -242,7 +242,7 @@ public class TrackingDAOImpl {
         if (customer.getWebsite() != null)
             params.add(" website = \"" + customer.getWebsite() + "\"");
         if (customer.getPastDue() != null)
-            params.add(" is_past_due = " + getSqlBoolean(customer.getPastDue()));
+            params.add(" is_past_due = \"" + customer.getPastDue() + "\"");
         if (customer.getPhoneNumber() != null)
             params.add("phone = \"" + customer.getPhoneNumber() + "\"");
         if (customer.getShippingAddr() != null) {
@@ -1112,12 +1112,5 @@ public class TrackingDAOImpl {
         conn = ds.getConnection();
         log.info("End of createConnection");
         return conn;
-    }
-
-    private int getSqlBoolean(Boolean b) {
-        if (b) {
-            return 1;
-        }
-        return 0;
     }
 }
