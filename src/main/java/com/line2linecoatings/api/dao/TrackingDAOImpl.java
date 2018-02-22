@@ -233,29 +233,29 @@ public class TrackingDAOImpl {
         log.info("Start of updateCustomer in DAO");
 
         Connection conn = createConnection();
+        ArrayList<String> params = new ArrayList<>();
 
-        String query = "UPDATE CUSTOMER SET";
         if (customer.getName() != null)
-            query += " name = \"" + customer.getName() + "\",";
+            params.add(" name = \"" + customer.getName() + "\"");
         if (customer.getEmail() != null)
-            query += " email = \"" +  customer.getEmail() + "\",";
+            params.add(" email = \"" +  customer.getEmail() + "\"");
         if (customer.getWebsite() != null)
-            query += " website = \"" + customer.getWebsite() + "\",";
+            params.add(" website = \"" + customer.getWebsite() + "\"");
         if (customer.getPastDue() != null)
-            query += " is_past_due = " + getSqlBoolean(customer.getPastDue()) + ",";
+            params.add(" is_past_due = " + getSqlBoolean(customer.getPastDue()));
         if (customer.getPhoneNumber() != null)
-            query += "phone = \"" + customer.getPhoneNumber() + "\",";
+            params.add("phone = \"" + customer.getPhoneNumber() + "\"");
         if (customer.getShippingAddr() != null) {
             customer.setShippingAddr(updateAddress(customer.getShippingAddr()));
-            query += " shipping_addr_id = " + customer.getShippingAddr().getId() + ",";
+            params.add(" shipping_addr_id = " + customer.getShippingAddr().getId());
         }
         if (customer.getBillingAddr() != null) {
             customer.setBillingAddr(updateAddress(customer.getBillingAddr()));
-            query += " billing_addr_id = " + customer.getBillingAddr().getId() + ",";
+            params.add(" billing_addr_id = " + customer.getBillingAddr().getId());
         }
 
         // lop off last comma and add where clause
-        query = query.substring(0, query.length() - 1) + " WHERE id = " + id;
+        String query = "UPDATE CUSTOMER SET" + String.join(",", params)  + " WHERE id = " + id;
 
         PreparedStatement preparedStatement = conn.prepareStatement(query);
         preparedStatement.executeUpdate();
