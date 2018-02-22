@@ -168,7 +168,7 @@ public class TrackingDAOImpl {
         preparedStatement.setString(3, customer.getWebsite());
         preparedStatement.setInt(4, customer.getShippingAddr().getId());
         preparedStatement.setInt(5, customer.getBillingAddr().getId());
-        preparedStatement.setBoolean(6, customer.getPastDue());
+        preparedStatement.setBoolean(6, customer.getIsPastDue());
         preparedStatement.setString(7, customer.getPhoneNumber());
 
         int affectedRows = preparedStatement.executeUpdate();
@@ -209,7 +209,7 @@ public class TrackingDAOImpl {
             customer.setName(rs.getString("name"));
             customer.setEmail(rs.getString("email"));
             customer.setWebsite(rs.getString("website"));
-            customer.setPastDue(rs.getBoolean("is_past_due"));
+            customer.setIsPastDue(rs.getBoolean("is_past_due"));
             customer.setPhoneNumber(rs.getString("phone"));
             customer.setShippingAddr(getAddressById(rs.getInt("shipping_addr_id")));
 
@@ -241,8 +241,8 @@ public class TrackingDAOImpl {
             params.add(" email = \"" +  customer.getEmail() + "\"");
         if (customer.getWebsite() != null)
             params.add(" website = \"" + customer.getWebsite() + "\"");
-        if (customer.getPastDue() != null)
-            params.add(" is_past_due = \"" + customer.getPastDue() + "\"");
+        if (customer.getIsPastDue() != null)
+            params.add(" is_past_due = \"" + customer.getIsPastDue() + "\"");
         if (customer.getPhoneNumber() != null)
             params.add("phone = \"" + customer.getPhoneNumber() + "\"");
         if (customer.getShippingAddr() != null) {
@@ -285,7 +285,7 @@ public class TrackingDAOImpl {
             customer.setName(rs.getString("name"));
             customer.setEmail(rs.getString("email"));
             customer.setWebsite(rs.getString("website"));
-            customer.setPastDue(rs.getBoolean("is_past_due"));
+            customer.setIsPastDue(rs.getBoolean("is_past_due"));
             customer.setPhoneNumber(rs.getString("phone"));
             customer.setShippingAddr(getAddressById(rs.getInt("shipping_addr_id")));
 
