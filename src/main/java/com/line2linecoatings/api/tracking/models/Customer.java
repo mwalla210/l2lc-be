@@ -71,11 +71,11 @@ public class Customer {
         this.billingAddr = billingAddr;
     }
 
-    public Boolean getPastDue() {
+    public Boolean getIsPastDue() {
         return isPastDue;
     }
 
-    public void setPastDue(Boolean pastDue) {
+    public void setIsPastDue(Boolean pastDue) {
         isPastDue = pastDue;
     }
 
