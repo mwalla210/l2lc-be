@@ -242,7 +242,7 @@ public class TrackingDAOImpl {
         if (customer.getWebsite() != null)
             params.add(" website = \"" + customer.getWebsite() + "\"");
         if (customer.getIsPastDue() != null)
-            params.add(" is_past_due = \"" + customer.getIsPastDue() + "\"");
+            params.add(" is_past_due = " + (customer.getIsPastDue()? 1 : 0));
         if (customer.getPhoneNumber() != null)
             params.add("phone = \"" + customer.getPhoneNumber() + "\"");
         if (customer.getShippingAddr() != null) {
