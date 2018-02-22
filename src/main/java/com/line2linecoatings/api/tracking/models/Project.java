@@ -7,7 +7,7 @@ public class Project {
     private int id;
     private String jobType;
     private String costCenter;
-    private Integer customerId;
+    private Customer customer;
     private Date created;
     private Date finished;
     private String title;
@@ -33,12 +33,12 @@ public class Project {
         this.jobType = jobType;
     }
 
-    public Integer getCustomerId() {
-        return customerId;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
+    public void setCustomer(Customer c) {
+        this.customer = c;
     }
 
     public Date getCreated() {
