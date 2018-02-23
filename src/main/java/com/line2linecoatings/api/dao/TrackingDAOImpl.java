@@ -84,6 +84,7 @@ public class TrackingDAOImpl {
             address.setCity(rs.getString("city"));
             address.setCountry(rs.getString("country"));
             address.setZip(rs.getString("zip"));
+            address.setState(rs.getString("state"));
         }
 
         rs.close();
