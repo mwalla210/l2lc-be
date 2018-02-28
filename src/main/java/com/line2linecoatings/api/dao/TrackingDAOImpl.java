@@ -294,7 +294,7 @@ public class TrackingDAOImpl {
             if (billingAddrId == customer.getShippingAddr().getId()) {
                 customer.setBillingAddr(customer.getShippingAddr());
             } else {
-                customer.setShippingAddr(getAddressById(billingAddrId));
+                customer.setBillingAddr(getAddressById(billingAddrId));
             }
             customers.add(customer);
         }
