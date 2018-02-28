@@ -84,6 +84,7 @@ public class TrackingDAOImpl {
             address.setCity(rs.getString("city"));
             address.setCountry(rs.getString("country"));
             address.setZip(rs.getString("zip"));
+            address.setState(rs.getString("state"));
         }
 
         rs.close();
@@ -168,7 +169,7 @@ public class TrackingDAOImpl {
         preparedStatement.setString(3, customer.getWebsite());
         preparedStatement.setInt(4, customer.getShippingAddr().getId());
         preparedStatement.setInt(5, customer.getBillingAddr().getId());
-        preparedStatement.setBoolean(6, customer.getPastDue());
+        preparedStatement.setBoolean(6, customer.getIsPastDue());
         preparedStatement.setString(7, customer.getPhoneNumber());
 
         int affectedRows = preparedStatement.executeUpdate();
@@ -209,7 +210,7 @@ public class TrackingDAOImpl {
             customer.setName(rs.getString("name"));
             customer.setEmail(rs.getString("email"));
             customer.setWebsite(rs.getString("website"));
-            customer.setPastDue(rs.getBoolean("is_past_due"));
+            customer.setIsPastDue(rs.getBoolean("is_past_due"));
             customer.setPhoneNumber(rs.getString("phone"));
             customer.setShippingAddr(getAddressById(rs.getInt("shipping_addr_id")));
 
@@ -217,7 +218,7 @@ public class TrackingDAOImpl {
             if (billingAddrId == customer.getShippingAddr().getId()) {
                 customer.setBillingAddr(customer.getShippingAddr());
             } else {
-                customer.setShippingAddr(getAddressById(billingAddrId));
+                customer.setBillingAddr(getAddressById(billingAddrId));
             }
 
             log.info("customer found with id " + customer.getId());
@@ -232,35 +233,38 @@ public class TrackingDAOImpl {
     public Customer updateCustomer(int id, Customer customer) throws Exception {
         log.info("Start of updateCustomer in DAO");
 
-        customer.setShippingAddr(updateAddress(customer.getShippingAddr()));
-        customer.setBillingAddr(updateAddress(customer.getBillingAddr()));
-
         Connection conn = createConnection();
+        ArrayList<String> params = new ArrayList<>();
 
-        String query = "UPDATE Customer " +
-                        "SET name = ?, email = ?, website = ?, shipping_addr_id = ?, " +
-                        "billing_addr_id = ?, is_past_due = ?, phone = ?" +
-                        "WHERE id = ?";
+        if (customer.getName() != null)
+            params.add(" name = \"" + customer.getName() + "\"");
+        if (customer.getEmail() != null)
+            params.add(" email = \"" +  customer.getEmail() + "\"");
+        if (customer.getWebsite() != null)
+            params.add(" website = \"" + customer.getWebsite() + "\"");
+        if (customer.getIsPastDue() != null)
+            params.add(" is_past_due = " + (customer.getIsPastDue()? 1 : 0));
+        if (customer.getPhoneNumber() != null)
+            params.add("phone = \"" + customer.getPhoneNumber() + "\"");
+        if (customer.getShippingAddr() != null) {
+            customer.setShippingAddr(updateAddress(customer.getShippingAddr()));
+            params.add(" shipping_addr_id = " + customer.getShippingAddr().getId());
+        }
+        if (customer.getBillingAddr() != null) {
+            customer.setBillingAddr(updateAddress(customer.getBillingAddr()));
+            params.add(" billing_addr_id = " + customer.getBillingAddr().getId());
+        }
+
+        // lop off last comma and add where clause
+        String query = "UPDATE CUSTOMER SET" + String.join(",", params)  + " WHERE id = " + id;
 
         PreparedStatement preparedStatement = conn.prepareStatement(query);
-        preparedStatement.setString(1, customer.getName());
-        preparedStatement.setString(2, customer.getEmail());
-        preparedStatement.setString(3, customer.getWebsite());
-        preparedStatement.setInt(4, customer.getShippingAddr().getId());
-        preparedStatement.setInt(5, customer.getBillingAddr().getId());
-        preparedStatement.setBoolean(6, customer.getPastDue());
-        preparedStatement.setString(7, customer.getPhoneNumber());
-        preparedStatement.setInt(8, id);
-
         preparedStatement.executeUpdate();
-
-        customer.setId(id);
-
         preparedStatement.close();
         conn.close();
 
         log.info("End of updateCustomer in DAO");
-        return customer;
+        return getCustomerById(id);
     }
 
     public Page getCustomerPage(int limit, int offset) throws Exception {
@@ -282,7 +286,7 @@ public class TrackingDAOImpl {
             customer.setName(rs.getString("name"));
             customer.setEmail(rs.getString("email"));
             customer.setWebsite(rs.getString("website"));
-            customer.setPastDue(rs.getBoolean("is_past_due"));
+            customer.setIsPastDue(rs.getBoolean("is_past_due"));
             customer.setPhoneNumber(rs.getString("phone"));
             customer.setShippingAddr(getAddressById(rs.getInt("shipping_addr_id")));
 
@@ -290,7 +294,7 @@ public class TrackingDAOImpl {
             if (billingAddrId == customer.getShippingAddr().getId()) {
                 customer.setBillingAddr(customer.getShippingAddr());
             } else {
-                customer.setShippingAddr(getAddressById(billingAddrId));
+                customer.setBillingAddr(getAddressById(billingAddrId));
             }
             customers.add(customer);
         }
@@ -797,7 +801,7 @@ public class TrackingDAOImpl {
                 "P.customer_id as cust_id, P.created as created, P.finished as finish, P.title as title, P.description as descr, P.part_count as pc, C.name as name " +
                 "FROM Project P " +
                 "LEFT JOIN Customer C " +
-                "WHERE cust_id = C.id AND P.id = ?";
+                "ON cust_id = C.id WHERE P.id = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(query);
         preparedStatement.setInt(1, id);
         ResultSet rs = preparedStatement.executeQuery();
@@ -867,7 +871,7 @@ public class TrackingDAOImpl {
                 "P.customer_id as cust_id, P.created as created, P.finished as finish, P.title as title, P.description as descr, P.part_count as pc, C.name as name " +
                 "FROM Project P " +
                 "LEFT JOIN Customer C " +
-                "WHERE cust_id = C.id";
+                "ON cust_id = C.id";
 
         Statement stm = conn.createStatement();
         ResultSet rs = stm.executeQuery(query);
